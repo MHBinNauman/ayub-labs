@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+/*
+ * Brand tokens. Values mirror brandTokens.colors in src/data/site-data.ts;
+ * change them there first, then here.
+ */
+@theme {
+  --color-logo-blue: #0a58a8;
+  --color-logo-red: #e81c24;
+  --color-navy: #27477d;
+  --color-surface: #f3f6f7;
+  --color-tint: rgba(105, 143, 208, 0.11);
+  --color-ink: #1e2a3a;
+  --color-muted: #5b6472;
+  --color-red-text: #c8151d;
+  --color-whatsapp: #25d366;
+}
+
+@theme inline {
+  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+}
