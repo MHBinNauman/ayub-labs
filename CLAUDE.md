@@ -30,11 +30,11 @@ src/
     ui/                Button, Card, Badge, Section, Container, Tabs
     sections/          Hero, TrustStrip, ServicesGrid, LocationsPreview, ReportCTA, ...
   data/site-data.ts    single source of truth (do not restructure without asking)
-  lib/                 hours.ts (isOpenNow, nextOpening), links.ts (tel/wa/maps), seo.ts (JSON-LD), validate.ts (zod)
+  lib/                 hours.ts (getBranchStatus, formatWeekHours), links.ts (tel/wa/maps), site.ts (derived values, resolved flags), seo.ts (JSON-LD), validate.ts (zod)
 public/brand/          logo + badges (downloaded from the live site before DNS cutover)
 ```
 
 ## Workflow
 - Work one prompt/phase at a time. Use plan mode for anything touching more than 3 files.
-- After each phase: `pnpm lint && pnpm typecheck && pnpm build` must pass, then commit with a conventional message.
+- After each phase: `pnpm test && pnpm lint && pnpm typecheck && pnpm build` must pass, then commit with a conventional message.
 - When unsure about a fact, add it to `openQuestions` in site-data.ts. Don't guess.

@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import { brand } from "@/data/site-data";
+import { validateSiteData } from "@/lib/validate";
 import "./globals.css";
+
+// Fails the build (and the dev server) if site-data.ts is not safe to render.
+validateSiteData();
 
 const montserrat = Montserrat({
   subsets: ["latin"],
