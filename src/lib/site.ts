@@ -66,6 +66,16 @@ export const primaryPhone = contact.mobile;
 /** Pre-filled text for WhatsApp chats opened from the site. */
 export const whatsappGreeting = `Hello ${brand.shortName}, I'd like to ask about…`;
 
+/** Pre-filled WhatsApp text from a service page with no published test list. */
+export function serviceQuestionMessage(serviceName: string): string {
+  return `Hello ${brand.shortName}, I'd like to ask about ${serviceName}: which tests do you offer, and what are the prices?`;
+}
+
+/** Pre-filled WhatsApp text when a services search finds nothing. */
+export function searchQuestionMessage(query: string): string {
+  return `Hello ${brand.shortName}, do you offer "${query.trim()}"?`;
+}
+
 /** Pre-filled text for asking for a report on WhatsApp (no online portal yet). */
 export const reportRequestMessage = `Hello ${brand.shortName}, I'd like to request my test report.`;
 
@@ -120,6 +130,15 @@ export function branchRegulator(
   branch: Pick<Branch, "regulator">,
 ): string | null {
   return branch.regulator.verified ? branch.regulator.value : null;
+}
+
+/**
+ * Branches where a service is available. site-data.ts does not yet record
+ * this per service (see openQuestions), so for now every branch is listed.
+ */
+export function branchesOffering(service: Pick<Service, "slug">): Branch[] {
+  void service;
+  return branches;
 }
 
 /** Cities with a branch, in data order, e.g. ["Rawalpindi", "Islamabad"]. */
@@ -241,3 +260,18 @@ export const resolvedFeatures: ResolvedFeatures = {
   reportPortalUrl: features.reportPortalUrl,
   urduToggle: features.urduToggle,
 };
+
+/* ------------------------------------------------------------------ */
+/* Prices                                                              */
+/* ------------------------------------------------------------------ */
+
+const pkrFormatter = new Intl.NumberFormat("en-PK", {
+  style: "currency",
+  currency: "PKR",
+  maximumFractionDigits: 0,
+});
+
+/** 1500 → "Rs 1,500". */
+export function formatPKR(amount: number): string {
+  return pkrFormatter.format(amount);
+}

@@ -3,7 +3,10 @@
  * and the footer. Plain serialisable data, so it can be passed from server
  * components to client components as props.
  */
+import type { ServiceCardData } from "@/components/ui/ServiceCard";
+import { serviceCategories, type Service } from "@/data/site-data";
 import type { NavItem, ServiceMenuGroup } from "./paths";
+import type { SearchableService } from "./service-search";
 import { servicesByCategory } from "./site";
 
 export { isActivePath, type NavItem, type ServiceMenuGroup } from "./paths";
@@ -39,3 +42,24 @@ export const serviceMenu: ServiceMenuGroup[] = servicesByCategory.map(
     })),
   }),
 );
+
+/** What a service card needs, nothing more (it is serialised to the client). */
+export function toServiceCard(service: Service): ServiceCardData {
+  return {
+    slug: service.slug,
+    name: service.name,
+    summary: service.summary,
+    icon: service.icon,
+    href: serviceHref(service.slug),
+  };
+}
+
+/** A card plus the extra fields the services search matches against. */
+export function toSearchableService(service: Service): SearchableService {
+  return {
+    ...toServiceCard(service),
+    legacyName: service.legacyName,
+    category: service.category,
+    categoryLabel: serviceCategories[service.category].label,
+  };
+}

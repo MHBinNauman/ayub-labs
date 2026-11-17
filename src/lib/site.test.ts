@@ -4,11 +4,15 @@ import {
   branchesByCity,
   branchRegulator,
   cities,
+  branchesOffering,
   currentYear,
   formatPhone,
+  formatPKR,
   joinList,
   offeringPhrase,
   registeredWithShort,
+  searchQuestionMessage,
+  serviceQuestionMessage,
   primaryBranch,
   servicesByCategory,
   yearsServing,
@@ -124,5 +128,31 @@ describe("derived copy", () => {
       "laboratory testing, ECG, ultrasound & Doppler and specialist clinics",
     );
     expect(offeringPhrase()).toMatch(/and an on-site pharmacy$/);
+  });
+});
+
+describe("formatPKR", () => {
+  it("formats whole rupees with grouping", () => {
+    expect(formatPKR(1500)).toMatch(/^Rs\s1,500$/);
+    expect(formatPKR(250000)).toMatch(/^Rs\s250,000$/);
+  });
+});
+
+describe("WhatsApp messages", () => {
+  it("names the service the visitor was reading", () => {
+    expect(serviceQuestionMessage("ECG")).toContain("ECG");
+    expect(serviceQuestionMessage("ECG")).toMatch(/^Hello Ayyub Labs/);
+  });
+
+  it("quotes the search text, trimmed", () => {
+    expect(searchQuestionMessage("  lipid profile ")).toContain(
+      '"lipid profile"',
+    );
+  });
+});
+
+describe("branchesOffering", () => {
+  it("lists every branch until per-branch data exists", () => {
+    expect(branchesOffering(services[0])).toEqual(branches);
   });
 });

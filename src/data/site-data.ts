@@ -328,4 +328,5 @@ export const openQuestions = [
   "Facebook / Instagram / Google Business Profile links.",
   "Who controls the domain registrar and the current hosting (cPanel)? Is info@ayyublabs.com hosted there?",
   "Approve the draft service descriptions and About copy.",
+  "Which services are offered at each branch (Saddar vs F-8)? Service pages list both until confirmed.",
 ] as const;

@@ -1,26 +1,12 @@
 import Link from "next/link";
 import { Section, SectionHeading } from "@/components/ui";
 import { services } from "@/data/site-data";
-import { routes, serviceHref } from "@/lib/nav";
+import { routes, toServiceCard } from "@/lib/nav";
 import { offeringPhrase, servicesByCategory } from "@/lib/site";
-import {
-  ServicesTabs,
-  type ServiceCardData,
-  type ServiceTab,
-} from "./ServicesTabs";
-
-function toCard(service: (typeof services)[number]): ServiceCardData {
-  return {
-    slug: service.slug,
-    name: service.name,
-    summary: service.summary,
-    icon: service.icon,
-    href: serviceHref(service.slug),
-  };
-}
+import { ServicesTabs, type ServiceTab } from "./ServicesTabs";
 
 export function ServicesShowcase() {
-  const cards = services.map(toCard);
+  const cards = services.map(toServiceCard);
   const tabs: ServiceTab[] = [
     { id: "all", label: "All", slugs: cards.map((card) => card.slug) },
     ...servicesByCategory.map((group) => ({
