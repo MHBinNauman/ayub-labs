@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+import {
+  FloatingWhatsApp,
+  Footer,
+  Header,
+  SkipLink,
+} from "@/components/layout";
 import { brand } from "@/data/site-data";
 import { validateSiteData } from "@/lib/validate";
 import "./globals.css";
@@ -14,6 +20,8 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
+const MAIN_ID = "main";
+
 export const metadata: Metadata = {
   metadataBase: new URL(`https://${brand.domain}`),
   title: {
@@ -26,7 +34,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={montserrat.variable}>
       <body className="bg-white font-sans text-ink antialiased">
-        {children}
+        <SkipLink targetId={MAIN_ID} />
+        <Header />
+        {/* Pages render their content only; the one <main> lives here. */}
+        <main id={MAIN_ID} tabIndex={-1} className="outline-none">
+          {children}
+        </main>
+        <Footer />
+        <FloatingWhatsApp />
       </body>
     </html>
   );

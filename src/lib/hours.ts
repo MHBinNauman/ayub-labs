@@ -53,6 +53,8 @@ export type WeekHoursRow = {
   hours: string;
   /** "Mon – Sat: 10:00 AM – 9:00 PM" */
   label: string;
+  /** True for a row of days the branch is closed. */
+  closed: boolean;
 };
 
 const zonedFormatter = new Intl.DateTimeFormat("en-US", {
@@ -133,7 +135,12 @@ export function getBranchStatus(
 
 /** The week as display rows, with consecutive identical days grouped. */
 export function formatWeekHours(branch: HasHours): WeekHoursRow[] {
-  const groups: { first: DayKey; last: DayKey; hours: string }[] = [];
+  const groups: {
+    first: DayKey;
+    last: DayKey;
+    hours: string;
+    closed: boolean;
+  }[] = [];
 
   for (const day of DAY_KEYS) {
     const dayHours = branch.hours[day];
@@ -145,15 +152,15 @@ export function formatWeekHours(branch: HasHours): WeekHoursRow[] {
     if (previous && previous.hours === hours) {
       previous.last = day;
     } else {
-      groups.push({ first: day, last: day, hours });
+      groups.push({ first: day, last: day, hours, closed: dayHours === null });
     }
   }
 
-  return groups.map(({ first, last, hours }) => {
+  return groups.map(({ first, last, hours, closed }) => {
     const days =
       first === last
         ? DAY_LABELS[first]
         : `${DAY_LABELS[first]} – ${DAY_LABELS[last]}`;
-    return { days, hours, label: `${days}: ${hours}` };
+    return { days, hours, label: `${days}: ${hours}`, closed };
   });
 }

@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { brand, branches, services } from "@/data/site-data";
+import { brand, branches, contact, services } from "@/data/site-data";
 import {
   branchesByCity,
   branchRegulator,
+  currentYear,
+  formatPhone,
   primaryBranch,
   servicesByCategory,
   yearsServing,
@@ -48,6 +50,35 @@ describe("derived collections", () => {
     expect(servicesByCategory.every((group) => group.services.length > 0)).toBe(
       true,
     );
+  });
+});
+
+describe("currentYear", () => {
+  it("uses the Karachi calendar, not UTC", () => {
+    expect(currentYear(new Date(Date.UTC(2026, 11, 31, 18, 30)))).toBe(2026);
+    expect(currentYear(new Date(Date.UTC(2026, 11, 31, 19, 30)))).toBe(2027);
+  });
+});
+
+describe("formatPhone", () => {
+  it("uses the display strings from site-data for known numbers", () => {
+    expect(formatPhone(contact.mobile.e164)).toBe(contact.mobile.display);
+    expect(formatPhone(contact.landline.e164)).toBe(contact.landline.display);
+  });
+
+  it("formats other Pakistani mobiles in the local style", () => {
+    expect(formatPhone("+923001234567")).toBe("0300-1234567");
+  });
+
+  it("falls back to a national number, or the input if not Pakistani", () => {
+    expect(formatPhone("+924212345678")).toBe("04212345678");
+    expect(formatPhone("+441234567890")).toBe("+441234567890");
+  });
+
+  it("has a readable form for every branch phone", () => {
+    for (const phone of branches.flatMap((b) => b.phones)) {
+      expect(formatPhone(phone)).toMatch(/^[0(]/);
+    }
   });
 });
 

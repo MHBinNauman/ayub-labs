@@ -1,21 +1,100 @@
 @import "tailwindcss";
 
 /*
- * Brand tokens. Values mirror brandTokens.colors in src/data/site-data.ts;
- * change them there first, then here.
+ * Brand tokens. Colour values mirror brandTokens.colors in
+ * src/data/site-data.ts; change them there first, then here.
+ * Components use these token classes only, never raw hex.
  */
 @theme {
-  --color-logo-blue: #0a58a8;
-  --color-logo-red: #e81c24;
   --color-navy: #27477d;
+  --color-brand-blue: #0a58a8; /* brandTokens.colors.logoBlue */
+  --color-brand-red: #e81c24; /* logoRed: large text, icons, fills */
+  --color-brand-red-text: #c8151d; /* redText: small red text */
   --color-surface: #f3f6f7;
   --color-tint: rgba(105, 143, 208, 0.11);
   --color-ink: #1e2a3a;
   --color-muted: #5b6472;
-  --color-red-text: #c8151d;
-  --color-whatsapp: #25d366;
+  --color-whatsapp: #25d366; /* WhatsApp button only */
+  --color-status-open: #15803d; /* "open now" dot only; not a brand colour */
+  --color-nav-strip: #ffffff; /* desktop nav strip under the navy header band */
+
+  --radius-card: 0.75rem;
+
+  --animate-menu-in: menu-in 0.16s ease-out;
+  --animate-drawer-in: drawer-in 0.22s ease-out;
+
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
+
+  @keyframes drawer-in {
+    from {
+      opacity: 0;
+      transform: translateX(16px);
+    }
+  }
+
+  /* Navy-tinted, so shadows sit in the brand palette rather than grey or purple. */
+  --shadow-card:
+    0 1px 2px rgb(39 71 125 / 0.06), 0 4px 12px rgb(39 71 125 / 0.08);
+  --shadow-card-hover:
+    0 2px 4px rgb(39 71 125 / 0.08), 0 12px 28px rgb(39 71 125 / 0.16);
 }
 
 @theme inline {
   --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Right edge cut into an arrow point. Used by the current breadcrumb chip. */
+@utility clip-arrow-r {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 0.875rem) 0,
+    100% 50%,
+    calc(100% - 0.875rem) 100%,
+    0 100%
+  );
+}
+
+/*
+ * In-page jumps (skip link, #anchors) land below the sticky part of the
+ * header: the band (64px) below lg, the nav strip (56px) from lg.
+ */
+html {
+  scroll-padding-top: 5rem;
+}
+
+/* While the mobile drawer (a modal <dialog>) is open, the page underneath must not scroll. */
+html:has(dialog[data-scroll-lock][open]) {
+  overflow: hidden;
+}
+
+/* Hide the backdrop of the full-screen drawer; the drawer covers the page anyway. */
+dialog[data-scroll-lock]::backdrop {
+  background: transparent;
+}
+
+/*
+ * Accordion: animate native <details> open/close. Browsers without
+ * ::details-content or interpolate-size simply snap open.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+
+  .accordion-item::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size 0.25s ease,
+      content-visibility 0.25s allow-discrete;
+  }
+
+  .accordion-item[open]::details-content {
+    block-size: auto;
+  }
 }

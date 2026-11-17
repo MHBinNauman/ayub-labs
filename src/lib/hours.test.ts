@@ -136,8 +136,9 @@ describe("formatWeekHours", () => {
         days: "Mon – Sat",
         hours: "10:00 AM – 9:00 PM",
         label: "Mon – Sat: 10:00 AM – 9:00 PM",
+        closed: false,
       },
-      { days: "Sun", hours: "Closed", label: "Sun: Closed" },
+      { days: "Sun", hours: "Closed", label: "Sun: Closed", closed: true },
     ]);
   });
 
