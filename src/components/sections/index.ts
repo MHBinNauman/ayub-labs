@@ -1,1 +1,9 @@
-export {};
+export { DoctorsSection } from "./DoctorsSection";
+export { Hero } from "./Hero";
+export { LocationsPreview } from "./LocationsPreview";
+export { QuickActions } from "./QuickActions";
+export { ReportCTA } from "./ReportCTA";
+export { ServicesShowcase } from "./ServicesShowcase";
+export { StatsSection } from "./StatsSection";
+export { TestimonialsSection } from "./TestimonialsSection";
+export { WhyAyyub } from "./WhyAyyub";

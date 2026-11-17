@@ -4,17 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ComponentType, ReactNode, SVGProps } from "react";
 import { Container } from "@/components/ui";
-import {
-  brand,
-  branches,
-  contact,
-  registrations,
-  services,
-} from "@/data/site-data";
+import { brand, branches, contact, services } from "@/data/site-data";
 import { cn } from "@/lib/cn";
 import { mapsDirections, tel } from "@/lib/links";
 import { mainNav, serviceHref } from "@/lib/nav";
-import { currentYear, formatPhone } from "@/lib/site";
+import { currentYear, formatPhone, verifiedRegistrations } from "@/lib/site";
 import { Logo } from "./Logo";
 import { FacebookIcon, InstagramIcon } from "./SocialIcons";
 
@@ -36,8 +30,6 @@ const socialLinks: SocialLink[] = [
     Icon: MapPin,
   },
 ];
-
-const verifiedRegistrations = registrations.filter((r) => r.verified);
 
 /** The year in Karachi. Cached so the footer stays in the static shell. */
 async function CopyrightYear() {

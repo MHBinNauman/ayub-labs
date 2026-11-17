@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui/Container";
-import type { NavItem, ServiceMenuGroup } from "@/lib/nav";
-import { isActivePath } from "@/lib/nav";
+import { isActivePath, type NavItem, type ServiceMenuGroup } from "@/lib/paths";
 import { MegaMenu } from "./MegaMenu";
 import { navItemClass } from "./nav-styles";
 

@@ -128,7 +128,9 @@ test.describe("desktop header", () => {
     await expect(trigger).toHaveAttribute("aria-expanded", "false");
     await expect(trigger).toBeFocused();
     await expect(
-      page.getByRole("link", { name: "View all services" }),
+      page
+        .getByRole("navigation", { name: "Main" })
+        .getByRole("link", { name: "View all services" }),
     ).toBeHidden();
 
     // Once closed, Tab moves on to the next nav item.

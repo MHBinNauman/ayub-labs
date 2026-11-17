@@ -41,7 +41,7 @@ export function Header() {
 
         <div className="bg-navy">
           <Container className="flex h-16 items-center justify-between gap-2 lg:h-22">
-            <Logo />
+            <Logo eager />
 
             <div className="flex shrink-0 items-center gap-2 lg:gap-3">
               <Button

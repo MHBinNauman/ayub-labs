@@ -11,8 +11,7 @@ import {
   type ReactNode,
 } from "react";
 import { cn } from "@/lib/cn";
-import type { NavItem, ServiceMenuGroup } from "@/lib/nav";
-import { isActivePath } from "@/lib/nav";
+import { isActivePath, type NavItem, type ServiceMenuGroup } from "@/lib/paths";
 import { serviceIcon } from "@/lib/service-icons";
 
 type MobileNavProps = {

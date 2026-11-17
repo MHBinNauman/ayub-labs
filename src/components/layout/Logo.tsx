@@ -9,6 +9,8 @@ const EMBLEM_SRC = "/brand/logo-emblem-192.png";
 type LogoProps = {
   /** "lg" grows the lock-up on desktop (header band); "md" stays compact. */
   size?: "md" | "lg";
+  /** Load the emblem straight away. Only for the copy above the fold (header band). */
+  eager?: boolean;
   className?: string;
 };
 
@@ -17,7 +19,7 @@ type LogoProps = {
  * crisp at every size. For navy backgrounds. The emblem is decorative: the
  * text beside it names the link.
  */
-export function Logo({ size = "lg", className }: LogoProps) {
+export function Logo({ size = "lg", eager = false, className }: LogoProps) {
   const large = size === "lg";
   return (
     <Link
@@ -39,7 +41,7 @@ export function Logo({ size = "lg", className }: LogoProps) {
           width={192}
           height={192}
           sizes={large ? "(min-width: 64rem) 60px, 44px" : "44px"}
-          loading="eager"
+          loading={eager ? "eager" : "lazy"}
           className="size-full"
         />
       </span>

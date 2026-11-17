@@ -9,6 +9,7 @@ import {
   contact,
   doctors,
   features,
+  registrations,
   serviceCategories,
   services,
   stats,
@@ -65,6 +66,9 @@ export const primaryPhone = contact.mobile;
 /** Pre-filled text for WhatsApp chats opened from the site. */
 export const whatsappGreeting = `Hello ${brand.shortName}, I'd like to ask about…`;
 
+/** Pre-filled text for asking for a report on WhatsApp (no online portal yet). */
+export const reportRequestMessage = `Hello ${brand.shortName}, I'd like to request my test report.`;
+
 /**
  * Human-readable form of an E.164 number. Numbers listed in `contact` use the
  * display string written there; anything else is formatted as a Pakistani
@@ -118,9 +122,78 @@ export function branchRegulator(
   return branch.regulator.verified ? branch.regulator.value : null;
 }
 
+/** Cities with a branch, in data order, e.g. ["Rawalpindi", "Islamabad"]. */
+export const cities: Branch["city"][] = branchesByCity.map(
+  (group) => group.city,
+);
+
+/* ------------------------------------------------------------------ */
+/* Registrations                                                       */
+/* ------------------------------------------------------------------ */
+
+/** Registrations the site may show. The only trust claim allowed. */
+export const verifiedRegistrations = registrations.filter(
+  (registration) => registration.verified,
+);
+
+/** "PHC & PNRA" */
+export const registeredWithShort = joinList(
+  verifiedRegistrations.map((registration) => registration.short),
+  "&",
+);
+
+/* ------------------------------------------------------------------ */
+/* Text helpers                                                        */
+/* ------------------------------------------------------------------ */
+
+/** ["a", "b", "c"] → "a, b and c". */
+export function joinList(
+  items: readonly string[],
+  conjunction = "and",
+): string {
+  if (items.length <= 1) return items.join("");
+  return `${items.slice(0, -1).join(", ")} ${conjunction} ${items.at(-1)}`;
+}
+
+/** Lower-cases a name for use mid-sentence, leaving acronyms ("ECG") alone. */
+function midSentence(name: string): string {
+  return /^[A-Z][A-Z]/.test(name)
+    ? name
+    : name[0].toLowerCase() + name.slice(1);
+}
+
 /* ------------------------------------------------------------------ */
 /* Services                                                            */
 /* ------------------------------------------------------------------ */
+
+/**
+ * How each category reads in a sentence. Diagnostics are named one by one
+ * because each is a distinct test a patient searches for.
+ */
+const categoryPhrases: Record<ServiceCategory, (items: Service[]) => string[]> =
+  {
+    laboratory: () => ["laboratory testing"],
+    diagnostics: (items) => items.map((service) => midSentence(service.name)),
+    clinics: () => ["specialist clinics"],
+    pharmacy: () => ["an on-site pharmacy"],
+  };
+
+/**
+ * What the practice offers, as a phrase built from the service list, e.g.
+ * "laboratory testing, ECG, ultrasound & Doppler and specialist clinics".
+ * Categories with no services are left out.
+ */
+export function offeringPhrase(
+  categories: readonly ServiceCategory[] = Object.keys(
+    serviceCategories,
+  ) as ServiceCategory[],
+): string {
+  const parts = categories.flatMap((category) => {
+    const items = services.filter((service) => service.category === category);
+    return items.length > 0 ? categoryPhrases[category](items) : [];
+  });
+  return joinList(parts);
+}
 
 export type ServiceGroup = {
   category: ServiceCategory;

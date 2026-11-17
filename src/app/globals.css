@@ -98,3 +98,20 @@ dialog[data-scroll-lock]::backdrop {
     block-size: auto;
   }
 }
+
+/*
+ * View transitions (services tabs): cards glide to their new place. Under
+ * reduced motion the swap is instant.
+ */
+::view-transition-group(*) {
+  animation-duration: 0.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}

@@ -3,14 +3,10 @@
  * and the footer. Plain serialisable data, so it can be passed from server
  * components to client components as props.
  */
+import type { NavItem, ServiceMenuGroup } from "./paths";
 import { servicesByCategory } from "./site";
 
-export type NavItem = {
-  label: string;
-  href: string;
-  /** Opens the services mega menu on desktop and an accordion on mobile. */
-  megaMenu?: boolean;
-};
+export { isActivePath, type NavItem, type ServiceMenuGroup } from "./paths";
 
 export const mainNav: NavItem[] = [
   { label: "Home", href: "/" },
@@ -31,12 +27,6 @@ export function serviceHref(slug: string): string {
   return `${routes.services}/${slug}`;
 }
 
-export type ServiceMenuGroup = {
-  category: string;
-  label: string;
-  items: { name: string; href: string; icon: string }[];
-};
-
 /** Services grouped by category, reduced to what a menu needs. */
 export const serviceMenu: ServiceMenuGroup[] = servicesByCategory.map(
   (group) => ({
@@ -49,17 +39,3 @@ export const serviceMenu: ServiceMenuGroup[] = servicesByCategory.map(
     })),
   }),
 );
-
-/**
- * Whether `href` is the current section. Home matches only itself; every
- * other link also matches its sub-pages ("/services/ecg" → "/services").
- */
-export function isActivePath(pathname: string | null, href: string): boolean {
-  if (!pathname) return false;
-  const path =
-    pathname.length > 1 && pathname.endsWith("/")
-      ? pathname.slice(0, -1)
-      : pathname;
-  if (href === "/") return path === "/";
-  return path === href || path.startsWith(`${href}/`);
-}

@@ -15,8 +15,7 @@ import {
 import { flushSync } from "react-dom";
 import { Container } from "@/components/ui/Container";
 import { cn } from "@/lib/cn";
-import type { NavItem, ServiceMenuGroup } from "@/lib/nav";
-import { isActivePath } from "@/lib/nav";
+import { isActivePath, type NavItem, type ServiceMenuGroup } from "@/lib/paths";
 import { serviceIcon } from "@/lib/service-icons";
 import { navItemClass } from "./nav-styles";
 

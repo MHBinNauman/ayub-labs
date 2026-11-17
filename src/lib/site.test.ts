@@ -3,8 +3,12 @@ import { brand, branches, contact, services } from "@/data/site-data";
 import {
   branchesByCity,
   branchRegulator,
+  cities,
   currentYear,
   formatPhone,
+  joinList,
+  offeringPhrase,
+  registeredWithShort,
   primaryBranch,
   servicesByCategory,
   yearsServing,
@@ -94,5 +98,31 @@ describe("branchRegulator", () => {
         regulator: { value: "TODO(client)", verified: false },
       }),
     ).toBeNull();
+  });
+});
+
+describe("joinList", () => {
+  it("joins with commas and a final conjunction", () => {
+    expect(joinList([])).toBe("");
+    expect(joinList(["a"])).toBe("a");
+    expect(joinList(["a", "b"])).toBe("a and b");
+    expect(joinList(["a", "b", "c"], "&")).toBe("a, b & c");
+  });
+});
+
+describe("derived copy", () => {
+  it("lists cities in data order without repeats", () => {
+    expect(cities).toEqual([...new Set(branches.map((b) => b.city))]);
+  });
+
+  it("names registrations by short name", () => {
+    expect(registeredWithShort).toBe("PHC & PNRA");
+  });
+
+  it("builds the offering from the service list", () => {
+    expect(offeringPhrase(["laboratory", "diagnostics", "clinics"])).toBe(
+      "laboratory testing, ECG, ultrasound & Doppler and specialist clinics",
+    );
+    expect(offeringPhrase()).toMatch(/and an on-site pharmacy$/);
   });
 });

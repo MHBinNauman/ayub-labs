@@ -13,11 +13,11 @@ import {
   Button,
   Card,
   Container,
-  Reveal,
   Section,
   SectionHeading,
-  Tabs,
 } from "@/components/ui";
+import { Reveal } from "@/components/ui/Reveal";
+import { Tabs } from "@/components/ui/Tabs";
 import {
   brand,
   brandTokens,
