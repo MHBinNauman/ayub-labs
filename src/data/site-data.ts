@@ -198,6 +198,18 @@ export const registrations = [
 ] as const;
 
 /* ------------------------------------------------------------------ */
+/* 5b. POLICIES shown to patients                                      */
+/* ------------------------------------------------------------------ */
+
+export const policies = {
+  reportRelease: {
+    value: "Reports are only shared with the patient or a person they have authorised.",
+    verified: false,
+    note: "Wording from the brief; confirm what ID or authorisation is required.",
+  },
+} as const;
+
+/* ------------------------------------------------------------------ */
 /* 6. SERVICES (11 on current /services/ page, no descriptions/prices) */
 /* ------------------------------------------------------------------ */
 
@@ -329,4 +341,6 @@ export const openQuestions = [
   "Who controls the domain registrar and the current hosting (cPanel)? Is info@ayyublabs.com hosted there?",
   "Approve the draft service descriptions and About copy.",
   "Which services are offered at each branch (Saddar vs F-8)? Service pages list both until confirmed.",
+  "Report collection: what ID or authorisation do you need from someone collecting on a patient's behalf?",
+  "Does each branch have its own email, or is info@ayyublabs.com used for both?",
 ] as const;

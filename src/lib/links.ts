@@ -21,7 +21,13 @@ export function mapsDirections(query: string): string {
   return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(query)}`;
 }
 
-export function mailto(email: string, subject?: string): string {
-  const base = `mailto:${email}`;
-  return subject ? `${base}?subject=${encodeURIComponent(subject)}` : base;
+/** `mailto:` link with an optional pre-filled subject and body. */
+export function mailto(email: string, subject?: string, body?: string): string {
+  const params = [
+    subject && `subject=${encodeURIComponent(subject)}`,
+    body && `body=${encodeURIComponent(body)}`,
+  ].filter(Boolean);
+  return params.length
+    ? `mailto:${email}?${params.join("&")}`
+    : `mailto:${email}`;
 }

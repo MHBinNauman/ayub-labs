@@ -301,6 +301,10 @@ const siteDataSchema = z.strictObject({
     }),
   ),
 
+  policies: z.strictObject({
+    reportRelease: verified(text),
+  }),
+
   openQuestions: z.array(z.string()),
 });
 

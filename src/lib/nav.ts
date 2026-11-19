@@ -24,6 +24,7 @@ export const routes = {
   services: "/services",
   locations: "/locations",
   reports: "/reports",
+  contact: "/contact",
 } as const;
 
 export function serviceHref(slug: string): string {
