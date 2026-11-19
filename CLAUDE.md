@@ -6,11 +6,8 @@ Claude Code reads this file automatically at the start of every session. Keep it
 Marketing and patient-access website for **Ayyub Labs & Clinics** (diagnostic lab and clinics, Saddar Rawalpindi + F-8 Islamabad, since 2016). It replaces a broken WordPress site at ayyublabs.com. Design is modelled on the information architecture of IDC (idc.net.pk/locations/rawalpindi), **not** its visual identity: we use Ayyub's own brand.
 
 ## Stack
-- Next.js (latest stable, App Router), TypeScript strict, React Server Components by default
-- Tailwind CSS (v4, CSS-first `@theme` tokens)
-- `lucide-react` icons, `motion` (Framer Motion) for animation, `fuse.js` for client search, `zod` for data validation
+- React Server Components by default.
 - Hosting: Vercel. Static generation everywhere; no database.
-- Package manager: pnpm
 
 ## Non-negotiable rules
 1. **All facts come from `src/data/site-data.ts`.** Never hard-code a phone number, address, hour, price, name or claim in a component. If data is missing, hide the UI element. Never render "TODO", "Lorem", "0K" or placeholder text.
@@ -22,17 +19,9 @@ Marketing and patient-access website for **Ayyub Labs & Clinics** (diagnostic la
 7. Times and "open now" are computed in `Asia/Karachi`, never the user's browser timezone.
 
 ## Structure
-```
-src/
-  app/                 routes (/, /services, /services/[slug], /locations, /locations/[id], /reports, /about, /contact, /tests)
-  components/
-    layout/            TopBar, Header, MegaMenu, MobileNav, Footer, FloatingWhatsApp
-    ui/                Button, Card, Badge, Section, Container, Tabs
-    sections/          Hero, TrustStrip, ServicesGrid, LocationsPreview, ReportCTA, ...
-  data/site-data.ts    single source of truth (do not restructure without asking)
-  lib/                 hours.ts (getBranchStatus, formatWeekHours), links.ts (tel/wa/maps), site.ts (derived values, resolved flags), seo.ts (JSON-LD), validate.ts (zod)
-public/brand/          logo + badges (downloaded from the live site before DNS cutover)
-```
+- Routes (built and planned): /, /services, /services/[slug], /locations, /locations/[id], /reports, /about, /contact, /tests
+- `src/data/site-data.ts` is the single source of truth (do not restructure without asking).
+- `public/brand/` holds the logo and badges, downloaded from the live site before DNS cutover.
 
 ## Workflow
 - Work one prompt/phase at a time. Use plan mode for anything touching more than 3 files.
