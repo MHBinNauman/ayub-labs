@@ -141,6 +141,27 @@ export function branchesOffering(service: Pick<Service, "slug">): Branch[] {
   return branches;
 }
 
+/** Services available at a branch. All for now, mirroring branchesOffering. */
+export function servicesAt(branch: Pick<Branch, "id">): Service[] {
+  void branch;
+  return services;
+}
+
+/** URL-safe id for a city: "Rawalpindi" → "rawalpindi". */
+export function cityId(city: Branch["city"]): string {
+  return city.toLowerCase();
+}
+
+/** The address as one copyable block, one line per address line. */
+export function addressText(branch: Pick<Branch, "addressLines">): string {
+  return branch.addressLines.join("\n");
+}
+
+/** Pre-filled WhatsApp text naming the branch the visitor was looking at. */
+export function branchWhatsappMessage(branch: Pick<Branch, "name">): string {
+  return `Hello ${brand.shortName} (${branch.name}), I'd like to ask about…`;
+}
+
 /** Cities with a branch, in data order, e.g. ["Rawalpindi", "Islamabad"]. */
 export const cities: Branch["city"][] = branchesByCity.map(
   (group) => group.city,
@@ -154,6 +175,16 @@ export const cities: Branch["city"][] = branchesByCity.map(
 export const verifiedRegistrations = registrations.filter(
   (registration) => registration.verified,
 );
+
+/**
+ * Verified registrations that cover this branch (registrations[].appliesTo).
+ * A branch with none listed, such as F-8 until IHRA is confirmed, gets none.
+ */
+export function registrationsFor(branch: Pick<Branch, "id">) {
+  return verifiedRegistrations.filter((registration) =>
+    (registration.appliesTo as readonly string[]).includes(branch.id),
+  );
+}
 
 /** "PHC & PNRA" */
 export const registeredWithShort = joinList(

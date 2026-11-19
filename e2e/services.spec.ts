@@ -7,7 +7,7 @@ const results = (page: Page) =>
 /** Opens /services (or a variant) and waits until the search island is interactive. */
 async function openServices(page: Page, path = "/services") {
   await page.goto(path);
-  await page.locator("[data-hydrated]").waitFor();
+  await page.locator("main [data-hydrated]").waitFor();
 }
 
 test.describe("/services without JavaScript", () => {

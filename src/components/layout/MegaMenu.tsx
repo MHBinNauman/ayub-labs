@@ -17,6 +17,7 @@ import { Container } from "@/components/ui/Container";
 import { cn } from "@/lib/cn";
 import { isActivePath, type NavItem, type ServiceMenuGroup } from "@/lib/paths";
 import { serviceIcon } from "@/lib/service-icons";
+import { useHydrated } from "@/lib/use-hydrated";
 import { navItemClass } from "./nav-styles";
 
 /** Hover must rest this long before the menu opens, so passing over it does nothing. */
@@ -54,6 +55,7 @@ export function MegaMenu({ item, groups, pathname }: MegaMenuProps) {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const panelId = useId();
+  const hydrated = useHydrated();
 
   const active = isActivePath(pathname, item.href);
 
@@ -205,6 +207,7 @@ export function MegaMenu({ item, groups, pathname }: MegaMenuProps) {
   return (
     <li
       ref={rootRef}
+      data-hydrated={hydrated || undefined}
       className="flex"
       onPointerEnter={onPointerEnter}
       onPointerLeave={onPointerLeave}

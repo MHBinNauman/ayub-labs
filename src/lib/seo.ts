@@ -3,7 +3,8 @@
  * page; it never adds claims (no ratings, accreditation or outcomes).
  */
 import { createElement, type ReactElement } from "react";
-import { brand, type Service } from "@/data/site-data";
+import { brand, type Branch, type Service } from "@/data/site-data";
+import { DAY_KEYS, DAY_NAMES } from "./hours";
 
 type JsonLdObject = Record<string, unknown>;
 
@@ -84,5 +85,64 @@ export function serviceJsonLd(service: Service): JsonLdObject | null {
     }),
     description: service.summary,
     url: absoluteUrl(`/services/${service.slug}`),
+  };
+}
+
+/**
+ * One block per branch: MedicalBusiness + DiagnosticLab with address, phones
+ * and opening hours. Hours are included only when the branch's hours are
+ * verified, and geo / map links only when site-data has them, so search
+ * engines are never handed a guess as fact.
+ */
+export function branchJsonLd(branch: Branch): JsonLdObject {
+  const path = `/locations/${branch.id}`;
+
+  // Consecutive or not, days with identical hours share one specification.
+  const groups = new Map<
+    string,
+    { opens: string; closes: string; days: string[] }
+  >();
+  for (const day of DAY_KEYS) {
+    const hours = branch.hours[day];
+    if (!hours) continue;
+    const key = `${hours.open}-${hours.close}`;
+    const group = groups.get(key) ?? {
+      opens: hours.open,
+      closes: hours.close,
+      days: [],
+    };
+    group.days.push(DAY_NAMES[day]);
+    groups.set(key, group);
+  }
+
+  return {
+    "@context": "https://schema.org",
+    "@type": ["MedicalBusiness", "DiagnosticLab"],
+    "@id": `${absoluteUrl(path)}#branch`,
+    name: `${brand.displayName} (${branch.name})`,
+    url: absoluteUrl(path),
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: branch.addressLines.join(", "),
+      addressLocality: branch.city,
+      addressCountry: "PK",
+    },
+    telephone: branch.phones.length === 1 ? branch.phones[0] : branch.phones,
+    ...(branch.hoursVerified && {
+      openingHoursSpecification: [...groups.values()].map((group) => ({
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: group.days,
+        opens: group.opens,
+        closes: group.closes,
+      })),
+    }),
+    ...(branch.geo && {
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: branch.geo.lat,
+        longitude: branch.geo.lng,
+      },
+    }),
+    ...(branch.googleMapsUrl && { hasMap: branch.googleMapsUrl }),
   };
 }

@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import type { Branch } from "@/data/site-data";
-import { formatTime, formatWeekHours, getBranchStatus } from "./hours";
+import {
+  formatTime,
+  formatWeekHours,
+  getBranchStatus,
+  weekHoursTable,
+  zonedDay,
+} from "./hours";
 
 // A fixture, not a real branch, so the tests survive the client changing hours.
 const tenToNine = { open: "10:00", close: "21:00" };
@@ -164,5 +170,39 @@ describe("formatTime", () => {
     ["23:59", "11:59 PM"],
   ])("formats %s as %s", (input, expected) => {
     expect(formatTime(input)).toBe(expected);
+  });
+});
+
+describe("zonedDay", () => {
+  it("uses the Karachi calendar day, not UTC", () => {
+    // Monday 18:59 UTC is still Monday 23:59 in Karachi; 19:00 UTC is Tuesday.
+    expect(zonedDay(new Date("2026-11-16T18:59:00Z"))).toBe("mon");
+    expect(zonedDay(new Date("2026-11-16T19:00:00Z"))).toBe("tue");
+  });
+});
+
+describe("weekHoursTable", () => {
+  it("lists all seven days from Monday with full names", () => {
+    const rows = weekHoursTable(branch);
+    expect(rows.map((row) => row.label)).toEqual([
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ]);
+    expect(rows[0]).toEqual({
+      day: "mon",
+      label: "Monday",
+      hours: "10:00 AM – 9:00 PM",
+      closed: false,
+    });
+    expect(rows[6]).toMatchObject({
+      day: "sun",
+      hours: "Closed",
+      closed: true,
+    });
   });
 });

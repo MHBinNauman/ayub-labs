@@ -25,6 +25,17 @@ const DAY_LABELS: Record<DayKey, string> = {
   sun: "Sun",
 };
 
+/** Full day names; also the schema.org DayOfWeek names used in JSON-LD. */
+export const DAY_NAMES: Record<DayKey, string> = {
+  mon: "Monday",
+  tue: "Tuesday",
+  wed: "Wednesday",
+  thu: "Thursday",
+  fri: "Friday",
+  sat: "Saturday",
+  sun: "Sunday",
+};
+
 const WEEKDAY_TO_KEY: Record<string, DayKey> = {
   Mon: "mon",
   Tue: "tue",
@@ -76,6 +87,11 @@ function zonedDayAndTime(now: Date): { day: DayKey; time: string } {
     throw new Error(`Unexpected weekday "${part("weekday")}" from Intl`);
   }
   return { day, time: `${part("hour")}:${part("minute")}` };
+}
+
+/** Today's weekday in the site timezone, e.g. "mon". */
+export function zonedDay(now: Date = new Date()): DayKey {
+  return zonedDayAndTime(now).day;
 }
 
 /**
@@ -162,5 +178,29 @@ export function formatWeekHours(branch: HasHours): WeekHoursRow[] {
         ? DAY_LABELS[first]
         : `${DAY_LABELS[first]} – ${DAY_LABELS[last]}`;
     return { days, hours, label: `${days}: ${hours}`, closed };
+  });
+}
+
+export type DayHoursRow = {
+  day: DayKey;
+  /** "Monday" */
+  label: string;
+  /** "10:00 AM – 9:00 PM" or "Closed" */
+  hours: string;
+  closed: boolean;
+};
+
+/** One row per day, Monday first, for a full week table. */
+export function weekHoursTable(branch: HasHours): DayHoursRow[] {
+  return DAY_KEYS.map((day) => {
+    const hours = branch.hours[day];
+    return {
+      day,
+      label: DAY_NAMES[day],
+      hours: hours
+        ? `${formatTime(hours.open)} – ${formatTime(hours.close)}`
+        : "Closed",
+      closed: hours === null,
+    };
   });
 }

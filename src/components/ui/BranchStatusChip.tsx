@@ -1,32 +1,16 @@
 "use client";
 
 import { Clock } from "lucide-react";
-import { useSyncExternalStore } from "react";
 import type { Branch } from "@/data/site-data";
 import { cn } from "@/lib/cn";
 import { formatWeekHours, getBranchStatus } from "@/lib/hours";
+import { useMinuteClock } from "@/lib/use-clock";
 import { Badge } from "./Badge";
-
-const MINUTE = 60_000;
-
-/* A shared minute clock: one interval however many chips are on the page. */
-function subscribe(onChange: () => void): () => void {
-  const interval = setInterval(onChange, MINUTE);
-  // A tab left in the background catches up as soon as it is shown again.
-  document.addEventListener("visibilitychange", onChange);
-  return () => {
-    clearInterval(interval);
-    document.removeEventListener("visibilitychange", onChange);
-  };
-}
-
-/** The current minute. Stable within a minute, so React re-renders once a minute at most. */
-const getMinute = () => Math.floor(Date.now() / MINUTE);
-/** Unknown on the server: the page is prerendered, so "now" is not known until it runs in the browser. */
-const getServerMinute = () => null;
 
 type BranchStatusChipProps = {
   branch: Pick<Branch, "hours" | "hoursVerified">;
+  /** "chip": a labelled badge. "dot": a coloured dot with a screen-reader label, for lists. */
+  variant?: "chip" | "dot";
   className?: string;
 };
 
@@ -34,17 +18,46 @@ type BranchStatusChipProps = {
  * "Open now · closes 9:00 PM" / "Closed · opens Mon 10:00 AM", computed in
  * Asia/Karachi and refreshed every minute.
  *
- * The static HTML shows the branch's regular hours instead; the live status
- * replaces it once the page is running in the browser. Renders nothing for a
- * branch whose hours are unconfirmed, so it never claims a branch is open
- * on a guess.
+ * The static HTML shows the branch's regular hours instead (a neutral dot for
+ * the dot variant); the live status replaces it once the page runs in the
+ * browser. Renders nothing for a branch whose hours are unconfirmed, so it
+ * never claims a branch is open on a guess.
  */
-export function BranchStatusChip({ branch, className }: BranchStatusChipProps) {
-  const minute = useSyncExternalStore(subscribe, getMinute, getServerMinute);
+export function BranchStatusChip({
+  branch,
+  variant = "chip",
+  className,
+}: BranchStatusChipProps) {
+  const now = useMinuteClock();
 
   if (!branch.hoursVerified) return null;
 
-  if (minute === null) {
+  const status = now ? getBranchStatus(branch, now) : null;
+
+  if (variant === "dot") {
+    return (
+      <span
+        className={cn("inline-flex items-center gap-1.5 text-xs", className)}
+      >
+        <span
+          aria-hidden="true"
+          className={cn(
+            "size-2.5 shrink-0 rounded-full",
+            !status && "bg-ink/20",
+            status?.isOpen && "bg-status-open",
+            status && !status.isOpen && "bg-brand-red",
+          )}
+        />
+        {status && (
+          <span className="font-semibold text-muted">
+            {status.isOpen ? "Open" : "Closed"}
+          </span>
+        )}
+      </span>
+    );
+  }
+
+  if (!status) {
     const openDays = formatWeekHours(branch).find((row) => !row.closed);
     if (!openDays) return null;
     return (
@@ -55,7 +68,6 @@ export function BranchStatusChip({ branch, className }: BranchStatusChipProps) {
     );
   }
 
-  const status = getBranchStatus(branch, new Date(minute * MINUTE));
   return (
     <Badge
       variant={status.isOpen ? "open" : "closed"}

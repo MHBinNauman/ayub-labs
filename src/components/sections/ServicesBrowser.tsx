@@ -1,13 +1,15 @@
 "use client";
 
 import { MessageCircle, Search, X } from "lucide-react";
-import { useEffect, useId, useState, useSyncExternalStore } from "react";
+import { useEffect, useId, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { CategoryTabs, categoryTabId } from "@/components/ui/CategoryTabs";
 import { ServiceCard } from "@/components/ui/ServiceCard";
 import { whatsapp } from "@/lib/links";
 import { fillTemplate } from "@/lib/message-template";
 import type { SearchableService } from "@/lib/service-search";
+import { useHydrated } from "@/lib/use-hydrated";
+import { setUrlParams, useUrlParams } from "@/lib/use-url-params";
 
 type SearchModule = typeof import("@/lib/service-search");
 
@@ -23,56 +25,6 @@ type ServicesBrowserProps = {
 };
 
 const ALL = "all";
-
-/* ------------------------------------------------------------------ */
-/* URL state: ?category= and ?q=                                       */
-/* ------------------------------------------------------------------ */
-
-/*
- * Why not useSearchParams: under Cache Components a component that calls it
- * renders only in the browser, inside <Suspense>. The static HTML then holds
- * the fallback, and React swaps in a second instance after hydration, so a
- * visitor who has already focused a tab or started typing loses focus and
- * keystrokes. Reading window.location through useSyncExternalStore keeps one
- * instance: it hydrates from the static HTML (the server snapshot is "no
- * filter", matching the prerender) and then re-renders with the real URL.
- */
-const URL_CHANGE = "services:url-change";
-
-function subscribe(onChange: () => void) {
-  window.addEventListener("popstate", onChange); // Back / Forward
-  window.addEventListener(URL_CHANGE, onChange); // our own push/replace
-  return () => {
-    window.removeEventListener("popstate", onChange);
-    window.removeEventListener(URL_CHANGE, onChange);
-  };
-}
-const getSearch = () => window.location.search;
-const getServerSearch = () => "";
-
-// true once the island runs in the browser; exposed as data-hydrated so
-// tests can wait for interactivity instead of guessing a delay.
-const noSubscription = () => () => {};
-const getHydrated = () => true;
-const getServerHydrated = () => false;
-
-/** Shallow URL update via the native history API (no navigation). */
-function setUrl(next: { category?: string | null; q?: string }, push: boolean) {
-  const params = new URLSearchParams(window.location.search);
-  if (next.category !== undefined) {
-    if (next.category) params.set("category", next.category);
-    else params.delete("category");
-  }
-  if (next.q !== undefined) {
-    if (next.q) params.set("q", next.q);
-    else params.delete("q");
-  }
-  const search = params.toString();
-  const url = `${window.location.pathname}${search ? `?${search}` : ""}`;
-  if (push) window.history.pushState(null, "", url);
-  else window.history.replaceState(null, "", url);
-  window.dispatchEvent(new Event(URL_CHANGE));
-}
 
 /** Plain substring match, used for the instant while fuse.js loads. */
 function quickFilter(services: SearchableService[], query: string) {
@@ -98,13 +50,9 @@ export function ServicesBrowser({
   askTemplate,
 }: ServicesBrowserProps) {
   const baseId = useId();
-  const search = useSyncExternalStore(subscribe, getSearch, getServerSearch);
-  const hydrated = useSyncExternalStore(
-    noSubscription,
-    getHydrated,
-    getServerHydrated,
-  );
-  const params = new URLSearchParams(search);
+  const params = useUrlParams();
+  // Exposed as data-hydrated so tests can wait for interactivity.
+  const hydrated = useHydrated();
   const query = params.get("q") ?? "";
   const urlCategory = params.get("category");
   const category = categories.some((option) => option.id === urlCategory)
@@ -163,7 +111,9 @@ export function ServicesBrowser({
           type="search"
           value={query}
           // Typing replaces the history entry, so Back is not one step per key.
-          onChange={(event) => setUrl({ q: event.target.value }, false)}
+          onChange={(event) =>
+            setUrlParams({ q: event.target.value }, { push: false })
+          }
           placeholder="Search services, e.g. blood test, ultrasound"
           autoComplete="off"
           enterKeyHint="search"
@@ -172,7 +122,7 @@ export function ServicesBrowser({
         {query && (
           <button
             type="button"
-            onClick={() => setUrl({ q: "" }, false)}
+            onClick={() => setUrlParams({ q: null }, { push: false })}
             className="absolute top-1/2 right-1 grid size-11 -translate-y-1/2 place-items-center rounded-full text-muted hover:text-navy focus-visible:outline-2 focus-visible:outline-brand-blue"
           >
             <X aria-hidden="true" className="size-5" />
@@ -185,7 +135,9 @@ export function ServicesBrowser({
         tabs={tabs}
         activeId={activeTab}
         // A new history entry, so Back returns to the previous category.
-        onSelect={(id) => setUrl({ category: id === ALL ? null : id }, true)}
+        onSelect={(id) =>
+          setUrlParams({ category: id === ALL ? null : id }, { push: true })
+        }
         label="Service categories"
         idPrefix={baseId}
         controlsId={panelId}

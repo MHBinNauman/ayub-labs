@@ -1,38 +1,33 @@
 "use client";
 
 import { MapPin } from "lucide-react";
-import { useState, useSyncExternalStore } from "react";
-
-/** Tailwind's lg breakpoint. */
-const DESKTOP_QUERY = "(min-width: 64rem)";
-
-function subscribe(onChange: () => void) {
-  const query = window.matchMedia(DESKTOP_QUERY);
-  query.addEventListener("change", onChange);
-  return () => query.removeEventListener("change", onChange);
-}
-const isDesktop = () => window.matchMedia(DESKTOP_QUERY).matches;
-const isDesktopOnServer = () => false;
+import { useState } from "react";
+import { useIsDesktop } from "@/lib/use-media-query";
 
 type MapEmbedProps = {
   src: string;
   /** Accessible name for the iframe, e.g. "Map of Saddar, Rawalpindi". */
   title: string;
-  /** Shown on the poster, e.g. the branch area. */
+  /** Shown on the poster, e.g. the branch name. */
   label: string;
+  /**
+   * "auto": poster on phones, lazy iframe straight away from lg.
+   * "on-request": always the poster until tapped. Use it where the map sits
+   * in a container hidden at some sizes, so a hidden iframe never loads.
+   */
+  mode?: "auto" | "on-request";
 };
 
 /**
  * Google Maps iframe. A map costs hundreds of kilobytes, so on phones it sits
- * behind a "Show map" poster until asked for; from lg it renders straight
- * away with loading="lazy". (A display:none iframe is not reliably
- * lazy-loaded, so the iframe is not in the DOM at all until it is wanted.)
+ * behind a "Show map" poster until asked for. (A display:none iframe is not
+ * reliably lazy-loaded, so the iframe is not in the DOM at all until wanted.)
  */
-export function MapEmbed({ src, title, label }: MapEmbedProps) {
-  const desktop = useSyncExternalStore(subscribe, isDesktop, isDesktopOnServer);
+export function MapEmbed({ src, title, label, mode = "auto" }: MapEmbedProps) {
+  const desktop = useIsDesktop();
   const [requested, setRequested] = useState(false);
 
-  if (desktop || requested) {
+  if (requested || (mode === "auto" && desktop)) {
     return (
       <iframe
         src={src}

@@ -27,6 +27,15 @@ async function tabUntil(
   throw new Error(`Never reached target. Focus went: ${seen.join(" → ")}`);
 }
 
+/** Desktop pages: wait until the mega menu has hydrated before using keys or hover. */
+async function openDesktop(page: Page, path: string) {
+  await page.goto(path);
+  await page
+    .getByRole("navigation", { name: "Main" })
+    .locator("[data-hydrated]")
+    .waitFor();
+}
+
 test.describe("layout landmarks", () => {
   test("has one header, one main, one footer and a skip link", async ({
     page,
@@ -80,7 +89,7 @@ test.describe("desktop header", () => {
   test.skip(({ isMobile }) => isMobile, "desktop only");
 
   test("keyboard reaches every header control in order", async ({ page }) => {
-    await page.goto("/");
+    await openDesktop(page, "/");
     const order = await tabUntil(page, (d) => d.startsWith("button:Services"));
     const joined = order.join(" → ");
     // Top bar, then band, then nav strip.
@@ -106,11 +115,11 @@ test.describe("desktop header", () => {
   test("mega menu: Enter opens, Tab is trapped, Esc closes", async ({
     page,
   }) => {
-    await page.goto("/");
+    await openDesktop(page, "/");
     const trigger = page.getByRole("button", { name: "Services" });
-    await trigger.focus();
     await expect(trigger).toHaveAttribute("aria-expanded", "false");
 
+    await trigger.focus();
     await page.keyboard.press("Enter");
     await expect(trigger).toHaveAttribute("aria-expanded", "true");
     await expect(trigger).toBeFocused();
@@ -139,7 +148,7 @@ test.describe("desktop header", () => {
   });
 
   test("mega menu: ArrowDown opens on the first service", async ({ page }) => {
-    await page.goto("/");
+    await openDesktop(page, "/");
     const trigger = page.getByRole("button", { name: "Services" });
     await trigger.focus();
     await page.keyboard.press("ArrowDown");
@@ -154,7 +163,7 @@ test.describe("desktop header", () => {
   test("mega menu: hover opens after the intent delay and closes on leave", async ({
     page,
   }) => {
-    await page.goto("/");
+    await openDesktop(page, "/");
     const trigger = page.getByRole("button", { name: "Services" });
     await trigger.hover();
     // Not instantly: the 120ms intent delay.
@@ -168,13 +177,13 @@ test.describe("desktop header", () => {
   test("header band scrolls away and the nav strip sticks", async ({
     page,
   }) => {
-    await page.goto("/styleguide");
+    await openDesktop(page, "/styleguide");
     const header = page.locator("header");
     const nav = page.getByRole("navigation", { name: "Main" });
     await page.evaluate(() => window.scrollTo(0, 1500));
     await expect(header).toHaveAttribute("data-stuck", "");
-    const box = await nav.boundingBox();
-    expect(box?.y).toBe(0);
+    // Poll: layout can settle a frame after the attribute flips.
+    await expect.poll(async () => (await nav.boundingBox())?.y).toBe(0);
   });
 });
 

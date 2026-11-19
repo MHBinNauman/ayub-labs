@@ -3,7 +3,10 @@ import { brand, branches, contact, services } from "@/data/site-data";
 import {
   branchesByCity,
   branchRegulator,
+  cityId,
+  registrationsFor,
   cities,
+  addressText,
   branchesOffering,
   currentYear,
   formatPhone,
@@ -154,5 +157,31 @@ describe("WhatsApp messages", () => {
 describe("branchesOffering", () => {
   it("lists every branch until per-branch data exists", () => {
     expect(branchesOffering(services[0])).toEqual(branches);
+  });
+});
+
+describe("branch helpers", () => {
+  it("makes URL-safe city ids", () => {
+    expect(cityId("Rawalpindi")).toBe("rawalpindi");
+    expect(cityId("Islamabad")).toBe("islamabad");
+  });
+
+  it("lists only verified registrations that apply to the branch", () => {
+    for (const branch of branches) {
+      for (const registration of registrationsFor(branch)) {
+        expect(registration.verified).toBe(true);
+        expect(registration.appliesTo as readonly string[]).toContain(
+          branch.id,
+        );
+      }
+    }
+    expect(
+      registrationsFor({ id: "saddar-rawalpindi" }).map((r) => r.short),
+    ).toEqual(["PHC", "PNRA"]);
+    expect(registrationsFor({ id: "f8-islamabad" })).toEqual([]);
+  });
+
+  it("puts each address line on its own line for copying", () => {
+    expect(addressText({ addressLines: ["A", "B"] })).toBe("A\nB");
   });
 });
