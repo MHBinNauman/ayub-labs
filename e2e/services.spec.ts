@@ -156,8 +156,10 @@ test.describe("/services/[slug]", () => {
     const blocks = await page
       .locator('script[type="application/ld+json"]')
       .allTextContents();
-    expect(blocks.map((text) => JSON.parse(text)["@type"])).toEqual([
+    // Only the site-wide organization and the breadcrumbs; no MedicalTest.
+    expect(blocks.map((text) => JSON.parse(text)["@type"]).sort()).toEqual([
       "BreadcrumbList",
+      "MedicalOrganization",
     ]);
   });
 

@@ -5,19 +5,25 @@ import { LocationsControls } from "@/components/sections/LocationsControls";
 import { LocationsMap } from "@/components/sections/LocationsMap";
 import type { FinderBranch } from "@/components/sections/locations-types";
 import { Breadcrumbs, Container } from "@/components/ui";
-import { branches } from "@/data/site-data";
+import { brand, branches } from "@/data/site-data";
 import { mapsEmbed } from "@/lib/links";
 import { routes } from "@/lib/nav";
-import { branchJsonLd, breadcrumbJsonLd, JsonLd } from "@/lib/seo";
+import { pageTitles } from "@/lib/page-titles";
+import {
+  branchJsonLd,
+  breadcrumbJsonLd,
+  JsonLd,
+  pageMetadata,
+} from "@/lib/seo";
 import { cities, cityId, joinList } from "@/lib/site";
 
 const intro = `${branches.length} branches in ${joinList(cities)}: ${joinList(branches.map((b) => b.name))}.`;
 
-export const metadata: Metadata = {
-  title: "Our Branches",
-  description: `Addresses, opening hours, phone numbers and directions for Ayyub Labs & Clinics. ${intro}`,
-  alternates: { canonical: routes.locations },
-};
+export const metadata: Metadata = pageMetadata({
+  title: pageTitles.locations,
+  description: `Addresses, opening hours, phone numbers and directions for ${brand.displayName}. ${intro}`,
+  path: routes.locations,
+});
 
 const crumbs = [
   { label: "Home", href: "/" },

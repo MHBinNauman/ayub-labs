@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { pageTitles } from "@/lib/page-titles";
 import { Breadcrumbs, Container } from "@/components/ui";
 import { ServicesBrowser } from "@/components/sections/ServicesBrowser";
 import { branches, contact, services } from "@/data/site-data";
 import { QUERY_TOKEN } from "@/lib/message-template";
 import { routes, toSearchableService } from "@/lib/nav";
-import { breadcrumbJsonLd, JsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, JsonLd, pageMetadata } from "@/lib/seo";
 import {
   cities,
   joinList,
@@ -16,11 +17,11 @@ import {
 const offering = offeringPhrase();
 const intro = `${offering[0].toUpperCase()}${offering.slice(1)}, at ${branches.length} branches in ${joinList(cities)}.`;
 
-export const metadata: Metadata = {
-  title: "Services",
+export const metadata: Metadata = pageMetadata({
+  title: pageTitles.services,
   description: intro,
-  alternates: { canonical: routes.services },
-};
+  path: routes.services,
+});
 
 const crumbs = [
   { label: "Home", href: "/" },

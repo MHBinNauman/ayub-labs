@@ -303,6 +303,13 @@ export const stats: Array<{ label: string; value: number; suffix?: string }> = [
 export const testimonials: Array<{ quote: string; author: string; source: "google" | "direct" }> = [];
 // TODO(client): real Google reviews only (with permission). Never fabricate.
 
+/**
+ * Patient FAQs. Shown on the home page (with FAQPage structured data) only
+ * once this has entries. Answers must be the client's, not ours.
+ */
+export const faqs: Array<{ question: string; answer: string }> = [];
+// TODO(client): common patient questions with approved answers.
+
 /* ------------------------------------------------------------------ */
 /* 8. FEATURE FLAGS — UI reads these; nothing half-built ships         */
 /* ------------------------------------------------------------------ */
@@ -388,4 +395,5 @@ export const openQuestions = [
   "Report collection: what ID or authorisation do you need from someone collecting on a patient's behalf?",
   "Does each branch have its own email, or is info@ayyublabs.com used for both?",
   "Our story timeline: which year did each branch open, and any other milestones worth listing?",
+  "Frequently asked questions with approved answers (shown on the home page)?",
 ] as const;

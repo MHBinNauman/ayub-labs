@@ -6,6 +6,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import type { Metadata } from "next";
+import { pageTitles } from "@/lib/page-titles";
 import Link from "next/link";
 import { UNVERIFIED_HOURS_NOTE } from "@/components/sections/BranchCard";
 import { ReportRequestForm } from "@/components/sections/ReportRequestForm";
@@ -14,7 +15,7 @@ import { branches, contact, policies } from "@/data/site-data";
 import { formatWeekHours } from "@/lib/hours";
 import { whatsapp } from "@/lib/links";
 import { routes } from "@/lib/nav";
-import { breadcrumbJsonLd, JsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, JsonLd, pageMetadata } from "@/lib/seo";
 import { reportRequestMessage, resolvedFeatures } from "@/lib/site";
 
 const portal = resolvedFeatures.reportPortalUrl;
@@ -22,11 +23,11 @@ const intro = portal
   ? "View and download your test report online, or collect it from the branch where your sample was taken."
   : "Ask for your test report on WhatsApp, or collect it from the branch where your sample was taken.";
 
-export const metadata: Metadata = {
-  title: "Test reports",
+export const metadata: Metadata = pageMetadata({
+  title: pageTitles.reports,
   description: intro,
-  alternates: { canonical: routes.reports },
-};
+  path: routes.reports,
+});
 
 const crumbs = [
   { label: "Home", href: "/" },

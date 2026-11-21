@@ -186,4 +186,17 @@ describe("validateSiteData", () => {
       "timeline[1].year: timeline must be in chronological order (oldest first)",
     ]);
   });
+
+  it("rejects a blank or repeated FAQ", () => {
+    const issues = issuesAfter((data) => {
+      data.faqs = [
+        { question: "Sample?", answer: "" },
+        { question: "Sample?", answer: "Sample." },
+      ];
+    });
+    expect(issues).toEqual([
+      "faqs[0].answer: must not be empty",
+      'faqs[1]: duplicate FAQ question "Sample?"',
+    ]);
+  });
 });

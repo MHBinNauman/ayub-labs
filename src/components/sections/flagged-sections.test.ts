@@ -7,8 +7,28 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { DoctorsSection } from "./DoctorsSection";
+import { FaqSection } from "./FaqSection";
 import { StatsSection } from "./StatsSection";
 import { TestimonialsSection } from "./TestimonialsSection";
+
+describe("FaqSection", () => {
+  it("renders nothing, not even structured data, without FAQs", () => {
+    expect(renderToStaticMarkup(createElement(FaqSection, { faqs: [] }))).toBe(
+      "",
+    );
+  });
+
+  it("renders the questions together with matching FAQPage data", () => {
+    const html = renderToStaticMarkup(
+      createElement(FaqSection, {
+        faqs: [{ question: "Sample question?", answer: "Sample answer." }],
+      }),
+    );
+    expect(html).toContain("Sample question?");
+    expect(html).toContain("Sample answer.");
+    expect(html).toContain('"@type":"FAQPage"');
+  });
+});
 
 const render = (element: Parameters<typeof renderToStaticMarkup>[0]) =>
   renderToStaticMarkup(element);

@@ -15,7 +15,12 @@ import {
 } from "@/data/site-data";
 import { tel, whatsapp } from "@/lib/links";
 import { routes, serviceHref, toServiceCard } from "@/lib/nav";
-import { breadcrumbJsonLd, JsonLd, serviceJsonLd } from "@/lib/seo";
+import {
+  breadcrumbJsonLd,
+  JsonLd,
+  pageMetadata,
+  serviceJsonLd,
+} from "@/lib/seo";
 import { serviceIcon } from "@/lib/service-icons";
 import {
   branchesOffering,
@@ -50,11 +55,11 @@ export async function generateMetadata({
 }: PageProps<"/services/[slug]">): Promise<Metadata> {
   const service = findService((await params).slug);
   if (!service) notFound();
-  return {
+  return pageMetadata({
     title: service.name,
     description: service.summary,
-    alternates: { canonical: serviceHref(service.slug) },
-  };
+    path: serviceHref(service.slug),
+  });
 }
 
 /** Visible only under `next dev`; the condition is compiled out of production builds. */

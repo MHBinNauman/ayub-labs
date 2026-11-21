@@ -257,6 +257,10 @@ const siteDataSchema = z.strictObject({
     }),
   ),
 
+  faqs: z
+    .array(z.strictObject({ question: text, answer: text }))
+    .superRefine(unique((faq) => faq.question, "FAQ question")),
+
   features: z.strictObject({
     testDirectory: z.boolean(),
     homeSampling: z.boolean(),

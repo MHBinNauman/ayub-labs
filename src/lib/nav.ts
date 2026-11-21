@@ -31,6 +31,7 @@ export const routes = {
   about: "/about",
   contact: "/contact",
   tests: "/tests",
+  styleguide: "/styleguide",
 } as const;
 
 export function serviceHref(slug: string): string {

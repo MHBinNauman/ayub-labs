@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { FaqSection } from "@/components/sections/FaqSection";
+import { homeTitle } from "@/lib/page-titles";
+import { pageMetadata } from "@/lib/seo";
 import {
   DoctorsSection,
   Hero,
@@ -14,11 +17,11 @@ import {
   brand,
   branches,
   doctors,
+  faqs,
   stats,
   testimonials,
 } from "@/data/site-data";
 import {
-  cities,
   joinList,
   offeringPhrase,
   registeredWithShort,
@@ -28,10 +31,10 @@ import {
 
 const offering = offeringPhrase(["laboratory", "diagnostics", "clinics"]);
 
-export const metadata: Metadata = {
-  title: {
-    absolute: `${brand.displayName} | Diagnostic Lab in ${joinList(cities, "&")}`,
-  },
+export const metadata: Metadata = pageMetadata({
+  title: homeTitle,
+  absoluteTitle: true,
+  path: "/",
   description: [
     `${offering[0].toUpperCase()}${offering.slice(1)} in ${joinList(branches.map((b) => b.name))}.`,
     `Serving patients since ${brand.foundedYear.value}.`,
@@ -41,8 +44,7 @@ export const metadata: Metadata = {
   ]
     .filter(Boolean)
     .join(" "),
-  alternates: { canonical: "/" },
-};
+});
 
 export default function HomePage() {
   return (
@@ -54,6 +56,7 @@ export default function HomePage() {
       <WhyAyyub />
       {resolvedFeatures.doctorsSection && <DoctorsSection doctors={doctors} />}
       <LocationsPreview />
+      <FaqSection faqs={faqs} />
       {resolvedFeatures.testimonials && (
         <TestimonialsSection testimonials={testimonials} />
       )}

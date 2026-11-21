@@ -4,9 +4,96 @@ import {
   absoluteUrl,
   branchJsonLd,
   breadcrumbJsonLd,
+  faqPageJsonLd,
+  organizationJsonLd,
+  ORGANIZATION_ID,
+  pageMetadata,
   serializeJsonLd,
   serviceJsonLd,
 } from "./seo";
+
+describe("organizationJsonLd", () => {
+  const noSocial = { facebook: null, instagram: null, googleBusiness: null };
+
+  it("is a MedicalOrganization with verified facts only", () => {
+    const data = organizationJsonLd(noSocial);
+    expect(data["@type"]).toBe("MedicalOrganization");
+    expect(data["@id"]).toBe(ORGANIZATION_ID);
+    expect(data.name).toBe(brand.displayName);
+    expect(data.logo).toBe(absoluteUrl("/brand/logo-emblem-192.png"));
+    expect(data.foundingDate).toBe(String(brand.foundedYear.value));
+    expect(data).not.toHaveProperty("legalName");
+    for (const point of data.contactPoint as { telephone: string }[]) {
+      expect(point.telephone).toMatch(/^\+92\d+$/);
+    }
+  });
+
+  it("omits sameAs while there are no social profiles", () => {
+    expect(organizationJsonLd(noSocial)).not.toHaveProperty("sameAs");
+  });
+
+  it("lists only the profiles that exist", () => {
+    const data = organizationJsonLd({
+      ...noSocial,
+      facebook: "https://www.facebook.com/sample",
+    });
+    expect(data.sameAs).toEqual(["https://www.facebook.com/sample"]);
+  });
+
+  it("branches name the organization as their parent", () => {
+    expect(branchJsonLd(branches[0]).parentOrganization).toEqual({
+      "@id": ORGANIZATION_ID,
+    });
+  });
+});
+
+describe("faqPageJsonLd", () => {
+  it("maps each question to a Question with an accepted Answer", () => {
+    expect(faqPageJsonLd([{ question: "Sample?", answer: "Sample." }])).toEqual(
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: [
+          {
+            "@type": "Question",
+            name: "Sample?",
+            acceptedAnswer: { "@type": "Answer", text: "Sample." },
+          },
+        ],
+      },
+    );
+  });
+});
+
+describe("pageMetadata", () => {
+  it("sets the canonical URL and matching Open Graph fields", () => {
+    const meta = pageMetadata({
+      title: "Sample",
+      description: "Sample description.",
+      path: "/sample",
+    });
+    expect(meta.title).toBe("Sample");
+    expect(meta.alternates?.canonical).toBe("/sample");
+    expect(meta.openGraph).toMatchObject({
+      title: "Sample",
+      description: "Sample description.",
+      url: "/sample",
+      siteName: brand.displayName,
+      locale: "en_PK",
+    });
+    expect(meta.twitter).toMatchObject({ card: "summary_large_image" });
+  });
+
+  it("can opt out of the title template", () => {
+    const meta = pageMetadata({
+      title: "Home",
+      description: "Sample.",
+      path: "/",
+      absoluteTitle: true,
+    });
+    expect(meta.title).toEqual({ absolute: "Home" });
+  });
+});
 
 const bySlug = (slug: string) => {
   const service = services.find((s) => s.slug === slug);

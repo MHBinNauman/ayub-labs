@@ -2,8 +2,9 @@
  * Structured data (JSON-LD). Everything here restates facts already on the
  * page; it never adds claims (no ratings, accreditation or outcomes).
  */
+import type { Metadata } from "next";
 import { createElement, type ReactElement } from "react";
-import { brand, type Branch, type Service } from "@/data/site-data";
+import { brand, contact, type Branch, type Service } from "@/data/site-data";
 import { DAY_KEYS, DAY_NAMES } from "./hours";
 
 type JsonLdObject = Record<string, unknown>;
@@ -27,6 +28,99 @@ export function JsonLd({ data }: { data: JsonLdObject }): ReactElement {
     type: "application/ld+json",
     dangerouslySetInnerHTML: { __html: serializeJsonLd(data) },
   });
+}
+
+/* ------------------------------------------------------------------ */
+/* Page metadata                                                       */
+/* ------------------------------------------------------------------ */
+
+/** The emblem, also used as the Organization logo (192×192). */
+export const LOGO_PATH = "/brand/logo-emblem-192.png";
+
+/**
+ * Title, description, canonical URL and the matching Open Graph / Twitter
+ * fields for a page. The og:image comes from the route's opengraph-image.
+ * `absoluteTitle` skips the "| Ayyub Labs & Clinics" template (home page).
+ */
+export function pageMetadata({
+  title,
+  description,
+  path,
+  absoluteTitle = false,
+}: {
+  title: string;
+  description: string;
+  path: string;
+  absoluteTitle?: boolean;
+}): Metadata {
+  return {
+    title: absoluteTitle ? { absolute: title } : title,
+    description,
+    alternates: { canonical: path },
+    openGraph: {
+      title,
+      description,
+      url: path,
+      siteName: brand.displayName,
+      locale: "en_PK",
+      type: "website",
+    },
+    twitter: { card: "summary_large_image", title, description },
+  };
+}
+
+/* ------------------------------------------------------------------ */
+/* Structured data                                                     */
+/* ------------------------------------------------------------------ */
+
+export const ORGANIZATION_ID = `${absoluteUrl("/")}#organization`;
+
+/**
+ * The practice as a whole. Rendered once, in the root layout. Only verified
+ * facts: no legal name (unconfirmed) and sameAs only for profiles we have.
+ */
+export function organizationJsonLd(
+  social: Record<string, string | null> = contact.social,
+): JsonLdObject {
+  const sameAs = Object.values(social).filter(
+    (url): url is string => typeof url === "string" && url !== "",
+  );
+  return {
+    "@context": "https://schema.org",
+    "@type": "MedicalOrganization",
+    "@id": ORGANIZATION_ID,
+    name: brand.displayName,
+    url: absoluteUrl("/"),
+    logo: absoluteUrl(LOGO_PATH),
+    ...(contact.email.verified && { email: contact.email.value }),
+    ...(brand.foundedYear.verified && {
+      foundingDate: String(brand.foundedYear.value),
+    }),
+    contactPoint: [contact.mobile, contact.landline]
+      .filter((phone) => phone.verified)
+      .map((phone) => ({
+        "@type": "ContactPoint",
+        telephone: phone.e164,
+        contactType: "customer service",
+        areaServed: "PK",
+      })),
+    ...(sameAs.length > 0 && { sameAs }),
+  };
+}
+
+/** FAQPage markup; only render it next to the visible FAQ it describes. */
+export function faqPageJsonLd(
+  faqs: readonly { question: string; answer: string }[],
+): JsonLdObject {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: { "@type": "Answer", text: faq.answer },
+    })),
+  };
 }
 
 export function breadcrumbJsonLd(
@@ -121,6 +215,7 @@ export function branchJsonLd(branch: Branch): JsonLdObject {
     "@id": `${absoluteUrl(path)}#branch`,
     name: `${brand.displayName} (${branch.name})`,
     url: absoluteUrl(path),
+    parentOrganization: { "@id": ORGANIZATION_ID },
     address: {
       "@type": "PostalAddress",
       streetAddress: branch.addressLines.join(", "),

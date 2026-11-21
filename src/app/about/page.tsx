@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageTitles } from "@/lib/page-titles";
 import { ContactCTA } from "@/components/sections/ContactCTA";
 import { DoctorsSection } from "@/components/sections/DoctorsSection";
 import { QualityPromise } from "@/components/sections/QualityPromise";
@@ -10,7 +11,7 @@ import { StoryTimeline } from "@/components/sections/StoryTimeline";
 import { Breadcrumbs, Container } from "@/components/ui";
 import { brand, doctors, qualityPromise } from "@/data/site-data";
 import { routes } from "@/lib/nav";
-import { breadcrumbJsonLd, JsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, JsonLd, pageMetadata } from "@/lib/seo";
 import {
   branchNames,
   resolvedFeatures,
@@ -18,11 +19,11 @@ import {
   verifiedRegistrations,
 } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "About us",
+export const metadata: Metadata = pageMetadata({
+  title: pageTitles.about,
   description: brand.aboutDraft,
-  alternates: { canonical: routes.about },
-};
+  path: routes.about,
+});
 
 const crumbs = [
   { label: "Home", href: "/" },

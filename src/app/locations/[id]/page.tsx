@@ -13,7 +13,13 @@ import { branches, serviceCategories, type Branch } from "@/data/site-data";
 import { formatWeekHours, weekHoursTable } from "@/lib/hours";
 import { mapsDirections, mapsEmbed, tel, whatsapp } from "@/lib/links";
 import { routes, serviceHref } from "@/lib/nav";
-import { branchJsonLd, breadcrumbJsonLd, JsonLd } from "@/lib/seo";
+import { branchTitle } from "@/lib/page-titles";
+import {
+  branchJsonLd,
+  breadcrumbJsonLd,
+  JsonLd,
+  pageMetadata,
+} from "@/lib/seo";
 import {
   addressText,
   branchWhatsappMessage,
@@ -49,11 +55,11 @@ export async function generateMetadata({
         .map((row) => row.label)
         .join(", ")}.`
     : "";
-  return {
-    title: `${branch.name} branch`,
+  return pageMetadata({
+    title: branchTitle(branch),
     description: `${branch.addressLines.join(", ")}.${hours} Directions, phone and services.`,
-    alternates: { canonical: `${routes.locations}/${branch.id}` },
-  };
+    path: `${routes.locations}/${branch.id}`,
+  });
 }
 
 export default async function BranchPage({

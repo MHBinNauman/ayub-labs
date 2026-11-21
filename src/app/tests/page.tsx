@@ -9,7 +9,8 @@ import { Breadcrumbs, Container } from "@/components/ui";
 import { contact, services } from "@/data/site-data";
 import { QUERY_TOKEN } from "@/lib/message-template";
 import { routes } from "@/lib/nav";
-import { breadcrumbJsonLd, JsonLd } from "@/lib/seo";
+import { pageTitles } from "@/lib/page-titles";
+import { breadcrumbJsonLd, JsonLd, pageMetadata } from "@/lib/seo";
 import {
   directoryTests,
   resolvedFeatures,
@@ -22,9 +23,11 @@ const intro =
   "Search our tests by name, other name or code, and book on WhatsApp.";
 
 export const metadata: Metadata = {
-  title: "Tests and prices",
-  description: intro,
-  alternates: { canonical: routes.tests },
+  ...pageMetadata({
+    title: pageTitles.tests,
+    description: intro,
+    path: routes.tests,
+  }),
   // Never indexed while the directory is switched off.
   ...(!enabled && { robots: { index: false, follow: false } }),
 };
@@ -80,7 +83,7 @@ export default function TestsPage() {
         <Container>
           <Breadcrumbs items={[crumbs[0], { label: crumbs[1].label }]} />
           <h1 className="mt-6 text-3xl font-bold tracking-tight text-navy sm:text-4xl">
-            Tests and prices
+            {pageTitles.tests}
           </h1>
           <p className="mt-3 max-w-2xl text-lg text-pretty text-muted">
             {intro}

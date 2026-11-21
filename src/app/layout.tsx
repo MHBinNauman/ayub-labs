@@ -7,6 +7,7 @@ import {
   SkipLink,
 } from "@/components/layout";
 import { brand } from "@/data/site-data";
+import { JsonLd, organizationJsonLd } from "@/lib/seo";
 import { validateSiteData } from "@/lib/validate";
 import "./globals.css";
 
@@ -28,12 +29,21 @@ export const metadata: Metadata = {
     default: brand.displayName,
     template: `%s | ${brand.displayName}`,
   },
+  applicationName: brand.displayName,
+  // Phone numbers are already tel: links; stop iOS restyling other digits.
+  formatDetection: { telephone: false },
+  openGraph: {
+    siteName: brand.displayName,
+    locale: "en_PK",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={montserrat.variable}>
       <body className="bg-white font-sans text-ink antialiased">
+        <JsonLd data={organizationJsonLd()} />
         <SkipLink targetId={MAIN_ID} />
         <Header />
         {/* Pages render their content only; the one <main> lives here. */}

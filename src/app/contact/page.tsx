@@ -1,5 +1,6 @@
 import { Mail, MessageCircle, Phone } from "lucide-react";
 import type { Metadata } from "next";
+import { pageTitles } from "@/lib/page-titles";
 import { UNVERIFIED_HOURS_NOTE } from "@/components/sections/BranchCard";
 import { EnquiryForm } from "@/components/sections/EnquiryForm";
 import { MapEmbed } from "@/components/sections/MapEmbed";
@@ -10,17 +11,17 @@ import { branches, contact, type Branch } from "@/data/site-data";
 import { weekHoursTable } from "@/lib/hours";
 import { mailto, mapsEmbed, tel, whatsapp } from "@/lib/links";
 import { routes } from "@/lib/nav";
-import { breadcrumbJsonLd, JsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, JsonLd, pageMetadata } from "@/lib/seo";
 import { cities, formatPhone, joinList, whatsappGreeting } from "@/lib/site";
 
 const email = contact.email.value;
 const intro = `Call, WhatsApp or email us, or visit one of our ${branches.length} branches in ${joinList(cities)}.`;
 
-export const metadata: Metadata = {
-  title: "Contact us",
+export const metadata: Metadata = pageMetadata({
+  title: pageTitles.contact,
   description: intro,
-  alternates: { canonical: routes.contact },
-};
+  path: routes.contact,
+});
 
 const crumbs = [
   { label: "Home", href: "/" },
