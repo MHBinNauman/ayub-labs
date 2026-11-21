@@ -20,6 +20,8 @@ import {
   type Service,
   type ServiceCategory,
 } from "@/data/site-data";
+import { QUERY_TOKEN } from "./message-template";
+import type { DirectoryTest } from "./test-filter";
 
 /* ------------------------------------------------------------------ */
 /* Years serving                                                       */
@@ -76,6 +78,12 @@ export function serviceQuestionMessage(serviceName: string): string {
 export function searchQuestionMessage(query: string): string {
   return `Hello ${brand.shortName}, do you offer "${query.trim()}"?`;
 }
+
+/**
+ * Pre-filled WhatsApp text for booking a test from /tests. Contains
+ * QUERY_TOKEN, which the client island replaces with the test name.
+ */
+export const testBookingTemplate = `Hello ${brand.shortName}, I'd like to book the ${QUERY_TOKEN} test. Please tell me the next steps.`;
 
 /** Pre-filled text for asking for a report on WhatsApp (no online portal yet). */
 export const reportRequestMessage = `Hello ${brand.shortName}, I'd like to request my test report.`;
@@ -310,6 +318,20 @@ export const servicesByCategory: ServiceGroup[] = (
   .filter((group) => group.services.length > 0);
 
 /* ------------------------------------------------------------------ */
+/* Test directory                                                      */
+/* ------------------------------------------------------------------ */
+
+/** Every test of every service as one flat list, in service order. */
+export const directoryTests: DirectoryTest[] = services.flatMap((service) =>
+  service.tests.map((test) => ({
+    ...test,
+    id: test.code ?? `${service.slug}:${test.name}`,
+    serviceSlug: service.slug,
+    serviceName: service.name,
+  })),
+);
+
+/* ------------------------------------------------------------------ */
 /* Feature flags                                                       */
 /* ------------------------------------------------------------------ */
 
@@ -342,13 +364,4 @@ export const resolvedFeatures: ResolvedFeatures = {
 /* Prices                                                              */
 /* ------------------------------------------------------------------ */
 
-const pkrFormatter = new Intl.NumberFormat("en-PK", {
-  style: "currency",
-  currency: "PKR",
-  maximumFractionDigits: 0,
-});
-
-/** 1500 → "Rs 1,500". */
-export function formatPKR(amount: number): string {
-  return pkrFormatter.format(amount);
-}
+export { formatPKR } from "./format-price";

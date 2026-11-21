@@ -7,13 +7,17 @@ import type { ServiceCardData } from "@/components/ui/ServiceCard";
 import { serviceCategories, type Service } from "@/data/site-data";
 import type { NavItem, ServiceMenuGroup } from "./paths";
 import type { SearchableService } from "./service-search";
-import { servicesByCategory } from "./site";
+import { resolvedFeatures, servicesByCategory } from "./site";
 
 export { isActivePath, type NavItem, type ServiceMenuGroup } from "./paths";
 
 export const mainNav: NavItem[] = [
   { label: "Home", href: "/" },
   { label: "Services", href: "/services", megaMenu: true },
+  // Linked only once the directory is live, so nothing points at a 404.
+  ...(resolvedFeatures.testDirectory
+    ? [{ label: "Tests & prices", href: "/tests" }]
+    : []),
   { label: "Locations", href: "/locations" },
   { label: "Reports", href: "/reports" },
   { label: "About", href: "/about" },

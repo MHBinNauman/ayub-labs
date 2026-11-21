@@ -12,6 +12,10 @@
  * Source pages audited: /, /services/, /about-us/, /contact-us/, /online-report/
  */
 
+// Test lists and prices imported from the client's spreadsheet (data/tests.csv).
+// Regenerate with `pnpm import-tests`; never edit by hand.
+import { generatedTests } from "./tests.generated";
+
 export type Verified<T> = { value: T; verified: boolean; note?: string };
 
 export type DayKey = "mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun";
@@ -254,7 +258,7 @@ export const serviceCategories: Record<ServiceCategory, { label: string; blurb: 
   pharmacy: { label: "Pharmacy", blurb: "Medicines on site" },
 };
 
-export const services: Service[] = [
+const serviceList: Service[] = [
   { slug: "haematology", name: "Haematology", legacyName: "Haematology", category: "laboratory", icon: "Droplets", tests: [], copyApproved: false,
     summary: "Blood tests that assess blood cells, haemoglobin and clotting, used for routine check-ups and for investigating anaemia, infection and bleeding disorders." },
   { slug: "microbiology", name: "Microbiology", legacyName: "Microbiology", category: "laboratory", icon: "Microscope", tests: [], copyApproved: false,
@@ -279,6 +283,12 @@ export const services: Service[] = [
     summary: "An on-site pharmacy so prescriptions can be filled in the same visit." },
 ];
 
+/** Services with their imported tests (tests.generated.ts) appended to any listed above. */
+export const services: Service[] = serviceList.map((service) => ({
+  ...service,
+  tests: [...service.tests, ...(generatedTests[service.slug] ?? [])],
+}));
+
 /* ------------------------------------------------------------------ */
 /* 7. PEOPLE / STATS / TESTIMONIALS — all missing on current site      */
 /* ------------------------------------------------------------------ */
@@ -298,7 +308,7 @@ export const testimonials: Array<{ quote: string; author: string; source: "googl
 /* ------------------------------------------------------------------ */
 
 export const features = {
-  testDirectory: false, // flip when services[].tests populated with prices
+  testDirectory: false, // flip when services[].tests populated with prices (run `pnpm import-tests`)
   homeSampling: false, // TODO(client): do they offer it? which areas, what fee?
   doctorsSection: false, // flips automatically if doctors.length > 0 (see lib)
   statsSection: false,

@@ -429,6 +429,24 @@ function crossChecks(data: SiteData): Issue[] {
     });
   });
 
+  // Test codes identify a test across the whole directory.
+  const codes = new Map<string, string>();
+  data.services.forEach((service, s) => {
+    service.tests.forEach((test, i) => {
+      if (!test.code) return;
+      const key = test.code.toUpperCase();
+      const first = codes.get(key);
+      if (first) {
+        issues.push({
+          path: ["services", s, "tests", i, "code"],
+          message: `duplicate test code "${test.code}" (also in ${first})`,
+        });
+      } else {
+        codes.set(key, service.slug);
+      }
+    });
+  });
+
   // The story starts at the founding year and reads oldest first.
   data.timeline.forEach((entry, t) => {
     if (entry.year < data.brand.foundedYear.value) {
