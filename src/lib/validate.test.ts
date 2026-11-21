@@ -157,4 +157,33 @@ describe("validateSiteData", () => {
     expect(issues).toHaveLength(1);
     expect(issues[0]).toMatch(/^registrations\[0\]\.claim: /);
   });
+
+  it("rejects a timeline entry before the founding year", () => {
+    const issues = issuesAfter((data) => {
+      data.timeline[0].year = data.brand.foundedYear.value - 1;
+    });
+    expect(issues).toEqual([
+      expect.stringMatching(
+        /^timeline\[0\]\.year: .* before the founding year/,
+      ),
+    ]);
+  });
+
+  it("rejects a timeline that is out of order", () => {
+    const issues = issuesAfter((data) => {
+      const founded = data.brand.foundedYear.value;
+      data.timeline = [
+        { year: founded + 3, title: "Later", text: "Sample.", verified: true },
+        {
+          year: founded + 1,
+          title: "Earlier",
+          text: "Sample.",
+          verified: true,
+        },
+      ];
+    });
+    expect(issues).toEqual([
+      "timeline[1].year: timeline must be in chronological order (oldest first)",
+    ]);
+  });
 });

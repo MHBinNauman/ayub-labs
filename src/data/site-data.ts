@@ -179,6 +179,8 @@ export const registrations = [
     short: "PHC",
     name: "Punjab Healthcare Commission",
     claim: "Registered", // NEVER write "accredited": registration ≠ accreditation
+    /** Plain-language line shown under the badge on /about. */
+    explainer: "PHC registers healthcare establishments in Punjab.",
     logo: "/brand/badges/phc.png", // from https://ayyublabs.com/wp-content/uploads/2024/07/PHC.png
     appliesTo: ["saddar-rawalpindi"],
     verified: true,
@@ -189,12 +191,44 @@ export const registrations = [
     short: "PNRA",
     name: "Pakistan Nuclear Regulatory Authority",
     claim: "Registered",
+    explainer: "PNRA licenses facilities that use radiation equipment.",
     logo: "/brand/badges/pnra.png", // from https://ayyublabs.com/wp-content/uploads/2024/07/PNRA.png
     appliesTo: ["saddar-rawalpindi"], // TODO(client): which branch/equipment does this licence cover?
     verified: true,
     registrationNo: null as string | null, // TODO(client)
     note: "PNRA licenses radiation equipment (e.g. X-ray). No X-ray service is listed on the current site; confirm what the licence covers.",
   },
+] as const;
+
+/* ------------------------------------------------------------------ */
+/* 5a. OUR STORY + QUALITY PROMISE (/about)                            */
+/* ------------------------------------------------------------------ */
+
+export interface TimelineEntry { year: number; title: string; text: string; verified: boolean; note?: string }
+
+/**
+ * Milestones for the "Our story" timeline on /about, oldest first.
+ * CLIENT: add a milestone as one more entry (year, short title, one sentence),
+ * e.g. when a branch opened. Only add what you can stand behind.
+ * The final "Today" entry is generated from `branches`; don't add it here.
+ */
+export const timeline: TimelineEntry[] = [
+  { year: brand.foundedYear.value, title: "Founded", verified: true, note: "About Us: 'serving in the health sector since 2016'",
+    text: "Ayyub Labs & Clinics begins serving patients in the health sector." },
+  // TODO(client): year each branch opened (Saddar, F-8)?
+];
+
+/**
+ * What "In Quality We Believe" (brand.tagline) means in practice. Each point
+ * restates the client's own About Us text; nothing here is a new claim.
+ */
+export const qualityPromise = [
+  { id: "reliable", title: "Reliable results", text: "Giving patients test results they can rely on.", verified: true,
+    note: "About Us: 'providing the patients with reliable test results'" },
+  { id: "access", title: "Easy to reach", text: "Making it easier for patients to access our services.", verified: true,
+    note: "About Us: 'making it easier for patients to access our services'" },
+  { id: "care", title: "Quality healthcare", text: "A commitment to delivering quality healthcare.", verified: true,
+    note: "About Us: 'We are committed to deliver quality healthcare.'" },
 ] as const;
 
 /* ------------------------------------------------------------------ */
@@ -343,4 +377,5 @@ export const openQuestions = [
   "Which services are offered at each branch (Saddar vs F-8)? Service pages list both until confirmed.",
   "Report collection: what ID or authorisation do you need from someone collecting on a patient's behalf?",
   "Does each branch have its own email, or is info@ayyublabs.com used for both?",
+  "Our story timeline: which year did each branch open, and any other milestones worth listing?",
 ] as const;

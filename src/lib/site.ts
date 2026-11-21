@@ -14,6 +14,7 @@ import {
   services,
   stats,
   testimonials,
+  timeline,
   timezone,
   type Branch,
   type Service,
@@ -186,11 +187,56 @@ export function registrationsFor(branch: Pick<Branch, "id">) {
   );
 }
 
+/** Branch names for a list of branch ids, in data order; unknown ids are skipped. */
+export function branchNames(ids: readonly string[]): string[] {
+  return branches
+    .filter((branch) => ids.includes(branch.id))
+    .map((branch) => branch.name);
+}
+
 /** "PHC & PNRA" */
 export const registeredWithShort = joinList(
   verifiedRegistrations.map((registration) => registration.short),
   "&",
 );
+
+/* ------------------------------------------------------------------ */
+/* Our story                                                           */
+/* ------------------------------------------------------------------ */
+
+export type StoryEntry = {
+  /** A year, or "Today" for the closing entry. */
+  when: string;
+  title: string;
+  text: string;
+  current: boolean;
+};
+
+/**
+ * The /about timeline: the dated milestones in site-data.ts (verified ones
+ * only), then a "Today" entry built from the branch list so it can never
+ * fall out of date.
+ */
+export function storyTimeline(): StoryEntry[] {
+  const dated = timeline
+    .filter((entry) => entry.verified)
+    .map((entry) => ({
+      when: String(entry.year),
+      title: entry.title,
+      text: entry.text,
+      current: false,
+    }));
+  const count = branches.length;
+  return [
+    ...dated,
+    {
+      when: "Today",
+      title: `${count} ${count === 1 ? "branch" : "branches"} in ${joinList(cities, "&")}`,
+      text: `${joinList(branches.map((branch) => branch.name))}.`,
+      current: true,
+    },
+  ];
+}
 
 /* ------------------------------------------------------------------ */
 /* Text helpers                                                        */

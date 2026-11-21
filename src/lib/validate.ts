@@ -209,6 +209,7 @@ const siteDataSchema = z.strictObject({
       name: text,
       // Registration is the only trust claim allowed (CLAUDE.md rule 2).
       claim: z.literal("Registered"),
+      explainer: text,
       logo: z.string().startsWith("/brand/"),
       appliesTo: z.array(z.string()).min(1),
       verified: z.boolean(),
@@ -304,6 +305,28 @@ const siteDataSchema = z.strictObject({
   policies: z.strictObject({
     reportRelease: verified(text),
   }),
+
+  timeline: z.array(
+    z.strictObject({
+      year: z.number().int().min(1900).max(2100),
+      title: text,
+      text,
+      verified: z.boolean(),
+      note: z.string().optional(),
+    }),
+  ),
+
+  qualityPromise: z
+    .array(
+      z.strictObject({
+        id: slug,
+        title: text,
+        text,
+        verified: z.boolean(),
+        note: z.string().optional(),
+      }),
+    )
+    .superRefine(unique((point) => point.id, "quality promise id")),
 
   openQuestions: z.array(z.string()),
 });
@@ -404,6 +427,23 @@ function crossChecks(data: SiteData): Issue[] {
         });
       }
     });
+  });
+
+  // The story starts at the founding year and reads oldest first.
+  data.timeline.forEach((entry, t) => {
+    if (entry.year < data.brand.foundedYear.value) {
+      issues.push({
+        path: ["timeline", t, "year"],
+        message: `${entry.year} is before the founding year ${data.brand.foundedYear.value}`,
+      });
+    }
+    const previous = data.timeline[t - 1];
+    if (previous && entry.year < previous.year) {
+      issues.push({
+        path: ["timeline", t, "year"],
+        message: "timeline must be in chronological order (oldest first)",
+      });
+    }
   });
 
   // A flag forced on with nothing behind it would render an empty section.
