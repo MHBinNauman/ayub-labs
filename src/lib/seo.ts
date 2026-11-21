@@ -6,12 +6,13 @@ import type { Metadata } from "next";
 import { createElement, type ReactElement } from "react";
 import { brand, contact, type Branch, type Service } from "@/data/site-data";
 import { DAY_KEYS, DAY_NAMES } from "./hours";
+import { SITE_URL } from "./site-url";
 
 type JsonLdObject = Record<string, unknown>;
 
-/** "/services/ecg" → "https://ayyublabs.com/services/ecg". */
+/** "/services/ecg" → "https://ayyublabs.com/services/ecg" (origin: SITE_URL). */
 export function absoluteUrl(path: string): string {
-  return new URL(path, `https://${brand.domain}`).toString();
+  return new URL(path, SITE_URL).toString();
 }
 
 /**

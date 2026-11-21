@@ -8,6 +8,7 @@ import {
 } from "@/components/layout";
 import { brand } from "@/data/site-data";
 import { JsonLd, organizationJsonLd } from "@/lib/seo";
+import { SITE_URL } from "@/lib/site-url";
 import { validateSiteData } from "@/lib/validate";
 import "./globals.css";
 
@@ -24,7 +25,7 @@ const montserrat = Montserrat({
 const MAIN_ID = "main";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(`https://${brand.domain}`),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: brand.displayName,
     template: `%s | ${brand.displayName}`,
