@@ -10,6 +10,7 @@ import { Section, SectionHeading } from "@/components/ui";
 import { brand, branches } from "@/data/site-data";
 import {
   joinList,
+  keepHyphens,
   registeredWithShort,
   servicesByCategory,
   verifiedRegistrations,
@@ -97,7 +98,7 @@ export async function WhyAyyub() {
             <h3 className="mt-4 text-xl font-bold text-balance text-navy">
               {title}
             </h3>
-            <p className="mt-2 text-sm text-muted">{text}</p>
+            <p className="mt-2 text-sm text-muted">{keepHyphens(text)}</p>
           </li>
         ))}
       </ul>

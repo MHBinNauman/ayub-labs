@@ -7,7 +7,7 @@ export function controlClass(invalid: boolean, className?: string): string {
     "min-h-12 w-full rounded-lg border bg-white px-3 text-base text-ink shadow-card placeholder:text-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue",
     invalid
       ? "border-brand-red-text focus-visible:border-brand-red-text"
-      : "border-ink/20 focus-visible:border-brand-blue",
+      : "border-ink/20 hover:border-ink/40 focus-visible:border-brand-blue",
     className,
   );
 }

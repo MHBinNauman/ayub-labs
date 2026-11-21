@@ -1,5 +1,6 @@
 "use client";
 
+import { MapLoading } from "@/components/ui/MapLoading";
 import { MapPin } from "lucide-react";
 import { useState } from "react";
 import { useIsDesktop } from "@/lib/use-media-query";
@@ -29,14 +30,17 @@ export function MapEmbed({ src, title, label, mode = "auto" }: MapEmbedProps) {
 
   if (requested || (mode === "auto" && desktop)) {
     return (
-      <iframe
-        src={src}
-        title={title}
-        loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
-        allowFullScreen
-        className="size-full border-0"
-      />
+      <div className="relative size-full">
+        <MapLoading />
+        <iframe
+          src={src}
+          title={title}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          allowFullScreen
+          className="relative size-full border-0"
+        />
+      </div>
     );
   }
 

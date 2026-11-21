@@ -137,7 +137,7 @@ export function EnquiryForm({
           Prefer email?{" "}
           <a
             href={emailHref}
-            className="inline-flex min-h-11 items-center gap-1.5 font-semibold text-navy underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-brand-blue"
+            className="inline-flex min-h-11 items-center gap-1.5 font-semibold text-navy underline underline-offset-4 transition-colors hover:text-brand-blue hover:decoration-2 focus-visible:outline-2 focus-visible:outline-brand-blue"
           >
             <Mail aria-hidden="true" className="size-4" />
             Write to {email}

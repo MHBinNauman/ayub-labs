@@ -4,7 +4,7 @@ import { Container } from "./Container";
 
 const spacings = {
   sm: "py-8 sm:py-10",
-  md: "py-12 sm:py-16",
+  md: "py-14 lg:py-20",
   lg: "py-16 sm:py-24",
 };
 

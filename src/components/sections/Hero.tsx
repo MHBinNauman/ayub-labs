@@ -9,6 +9,7 @@ import { routes } from "@/lib/nav";
 import {
   cities,
   joinList,
+  keepHyphens,
   offeringPhrase,
   primaryBranch,
   primaryPhone,
@@ -47,6 +48,7 @@ function HeroPattern() {
   return (
     <svg
       aria-hidden="true"
+      fill="none"
       className="pointer-events-none absolute inset-0 size-full text-white opacity-[0.06]"
     >
       <defs>
@@ -126,7 +128,9 @@ export function Hero() {
             <TaglineLine />
           </h1>
           <p className="mt-5 max-w-xl text-lg text-pretty text-white/85">
-            {sub[0].toUpperCase() + sub.slice(1)} in {joinList(cities)}.
+            {keepHyphens(
+              `${sub[0].toUpperCase()}${sub.slice(1)} in ${joinList(cities)}.`,
+            )}
           </p>
 
           {/*

@@ -25,7 +25,7 @@ export function Logo({ size = "lg", eager = false, className }: LogoProps) {
     <Link
       href="/"
       className={cn(
-        "flex min-w-0 items-center gap-2.5 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:gap-3",
+        "flex min-w-0 items-center gap-2.5 rounded-md transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:gap-3",
         className,
       )}
     >

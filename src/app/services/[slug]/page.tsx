@@ -191,7 +191,7 @@ export default async function ServicePage({
        * card at the bottom of the main content; from lg the aside moves to a
        * sticky right column spanning both rows. One markup for both layouts.
        */}
-      <Container className="grid gap-10 py-10 sm:py-12 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
+      <Container className="grid gap-10 py-14 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12 lg:py-20">
         <div className="min-w-0 lg:col-start-1 lg:row-start-1">
           {service.tests.length > 0 ? (
             <TestTable tests={service.tests} serviceName={service.name} />

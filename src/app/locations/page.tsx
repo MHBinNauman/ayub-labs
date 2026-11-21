@@ -15,7 +15,7 @@ import {
   JsonLd,
   pageMetadata,
 } from "@/lib/seo";
-import { cities, cityId, joinList } from "@/lib/site";
+import { cities, cityId, joinList, keepHyphens } from "@/lib/site";
 
 const intro = `${branches.length} branches in ${joinList(cities)}: ${joinList(branches.map((b) => b.name))}.`;
 
@@ -54,16 +54,16 @@ export default function LocationsPage() {
       <section className="bg-surface py-8 sm:py-10">
         <Container>
           <Breadcrumbs items={[crumbs[0], { label: crumbs[1].label }]} />
-          <h1 className="mt-6 text-3xl font-bold tracking-tight text-navy sm:text-4xl">
-            Our Branches
+          <h1 className="mt-6 text-3xl font-bold tracking-tight text-balance text-navy sm:text-4xl">
+            {pageTitles.locations}
           </h1>
           <p className="mt-3 max-w-2xl text-lg text-pretty text-muted">
-            {intro}
+            {keepHyphens(intro)}
           </p>
         </Container>
       </section>
 
-      <Container className="py-10 sm:py-12">
+      <Container className="py-14 lg:py-20">
         {/* Row 1: finder (40%) and map (60%). The map is desktop only. */}
         <div className="grid gap-8 lg:grid-cols-[2fr_3fr]">
           <LocationsControls branches={finderBranches} cities={cityOptions} />

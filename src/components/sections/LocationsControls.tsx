@@ -72,7 +72,7 @@ export function LocationsControls({
                 { push: true },
               );
             }}
-            className="min-h-12 w-full rounded-lg border border-ink/20 bg-white px-3 text-base text-ink shadow-card focus-visible:border-brand-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue"
+            className="min-h-12 w-full rounded-lg border border-ink/20 bg-white px-3 text-base text-ink shadow-card hover:border-ink/40 focus-visible:border-brand-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue"
           >
             <option value={ALL}>All cities</option>
             {cities.map((option) => (

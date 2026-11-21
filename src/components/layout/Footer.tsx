@@ -13,7 +13,7 @@ import { Logo } from "./Logo";
 import { FacebookIcon, InstagramIcon } from "./SocialIcons";
 
 const linkClass =
-  "inline-flex min-h-11 items-center gap-2 rounded-sm text-white/80 transition-colors hover:text-white hover:underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:min-h-9";
+  "inline-flex min-h-11 items-center gap-2 rounded-sm text-white/80 transition-colors hover:text-white hover:underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
 
 type SocialLink = {
   label: string;

@@ -16,14 +16,15 @@ const linkClass =
  * version: phone and the days the branch is open (plus a WhatsApp icon from
  * sm; on phones the floating WhatsApp button covers it).
  *
- * Its height is part of the sticky-header offset in Header.tsx (h-11, lg:h-10).
+ * Its height (h-11 = 44px, the minimum touch target) is part of the
+ * sticky-header offset in Header.tsx.
  */
 export function TopBar() {
   const hours = formatWeekHours(primaryBranch);
 
   return (
     <div className="bg-white text-xs text-muted sm:text-[0.8125rem]">
-      <Container className="flex h-11 items-center justify-between gap-4 lg:h-10">
+      <Container className="flex h-11 items-center justify-between gap-4">
         <div className="flex h-full min-w-0 items-center gap-x-3 md:gap-x-4">
           <a
             href={tel(primaryPhone.e164)}
@@ -56,7 +57,7 @@ export function TopBar() {
                 // Compact bar: only the days the branch is open.
                 <span
                   key={row.days}
-                  className={row.closed ? "hidden md:inline" : undefined}
+                  className={row.closed ? "hidden lg:inline" : undefined}
                 >
                   {index > 0 && (
                     <span aria-hidden="true" className="mx-1.5">
@@ -72,7 +73,7 @@ export function TopBar() {
 
         <nav
           aria-label="Patient shortcuts"
-          className="hidden h-full items-center gap-5 md:flex"
+          className="hidden h-full shrink-0 items-center gap-5 whitespace-nowrap md:flex"
         >
           <Link href={routes.reports} className={linkClass}>
             Get your report

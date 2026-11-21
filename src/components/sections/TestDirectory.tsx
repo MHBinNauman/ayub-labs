@@ -198,7 +198,7 @@ export function TestDirectory({
   return (
     <div data-hydrated={hydrated || undefined}>
       {/* Sticky under the header on phones, so search is always in reach. */}
-      <div className="sticky top-16 z-30 -mx-4 bg-white/95 px-4 py-3 shadow-[0_1px_0_rgb(30_42_58/0.08)] backdrop-blur sm:-mx-6 sm:px-6 lg:static lg:mx-0 lg:bg-transparent lg:p-0 lg:shadow-none lg:backdrop-blur-none">
+      <div className="sticky top-16 z-30 -mx-4 border-b border-ink/10 bg-white/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:static lg:mx-0 lg:border-b-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
         <div className="relative max-w-xl">
           <label htmlFor={ids.search} className="sr-only">
             Search tests
@@ -218,7 +218,7 @@ export function TestDirectory({
             placeholder="Search by test name or code"
             autoComplete="off"
             enterKeyHint="search"
-            className="min-h-12 w-full rounded-full border border-ink/20 bg-white pr-12 pl-12 text-base text-ink shadow-card placeholder:text-muted focus-visible:border-brand-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue [&::-webkit-search-cancel-button]:hidden"
+            className="min-h-12 w-full rounded-full border border-ink/20 bg-white pr-12 pl-12 text-base text-ink shadow-card placeholder:text-muted hover:border-ink/40 focus-visible:border-brand-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue [&::-webkit-search-cancel-button]:hidden"
           />
           {filter.q && (
             <button

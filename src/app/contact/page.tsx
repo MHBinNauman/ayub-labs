@@ -36,7 +36,9 @@ function BranchPanel({ branch }: { branch: Branch }) {
     <div className="grid gap-8 lg:grid-cols-2">
       <div className="space-y-6">
         <div>
-          <h2 className="text-xl font-bold text-navy">{branch.name}</h2>
+          <h2 className="text-xl font-bold text-balance text-navy">
+            {branch.name}
+          </h2>
           <address className="mt-2 text-ink not-italic">
             {branch.addressLines.map((line) => (
               <span key={line} className="block">
@@ -105,7 +107,7 @@ export default function ContactPage() {
       <section className="bg-surface py-8 sm:py-10">
         <Container>
           <Breadcrumbs items={[crumbs[0], { label: crumbs[1].label }]} />
-          <h1 className="mt-6 text-3xl font-bold tracking-tight text-navy sm:text-4xl">
+          <h1 className="mt-6 text-3xl font-bold tracking-tight text-balance text-navy sm:text-4xl">
             Contact us
           </h1>
           <p className="mt-3 max-w-2xl text-lg text-pretty text-muted">
@@ -114,7 +116,7 @@ export default function ContactPage() {
         </Container>
       </section>
 
-      <Container className="space-y-14 py-10 sm:py-12">
+      <Container className="space-y-14 py-14 lg:space-y-20 lg:py-20">
         <section aria-label="Our branches">
           <Tabs
             label="Branches"

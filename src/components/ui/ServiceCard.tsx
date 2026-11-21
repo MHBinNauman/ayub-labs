@@ -47,7 +47,7 @@ export function ServiceCard({
         </span>
       )}
       <div className="flex min-w-0 flex-1 flex-col">
-        <Heading className="font-bold text-navy sm:mt-4 sm:text-lg">
+        <Heading className="font-bold text-balance text-navy sm:mt-4 sm:text-lg">
           <Link
             href={service.href}
             className="rounded-sm after:absolute after:inset-0 after:rounded-card focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-brand-blue"

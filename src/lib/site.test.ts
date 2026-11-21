@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { brand, branches, contact, services } from "@/data/site-data";
 import {
+  keepHyphens,
   branchesByCity,
   branchRegulator,
   cityId,
@@ -183,5 +184,17 @@ describe("branch helpers", () => {
 
   it("puts each address line on its own line for copying", () => {
     expect(addressText({ addressLines: ["A", "B"] })).toBe("A\nB");
+  });
+});
+
+describe("keepHyphens", () => {
+  it("joins hyphenated words with a non-breaking hyphen", () => {
+    expect(keepHyphens("F-8, Islamabad and an on-site pharmacy")).toBe(
+      "F\u20118, Islamabad and an on\u2011site pharmacy",
+    );
+  });
+
+  it("leaves a spaced dash alone", () => {
+    expect(keepHyphens("Mon - Sat")).toBe("Mon - Sat");
   });
 });

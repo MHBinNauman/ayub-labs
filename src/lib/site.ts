@@ -250,6 +250,16 @@ export function storyTimeline(): StoryEntry[] {
 /* Text helpers                                                        */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Display text in which hyphenated words never break across lines, so
+ * "F-8" and "on-site" don't wrap as "F-" / "8". Uses the non-breaking
+ * hyphen (U+2011), so apply it only to rendered prose, never to data, URLs
+ * or metadata.
+ */
+export function keepHyphens(text: string): string {
+  return text.replace(/(\S)-(?=\S)/g, "$1\u2011");
+}
+
 /** ["a", "b", "c"] → "a, b and c". */
 export function joinList(
   items: readonly string[],

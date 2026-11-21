@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <>
-      <section className="bg-surface py-12 sm:py-16">
+      <section className="bg-surface py-14 lg:py-20">
         <Container>
           <p className="text-sm font-semibold tracking-wide text-brand-red-text uppercase">
             Error 404
@@ -53,7 +53,7 @@ export default function NotFound() {
                 placeholder="Search services, e.g. blood test, ultrasound"
                 autoComplete="off"
                 enterKeyHint="search"
-                className="min-h-12 w-full rounded-full border border-ink/20 bg-white pr-4 pl-12 text-base text-ink shadow-card placeholder:text-muted focus-visible:border-brand-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue"
+                className="min-h-12 w-full rounded-full border border-ink/20 bg-white pr-4 pl-12 text-base text-ink shadow-card placeholder:text-muted hover:border-ink/40 focus-visible:border-brand-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue"
               />
             </div>
             <Button type="submit" className="rounded-full">
@@ -73,7 +73,7 @@ export default function NotFound() {
         </Container>
       </section>
 
-      <Container className="py-10 sm:py-12">
+      <Container className="py-14 lg:py-20">
         <h2 className="text-2xl font-bold text-navy">Our services</h2>
         <div className="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {servicesByCategory.map((group) => (

@@ -30,7 +30,7 @@ export function HeaderShadow({ headerId }: { headerId: string }) {
     <div
       ref={sentinelRef}
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 top-0 h-11 lg:h-32"
+      className="pointer-events-none absolute inset-x-0 top-0 h-11 lg:h-33"
     />
   );
 }

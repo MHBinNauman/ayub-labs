@@ -82,7 +82,7 @@ export default function TestsPage() {
       <section className="bg-surface py-8 sm:py-10">
         <Container>
           <Breadcrumbs items={[crumbs[0], { label: crumbs[1].label }]} />
-          <h1 className="mt-6 text-3xl font-bold tracking-tight text-navy sm:text-4xl">
+          <h1 className="mt-6 text-3xl font-bold tracking-tight text-balance text-navy sm:text-4xl">
             {pageTitles.tests}
           </h1>
           <p className="mt-3 max-w-2xl text-lg text-pretty text-muted">

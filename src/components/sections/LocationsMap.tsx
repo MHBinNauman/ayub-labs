@@ -1,5 +1,6 @@
 "use client";
 
+import { MapLoading } from "@/components/ui/MapLoading";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
 import { resolveSelection } from "@/lib/locations-state";
@@ -39,6 +40,7 @@ export function LocationsMap({ branches }: { branches: FinderBranch[] }) {
 
   return (
     <div className="relative size-full bg-tint">
+      <MapLoading />
       {layers.map((id) => {
         const branch = branches.find((b) => b.id === id);
         if (!branch) return null;

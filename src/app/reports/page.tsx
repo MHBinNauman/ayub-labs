@@ -43,7 +43,9 @@ const portalSteps = [
 function PortalCard({ url }: { url: string }) {
   return (
     <div className="rounded-card border-l-4 border-brand-red bg-white p-6 shadow-card ring-1 ring-ink/5 sm:p-8">
-      <h2 className="text-2xl font-bold text-navy">Open the report portal</h2>
+      <h2 className="text-2xl font-bold text-balance text-navy">
+        Open the report portal
+      </h2>
       <ol className="mt-5 space-y-3">
         {portalSteps.map((step, index) => (
           <li key={step} className="flex gap-3 text-ink">
@@ -79,7 +81,7 @@ function RequestCard() {
   }));
   return (
     <div className="rounded-card bg-white p-6 shadow-card ring-1 ring-ink/5 sm:p-8">
-      <h2 className="text-2xl font-bold text-navy">
+      <h2 className="text-2xl font-bold text-balance text-navy">
         Request your report on WhatsApp
       </h2>
       <p className="mt-2 max-w-2xl text-muted">
@@ -111,7 +113,7 @@ export default function ReportsPage() {
       <section className="bg-surface py-8 sm:py-10">
         <Container>
           <Breadcrumbs items={[crumbs[0], { label: crumbs[1].label }]} />
-          <h1 className="mt-6 text-3xl font-bold tracking-tight text-navy sm:text-4xl">
+          <h1 className="mt-6 text-3xl font-bold tracking-tight text-balance text-navy sm:text-4xl">
             Your test report
           </h1>
           <p className="mt-3 max-w-2xl text-lg text-pretty text-muted">
@@ -120,11 +122,14 @@ export default function ReportsPage() {
         </Container>
       </section>
 
-      <Container className="space-y-12 py-10 sm:py-12">
+      <Container className="space-y-14 py-14 lg:space-y-20 lg:py-20">
         {portal ? <PortalCard url={portal} /> : <RequestCard />}
 
         <section aria-labelledby="collect-heading">
-          <h2 id="collect-heading" className="text-2xl font-bold text-navy">
+          <h2
+            id="collect-heading"
+            className="text-2xl font-bold text-balance text-navy"
+          >
             Collect in person
           </h2>
           <ul className="mt-6 grid gap-6 md:grid-cols-2">
@@ -133,7 +138,9 @@ export default function ReportsPage() {
                 key={branch.id}
                 className="flex flex-col rounded-card bg-surface p-6"
               >
-                <h3 className="text-lg font-bold text-navy">{branch.name}</h3>
+                <h3 className="text-lg font-bold text-balance text-navy">
+                  {branch.name}
+                </h3>
                 <div className="mt-3 flex gap-3 text-sm text-ink">
                   <Clock
                     aria-hidden="true"
@@ -155,7 +162,7 @@ export default function ReportsPage() {
                 </div>
                 <Link
                   href={`${routes.locations}/${branch.id}`}
-                  className="group mt-3 inline-flex min-h-11 w-fit items-center gap-1.5 text-sm font-semibold text-brand-blue focus-visible:outline-2 focus-visible:outline-brand-blue"
+                  className="group mt-3 inline-flex min-h-11 w-fit items-center gap-1.5 text-sm font-semibold text-brand-blue underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-brand-blue"
                 >
                   Address and directions
                   <span className="sr-only">: {branch.name}</span>

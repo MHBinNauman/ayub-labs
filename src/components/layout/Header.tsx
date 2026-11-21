@@ -20,7 +20,7 @@ const HEADER_ID = "site-header";
  * The whole header is sticky with a negative `top` equal to the height of
  * the part that should scroll away, so only the bottom stays pinned:
  *   below lg: top bar (h-11) scrolls away, the band (logo + menu) sticks;
- *   lg+:      top bar (h-10) + band (h-22) = 128px scroll away, the nav
+ *   lg+:      top bar (h-11) + band (h-22) = 132px scroll away, the nav
  *             strip sticks.
  * Keep these heights in sync with TopBar, the band below and the sentinel in
  * HeaderShadow.
@@ -35,7 +35,7 @@ export function Header() {
       <HeaderShadow headerId={HEADER_ID} />
       <header
         id={HEADER_ID}
-        className="sticky -top-11 z-40 transition-shadow duration-200 data-stuck:shadow-card lg:-top-32"
+        className="sticky -top-11 z-40 transition-shadow duration-200 data-stuck:shadow-card lg:-top-33"
       >
         <TopBar />
 

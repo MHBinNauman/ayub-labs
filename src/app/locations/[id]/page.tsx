@@ -110,7 +110,7 @@ export default async function BranchPage({
         </Container>
       </section>
 
-      <Container className="grid gap-10 py-10 sm:py-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-12">
+      <Container className="grid gap-10 py-14 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-12 lg:py-20">
         <div className="min-w-0 space-y-10">
           <section aria-labelledby="address-heading">
             <h2 id="address-heading" className="text-xl font-bold text-navy">
@@ -214,7 +214,7 @@ export default async function BranchPage({
       {serviceGroups.length > 0 && (
         <section
           aria-labelledby="services-heading"
-          className="bg-surface py-12 sm:py-16"
+          className="bg-surface py-14 lg:py-20"
         >
           <Container>
             <h2 id="services-heading" className="text-2xl font-bold text-navy">
@@ -248,7 +248,7 @@ export default async function BranchPage({
       {registrations.length > 0 && (
         <section
           aria-labelledby="registrations-heading"
-          className="py-12 sm:py-16"
+          className="py-14 lg:py-20"
         >
           <Container>
             <h2

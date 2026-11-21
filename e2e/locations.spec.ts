@@ -28,7 +28,7 @@ test.describe("/locations without JavaScript", () => {
   test("static HTML has every branch card", async ({ page }) => {
     await page.goto("/locations");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      "Our Branches",
+      "Our branches",
     );
     for (const branch of branches) {
       await expect(

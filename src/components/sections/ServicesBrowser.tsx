@@ -117,7 +117,7 @@ export function ServicesBrowser({
           placeholder="Search services, e.g. blood test, ultrasound"
           autoComplete="off"
           enterKeyHint="search"
-          className="min-h-12 w-full rounded-full border border-ink/20 bg-white pr-12 pl-12 text-base text-ink shadow-card placeholder:text-muted focus-visible:border-brand-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue [&::-webkit-search-cancel-button]:hidden"
+          className="min-h-12 w-full rounded-full border border-ink/20 bg-white pr-12 pl-12 text-base text-ink shadow-card placeholder:text-muted hover:border-ink/40 focus-visible:border-brand-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue [&::-webkit-search-cancel-button]:hidden"
         />
         {query && (
           <button

@@ -67,6 +67,16 @@ html {
   scroll-padding-top: 5rem;
 }
 
+/*
+ * Pressed state for every link and plain button, so a tap always gives
+ * feedback. <Button> (.ui-button) has its own, so it is left out here.
+ * :where() keeps specificity at zero, so any component's own active:
+ * classes still win.
+ */
+:where(a[href], button, summary, [role="tab"]):where(:not(.ui-button)):active {
+  opacity: 0.75;
+}
+
 /* While the mobile drawer (a modal <dialog>) is open, the page underneath must not scroll. */
 html:has(dialog[data-scroll-lock][open]) {
   overflow: hidden;

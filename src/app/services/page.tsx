@@ -12,6 +12,7 @@ import {
   offeringPhrase,
   searchQuestionMessage,
   servicesByCategory,
+  keepHyphens,
 } from "@/lib/site";
 
 const offering = offeringPhrase();
@@ -45,16 +46,16 @@ export default function ServicesPage() {
       <section className="bg-surface py-8 sm:py-10">
         <Container>
           <Breadcrumbs items={[crumbs[0], { label: crumbs[1].label }]} />
-          <h1 className="mt-6 text-3xl font-bold tracking-tight text-navy sm:text-4xl">
+          <h1 className="mt-6 text-3xl font-bold tracking-tight text-balance text-navy sm:text-4xl">
             Services
           </h1>
           <p className="mt-3 max-w-2xl text-lg text-pretty text-muted">
-            {intro}
+            {keepHyphens(intro)}
           </p>
         </Container>
       </section>
 
-      <Container className="py-10 sm:py-12">
+      <Container className="py-14 lg:py-20">
         {/*
          * Prerendered unfiltered, so the static HTML lists every service;
          * the island applies ?category= and ?q= once it runs in the browser.

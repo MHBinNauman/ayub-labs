@@ -12,7 +12,7 @@ export function ReportCTA() {
   const portal = features.reportPortalUrl;
 
   return (
-    <section aria-labelledby="report-heading" className="py-12 sm:py-16">
+    <section aria-labelledby="report-heading" className="py-14 lg:py-20">
       <Container>
         <div className="flex flex-col gap-6 rounded-r-card border-l-4 border-brand-red bg-surface p-6 sm:p-8 md:flex-row md:items-center md:justify-between lg:p-10">
           <div className="flex gap-4">

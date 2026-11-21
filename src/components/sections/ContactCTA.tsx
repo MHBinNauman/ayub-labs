@@ -14,7 +14,7 @@ export function ContactCTA({
   text?: string;
 }) {
   return (
-    <section aria-labelledby="contact-cta-heading" className="py-12 sm:py-16">
+    <section aria-labelledby="contact-cta-heading" className="py-14 lg:py-20">
       <Container>
         <div className="flex flex-col gap-6 rounded-card bg-linear-to-br from-navy to-brand-blue p-6 text-white sm:p-8 lg:flex-row lg:items-center lg:justify-between lg:p-10">
           <div>
