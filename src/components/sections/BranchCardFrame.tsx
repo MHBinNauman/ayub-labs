@@ -57,7 +57,6 @@ export function ShowOnMapButton({
   return (
     <button
       type="button"
-      aria-label={`Show ${branchName} on the map`}
       onClick={() => {
         setUrlParams({ branch: branchId }, { push: true });
         const reduce = window.matchMedia(
@@ -71,7 +70,8 @@ export function ShowOnMapButton({
       className="hidden min-h-11 items-center gap-2 rounded-lg px-3 text-sm font-semibold text-navy transition-colors hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue lg:inline-flex"
     >
       <MapPinned aria-hidden="true" className="size-4" />
-      Show on map
+      {/* Visible text first, so voice users can say "Show on map" (WCAG 2.5.3). */}
+      Show on map<span className="sr-only"> for {branchName}</span>
     </button>
   );
 }

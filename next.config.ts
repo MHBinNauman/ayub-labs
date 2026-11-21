@@ -14,12 +14,14 @@ const nextConfig: NextConfig = {
     },
   },
   // Old WordPress URLs → new pages (see legacyRedirects in site-data.ts).
+  // Permanent ones send a classic 301 (Next's `permanent: true` would send
+  // 308); temporary ones keep Next's 307.
   async redirects() {
-    return legacyRedirects.map(({ source, destination, permanent }) => ({
-      source,
-      destination,
-      permanent,
-    }));
+    return legacyRedirects.map(({ source, destination, permanent }) =>
+      permanent
+        ? { source, destination, statusCode: 301 as const }
+        : { source, destination, permanent: false },
+    );
   },
   async headers() {
     return [

@@ -46,6 +46,19 @@ test.describe("/services search and filters", () => {
     await expect(results(page)).toHaveCount(services.length);
   });
 
+  for (const query of ["haem", "blood"]) {
+    test(`"${query}" finds Haematology`, async ({ page }) => {
+      await openServices(page);
+      await page.getByRole("searchbox").fill(query);
+      await expect(page).toHaveURL(new RegExp(`[?&]q=${query}`));
+      await expect(
+        page
+          .getByRole("tabpanel")
+          .getByRole("link", { name: "Haematology", exact: true }),
+      ).toBeVisible();
+    });
+  }
+
   test("fuzzy search loads on demand and tolerates typos", async ({ page }) => {
     // The instant substring filter cannot match a misspelling, so finding
     // the service proves fuse.js was fetched after the first keystroke.

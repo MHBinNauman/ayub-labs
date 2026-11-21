@@ -113,7 +113,7 @@ test.describe("/locations map (desktop)", () => {
 
     await page.getByRole("button", { name: "Reset" }).click();
     await page
-      .getByRole("button", { name: `Show ${f8.name} on the map` })
+      .getByRole("button", { name: `Show on map for ${f8.name}`, exact: true })
       .click();
     await expect(page).toHaveURL(new RegExp(`branch=${f8.id}`));
     await expect(finderMap(page)).toHaveAttribute("title", `Map of ${f8.name}`);

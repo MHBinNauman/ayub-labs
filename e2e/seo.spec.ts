@@ -9,7 +9,7 @@ const legacySamples: { from: string; to: string; permanent: boolean }[] = [
   { from: "/about-us", to: "/about", permanent: true },
   { from: "/contact-us", to: "/contact", permanent: true },
   { from: "/online-report", to: "/reports", permanent: true },
-  { from: "/2021/09/14/hello-world", to: "/", permanent: true },
+  { from: "/2023/01/30/anything", to: "/", permanent: true },
   { from: "/category/uncategorized", to: "/", permanent: true },
   { from: "/tag/sample", to: "/", permanent: true },
   { from: "/wp-admin/index.php", to: "/", permanent: false },
@@ -26,7 +26,8 @@ test.describe("SEO and platform files", () => {
   for (const sample of legacySamples) {
     test(`redirects ${sample.from} → ${sample.to}`, async ({ request }) => {
       const response = await request.get(sample.from, { maxRedirects: 0 });
-      expect(response.status()).toBe(sample.permanent ? 308 : 307);
+      // Permanent legacy URLs are a classic 301 (see next.config.ts).
+      expect(response.status()).toBe(sample.permanent ? 301 : 307);
       expect(new URL(response.headers().location, "http://x").pathname).toBe(
         sample.to,
       );
