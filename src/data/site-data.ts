@@ -380,7 +380,7 @@ export const media: {
   hero: [
     { kind: "stock", src: "/images/stock/optimized/hero-1-lab.jpg", focal: "right", alt: "Gloved hands drawing liquid from a small vial beside a rack of blue-capped test tubes" },
     { kind: "stock", src: "/images/stock/optimized/hero-2-samples.jpg", focal: "center", alt: "Twelve glass test tubes of blue liquid in a wooden rack, seen from above" },
-    { kind: "stock", src: "/images/stock/optimized/hero-3-care.jpg", focal: "center", alt: "Gloved hands at the controls of an ultrasound machine, holding the scanning probe" },
+    { kind: "stock", src: "/images/stock/optimized/hero-3-care.jpg", focal: "center", alt: "Hands holding a stethoscope in front of a white coat" },
   ],
   services: {
     haematology: { kind: "stock", src: "/images/stock/optimized/svc-haematology.jpg", alt: "Gloved hand sorting barcoded blood sample tubes in a lab rack" },
