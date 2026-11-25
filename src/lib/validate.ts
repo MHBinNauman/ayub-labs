@@ -12,6 +12,7 @@ import type {
   Branch,
   DayHours,
   DayKey,
+  NavItem,
   Service,
   TestItem,
 } from "@/data/site-data";
@@ -127,6 +128,12 @@ const branchSchema: z.ZodType<Branch> = z.strictObject({
   googleMapsUrl: z.httpUrl().optional(),
   regulator: verified(z.string()),
   isPrimary: z.boolean(),
+});
+
+const navItemSchema: z.ZodType<NavItem> = z.strictObject({
+  label: text,
+  href: sitePath,
+  hasMegaMenu: z.boolean().optional(),
 });
 
 /** Reports each value of `key` that appears more than once in a list. */
@@ -269,6 +276,13 @@ const siteDataSchema = z.strictObject({
     testimonials: z.boolean(),
     reportPortalUrl: z.httpUrl().nullable(),
     urduToggle: z.boolean(),
+  }),
+
+  navigation: z.strictObject({
+    navItems: z
+      .array(navItemSchema)
+      .min(1)
+      .superRefine(unique((item) => item.href, "nav link")),
   }),
 
   brandTokens: z.strictObject({

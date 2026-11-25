@@ -1,16 +1,9 @@
 /**
  * Navigation types and path matching with no imports, so client components
  * (MegaMenu, NavStrip, MobileNav) can use them without pulling site-data.ts
- * into the browser bundle. The data itself lives in nav.ts (server side) and
- * reaches client components as props.
+ * into the browser bundle. The data itself lives in site-data.ts and nav.ts
+ * (server side) and reaches client components as props.
  */
-
-export type NavItem = {
-  label: string;
-  href: string;
-  /** Opens the services mega menu on desktop and an accordion on mobile. */
-  megaMenu?: boolean;
-};
 
 export type ServiceMenuGroup = {
   category: string;
@@ -24,10 +17,25 @@ export type ServiceMenuGroup = {
  */
 export function isActivePath(pathname: string | null, href: string): boolean {
   if (!pathname) return false;
-  const path =
-    pathname.length > 1 && pathname.endsWith("/")
-      ? pathname.slice(0, -1)
-      : pathname;
+  const path = withoutTrailingSlash(pathname);
   if (href === "/") return path === "/";
   return path === href || path.startsWith(`${href}/`);
+}
+
+/**
+ * aria-current for a nav link: "page" when it is the page being viewed,
+ * "true" when the page is somewhere inside its section.
+ */
+export function ariaCurrent(
+  pathname: string | null,
+  href: string,
+): "page" | "true" | undefined {
+  if (!pathname || !isActivePath(pathname, href)) return undefined;
+  return withoutTrailingSlash(pathname) === href ? "page" : "true";
+}
+
+function withoutTrailingSlash(pathname: string): string {
+  return pathname.length > 1 && pathname.endsWith("/")
+    ? pathname.slice(0, -1)
+    : pathname;
 }

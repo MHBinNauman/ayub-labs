@@ -1,9 +1,9 @@
 import { MessageCircle, Navigation, Phone } from "lucide-react";
 import { Suspense } from "react";
 import { Button, Container } from "@/components/ui";
-import { contact } from "@/data/site-data";
+import { contact, navigation } from "@/data/site-data";
 import { mapsDirections, tel, whatsapp } from "@/lib/links";
-import { mainNav, serviceMenu } from "@/lib/nav";
+import { serviceMenu } from "@/lib/nav";
 import { primaryBranch, primaryPhone, whatsappGreeting } from "@/lib/site";
 import { HeaderShadow } from "./HeaderShadow";
 import { Logo } from "./Logo";
@@ -65,7 +65,7 @@ export function Header() {
                 WhatsApp
               </Button>
               <MobileNav
-                items={mainNav}
+                items={navigation.navItems}
                 serviceMenu={serviceMenu}
                 logo={<Logo size="md" />}
                 actionBar={
@@ -111,13 +111,13 @@ export function Header() {
         <Suspense
           fallback={
             <NavStripView
-              items={mainNav}
+              items={navigation.navItems}
               serviceMenu={serviceMenu}
               pathname={null}
             />
           }
         >
-          <NavStrip items={mainNav} serviceMenu={serviceMenu} />
+          <NavStrip items={navigation.navItems} serviceMenu={serviceMenu} />
         </Suspense>
       </header>
     </>

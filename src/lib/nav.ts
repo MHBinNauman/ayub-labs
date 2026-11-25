@@ -1,28 +1,15 @@
 /**
- * Site navigation model, shared by the desktop nav strip, the mobile drawer
- * and the footer. Plain serialisable data, so it can be passed from server
- * components to client components as props.
+ * Routes and the services menu. The main nav list itself (header, drawer,
+ * footer) is navigation.navItems in site-data.ts. Plain serialisable data, so
+ * it can be passed from server components to client components as props.
  */
 import type { ServiceCardData } from "@/components/ui/ServiceCard";
 import { serviceCategories, type Service } from "@/data/site-data";
-import type { NavItem, ServiceMenuGroup } from "./paths";
+import type { ServiceMenuGroup } from "./paths";
 import type { SearchableService } from "./service-search";
-import { resolvedFeatures, servicesByCategory } from "./site";
+import { servicesByCategory } from "./site";
 
-export { isActivePath, type NavItem, type ServiceMenuGroup } from "./paths";
-
-export const mainNav: NavItem[] = [
-  { label: "Home", href: "/" },
-  { label: "Services", href: "/services", megaMenu: true },
-  // Linked only once the directory is live, so nothing points at a 404.
-  ...(resolvedFeatures.testDirectory
-    ? [{ label: "Tests & prices", href: "/tests" }]
-    : []),
-  { label: "Locations", href: "/locations" },
-  { label: "Reports", href: "/reports" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
-];
+export { ariaCurrent, isActivePath, type ServiceMenuGroup } from "./paths";
 
 export const routes = {
   services: "/services",

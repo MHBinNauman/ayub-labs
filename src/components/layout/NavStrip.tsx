@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui/Container";
-import { isActivePath, type NavItem, type ServiceMenuGroup } from "@/lib/paths";
+import type { NavItem } from "@/data/site-data";
+import { ariaCurrent, isActivePath, type ServiceMenuGroup } from "@/lib/paths";
 import { MegaMenu } from "./MegaMenu";
 import { navItemClass } from "./nav-styles";
 
@@ -29,7 +30,7 @@ export function NavStripView({
       <Container>
         <ul className="-mx-4 flex h-14">
           {items.map((item) =>
-            item.megaMenu ? (
+            item.hasMegaMenu ? (
               <MegaMenu
                 key={item.href}
                 item={item}
@@ -40,9 +41,7 @@ export function NavStripView({
               <li key={item.href} className="flex">
                 <Link
                   href={item.href}
-                  aria-current={
-                    isActivePath(pathname, item.href) ? "page" : undefined
-                  }
+                  aria-current={ariaCurrent(pathname, item.href)}
                   className={navItemClass(isActivePath(pathname, item.href))}
                 >
                   {item.label}

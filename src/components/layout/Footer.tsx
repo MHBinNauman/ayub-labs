@@ -4,10 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ComponentType, ReactNode, SVGProps } from "react";
 import { Container } from "@/components/ui";
-import { brand, branches, contact, services } from "@/data/site-data";
+import {
+  brand,
+  branches,
+  contact,
+  navigation,
+  services,
+} from "@/data/site-data";
 import { cn } from "@/lib/cn";
 import { mapsDirections, tel } from "@/lib/links";
-import { mainNav, serviceHref } from "@/lib/nav";
+import { serviceHref } from "@/lib/nav";
 import { currentYear, formatPhone, verifiedRegistrations } from "@/lib/site";
 import { Logo } from "./Logo";
 import { FacebookIcon, InstagramIcon } from "./SocialIcons";
@@ -106,7 +112,7 @@ export function Footer() {
           className="lg:col-span-2"
         >
           <ul>
-            {mainNav.map((item) => (
+            {navigation.navItems.map((item) => (
               <li key={item.href}>
                 <Link href={item.href} className={cn(linkClass, "text-sm")}>
                   {item.label}

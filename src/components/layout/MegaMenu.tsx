@@ -14,8 +14,9 @@ import {
 } from "react";
 import { flushSync } from "react-dom";
 import { Container } from "@/components/ui/Container";
+import type { NavItem } from "@/data/site-data";
 import { cn } from "@/lib/cn";
-import { isActivePath, type NavItem, type ServiceMenuGroup } from "@/lib/paths";
+import { isActivePath, type ServiceMenuGroup } from "@/lib/paths";
 import { serviceIcon } from "@/lib/service-icons";
 import { useHydrated } from "@/lib/use-hydrated";
 import { navItemClass } from "./nav-styles";
@@ -218,6 +219,7 @@ export function MegaMenu({ item, groups, pathname }: MegaMenuProps) {
         type="button"
         aria-expanded={open}
         aria-controls={panelId}
+        aria-current={active ? "true" : undefined}
         onClick={onTriggerClick}
         className={navItemClass(active, open)}
       >

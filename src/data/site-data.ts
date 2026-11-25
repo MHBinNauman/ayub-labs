@@ -325,6 +325,30 @@ export const features = {
 } as const;
 
 /* ------------------------------------------------------------------ */
+/* 8a. NAVIGATION: header, mobile drawer and footer, in this order     */
+/* ------------------------------------------------------------------ */
+
+export interface NavItem {
+  label: string;
+  href: string;
+  /** Opens the services mega menu on desktop and an accordion on mobile. */
+  hasMegaMenu?: boolean;
+}
+
+export const navigation: { navItems: NavItem[] } = {
+  navItems: [
+    { label: "Home", href: "/" },
+    { label: "About", href: "/about" },
+    { label: "Services", href: "/services", hasMegaMenu: true },
+    // Linked only once the directory is live, so nothing points at a 404.
+    ...(features.testDirectory ? [{ label: "Tests & prices", href: "/tests" }] : []),
+    { label: "Reports", href: "/reports" },
+    { label: "Locations", href: "/locations" },
+    { label: "Contact", href: "/contact" },
+  ],
+};
+
+/* ------------------------------------------------------------------ */
 /* 9. BRAND TOKENS (measured from live logo files + theme CSS)         */
 /* ------------------------------------------------------------------ */
 

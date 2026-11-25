@@ -41,6 +41,17 @@ describe("validateSiteData", () => {
     },
   );
 
+  it("rejects a nav link listed twice", () => {
+    const issues = issuesAfter((data) => {
+      data.navigation.navItems.push({ label: "Home again", href: "/" });
+    });
+    expect(issues).toEqual([
+      expect.stringMatching(
+        /^navigation\.navItems\[\d+\].*duplicate nav link "\/"/,
+      ),
+    ]);
+  });
+
   it("rejects a contact phone that is not E.164", () => {
     const issues = issuesAfter((data) => {
       (data.contact.mobile.e164 as string) = "0322-5135060";

@@ -144,7 +144,7 @@ test.describe("desktop header", () => {
 
     // Once closed, Tab moves on to the next nav item.
     await page.keyboard.press("Tab");
-    expect(await focused(page)).toContain("Locations");
+    expect(await focused(page)).toContain("Reports");
   });
 
   test("mega menu: ArrowDown opens on the first service", async ({ page }) => {

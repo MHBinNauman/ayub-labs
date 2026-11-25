@@ -10,8 +10,9 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
+import type { NavItem } from "@/data/site-data";
 import { cn } from "@/lib/cn";
-import { isActivePath, type NavItem, type ServiceMenuGroup } from "@/lib/paths";
+import { ariaCurrent, isActivePath, type ServiceMenuGroup } from "@/lib/paths";
 import { serviceIcon } from "@/lib/service-icons";
 
 type MobileNavProps = {
@@ -128,12 +129,12 @@ function Drawer({
             {items.map((item) => {
               const active = isActivePath(pathname, item.href);
 
-              if (!item.megaMenu) {
+              if (!item.hasMegaMenu) {
                 return (
                   <li key={item.href} className="py-1">
                     <Link
                       href={item.href}
-                      aria-current={active ? "page" : undefined}
+                      aria-current={ariaCurrent(pathname, item.href)}
                       className={linkClass(active)}
                     >
                       {item.label}
@@ -146,6 +147,7 @@ function Drawer({
                 <li key={item.href} className="py-1">
                   <details open={active} className="accordion-item group">
                     <summary
+                      aria-current={active ? "true" : undefined}
                       className={cn(
                         linkClass(active),
                         "cursor-pointer list-none justify-between [&::-webkit-details-marker]:hidden",
