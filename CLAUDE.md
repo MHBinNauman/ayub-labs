@@ -20,7 +20,7 @@ Marketing and patient-access website for **Ayyub Labs & Clinics** (diagnostic la
 
 ## Motion rules
 - Library: motion (already installed). Durations 200–600ms; easing [0.22, 1, 0.36, 1].
-- Animate only transform and opacity (no animating height/width/top/left, no layout thrash).
+- Animate only transform and opacity (no animating height/width/top/left, no layout thrash). Splash only: the ring may animate stroke-dashoffset (paint only) and the progress line runs up to 1200ms.
 - Every animation is disabled or reduced under prefers-reduced-motion.
 - Reveal-on-scroll runs once; no looping animations except the hero slider and the loader.
 - No animation may delay the LCP element or hide it with opacity:0 on first paint.

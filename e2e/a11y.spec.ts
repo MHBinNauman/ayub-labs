@@ -12,6 +12,8 @@ const paths = [
 
 /** Serious and critical WCAG 2.1 A/AA violations, formatted for the report. */
 async function seriousViolations(page: Page): Promise<string[]> {
+  // Scan the page itself, not the splash laid over it.
+  await expect(page.locator(".splash")).toHaveCount(0);
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
     // Google's map iframe is third-party content we cannot change.
@@ -35,6 +37,22 @@ test.describe("axe: no serious or critical violations", () => {
       expect(await seriousViolations(page)).toEqual([]);
     });
   }
+
+  test("the splash screen", async ({ page }) => {
+    // Its script (the first caller of matchMedia) fails, so it stays up.
+    await page.addInitScript(() => {
+      const matchMedia = window.matchMedia;
+      window.matchMedia = () => {
+        window.matchMedia = matchMedia;
+        throw new Error("blocked");
+      };
+    });
+    await page.goto("/");
+    const splash = page.locator(".splash");
+    await expect(splash).toBeVisible();
+    const results = await new AxeBuilder({ page }).include(".splash").analyze();
+    expect(results.violations.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+  });
 
   test("with the mobile menu open", async ({ page, isMobile }) => {
     test.skip(!isMobile, "the drawer is the phone navigation");

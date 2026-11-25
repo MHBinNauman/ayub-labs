@@ -5,10 +5,12 @@ import {
   Footer,
   Header,
   SkipLink,
+  Splash,
 } from "@/components/layout";
 import { brand } from "@/data/site-data";
 import { JsonLd, organizationJsonLd } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site-url";
+import { splashHeadScript } from "@/lib/splash";
 import { validateSiteData } from "@/lib/validate";
 import "./globals.css";
 
@@ -42,8 +44,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={montserrat.variable}>
+    // The head script may add data-splash before React hydrates.
+    <html lang="en" className={montserrat.variable} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: splashHeadScript }} />
+        <noscript>
+          <style>{".splash { display: none }"}</style>
+        </noscript>
+      </head>
       <body className="bg-white font-sans text-ink antialiased">
+        <Splash />
         <JsonLd data={organizationJsonLd()} />
         <SkipLink targetId={MAIN_ID} />
         <Header />

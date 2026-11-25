@@ -4,7 +4,7 @@ import { brand } from "@/data/site-data";
 import { cn } from "@/lib/cn";
 
 /** See public/brand/README.md. Swap for the vector file once the client supplies one. */
-const EMBLEM_SRC = "/brand/logo-emblem-192.png";
+export const EMBLEM_SRC = "/brand/logo-emblem-192.png";
 
 type LogoProps = {
   /** "lg" grows the lock-up on desktop (header band); "md" stays compact. */

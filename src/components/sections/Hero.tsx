@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button, Container } from "@/components/ui";
 import { BranchStatusChip } from "@/components/ui/BranchStatusChip";
+import { HexPattern } from "@/components/ui/HexPattern";
 import { brand, contact } from "@/data/site-data";
 import { tel, whatsapp } from "@/lib/links";
 import { routes } from "@/lib/nav";
@@ -43,39 +44,6 @@ function TaglineLine() {
   );
 }
 
-/** Thin hexagon / molecule line pattern, drawn inline. ~6% white on the gradient. */
-function HeroPattern() {
-  return (
-    <svg
-      aria-hidden="true"
-      fill="none"
-      className="pointer-events-none absolute inset-0 size-full text-white opacity-[0.06]"
-    >
-      <defs>
-        <pattern
-          id="hero-hex"
-          width="56"
-          height="96"
-          patternUnits="userSpaceOnUse"
-          patternTransform="scale(1.25)"
-        >
-          {/* One hexagon plus the stem that joins it to the row below tiles a honeycomb. */}
-          <path
-            d="M28 0 L56 16 L56 48 L28 64 L0 48 L0 16 Z M28 64 L28 96"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-          />
-          <circle cx="28" cy="0" r="2.5" fill="currentColor" />
-          <circle cx="56" cy="48" r="2.5" fill="currentColor" />
-          <circle cx="0" cy="48" r="2.5" fill="currentColor" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#hero-hex)" />
-    </svg>
-  );
-}
-
 function RegisteredCard() {
   if (verifiedRegistrations.length === 0) return null;
   return (
@@ -112,7 +80,7 @@ export function Hero() {
       aria-labelledby="hero-heading"
       className="relative overflow-hidden bg-linear-to-br from-navy to-brand-blue text-white"
     >
-      <HeroPattern />
+      <HexPattern id="hero-hex" />
       {/* Extra bottom padding: the quick-action cards overlap the hero by 3rem. */}
       <Container className="relative grid gap-10 pt-12 pb-24 sm:pt-16 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:gap-16 lg:pt-20 lg:pb-32">
         <div>
