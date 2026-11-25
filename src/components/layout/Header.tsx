@@ -35,7 +35,7 @@ export function Header() {
       <HeaderShadow headerId={HEADER_ID} />
       <header
         id={HEADER_ID}
-        className="sticky -top-11 z-40 transition-shadow duration-200 data-stuck:shadow-card lg:-top-33"
+        className="vt-header sticky -top-11 z-40 transition-shadow duration-200 data-stuck:shadow-card lg:-top-33"
       >
         <TopBar />
 

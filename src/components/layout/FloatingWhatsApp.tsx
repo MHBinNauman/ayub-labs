@@ -17,7 +17,7 @@ export function FloatingWhatsApp() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={LABEL}
-      className="group fixed right-4 bottom-20 z-30 grid size-14 place-items-center rounded-full bg-whatsapp text-ink shadow-card-hover transition-transform focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue motion-safe:hover:scale-105 sm:right-6 lg:bottom-6"
+      className="vt-whatsapp group fixed right-4 bottom-20 z-30 grid size-14 place-items-center rounded-full bg-whatsapp text-ink shadow-card-hover transition-transform focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue motion-safe:hover:scale-105 sm:right-6 lg:bottom-6"
     >
       <MessageCircle aria-hidden="true" className="size-7" />
       <span

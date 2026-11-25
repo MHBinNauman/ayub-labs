@@ -150,6 +150,7 @@ export function BranchCard({ branch }: { branch: Branch }) {
       <div className="flex items-center justify-between gap-2 border-t border-ink/10 px-4 py-1">
         <Link
           href={`${routes.locations}/${branch.id}`}
+          prefetch
           className="group inline-flex min-h-11 items-center gap-1.5 rounded-lg px-2 text-sm font-semibold text-brand-blue underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-brand-blue"
         >
           Branch details

@@ -109,11 +109,83 @@ dialog[data-scroll-lock]::backdrop {
 }
 
 /*
- * View transitions (services tabs): cards glide to their new place. Under
- * reduced motion the swap is instant.
+ * View transitions. Services tabs: cards glide to their new place. Page
+ * changes (PageTransition.tsx): the old page fades into the new one, which
+ * rises into place, so there is no blank moment between them. Under reduced
+ * motion both swap instantly.
  */
 ::view-transition-group(*) {
   animation-duration: 0.3s;
+}
+
+/* Taps during a transition reach the page instead of being swallowed. */
+::view-transition {
+  pointer-events: none;
+}
+
+/*
+ * React hides the picture of everything outside the page (the footer) when it
+ * did not change itself. Keep it, fading with the old page: otherwise leaving
+ * from the foot of a page shows a blank frame.
+ */
+::view-transition-group(root) {
+  opacity: 1 !important;
+}
+
+::view-transition-old(root) {
+  animation: page-fade 260ms ease-in both reverse;
+}
+
+/* The old page leaves a little ahead of the new one, so text barely overlaps. */
+::view-transition-old(.page-exit) {
+  animation: page-fade 260ms ease-in both reverse;
+}
+
+/* An even fade, so it can be seen; the movement keeps the house easing. */
+::view-transition-new(.page-enter) {
+  animation:
+    page-fade 380ms ease-out 80ms both,
+    page-rise 500ms cubic-bezier(0.22, 1, 0.36, 1) 80ms both;
+}
+
+@keyframes page-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes page-rise {
+  from {
+    transform: translateY(16px);
+  }
+}
+
+/*
+ * The header and WhatsApp button stay above the pages and never fade. The
+ * header's own group still moves, so it slides back into place when the old
+ * page was scrolled.
+ */
+.vt-header {
+  view-transition-name: site-header;
+}
+
+.vt-whatsapp {
+  view-transition-name: floating-whatsapp;
+}
+
+::view-transition-group(site-header),
+::view-transition-group(floating-whatsapp) {
+  z-index: 10;
+}
+
+::view-transition-old(site-header),
+::view-transition-old(floating-whatsapp) {
+  display: none;
+}
+
+::view-transition-new(site-header),
+::view-transition-new(floating-whatsapp) {
+  animation: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -173,9 +245,9 @@ dialog[data-scroll-lock]::backdrop {
     animation-delay: 120ms;
   }
 
-  /* As long as the longest splash; most of the way there by the shortest. */
+  /* Fills at an even pace for as long as the splash is held (SPLASH_HOLD_MS). */
   .splash-line {
-    animation: splash-line 1200ms var(--splash-ease) both;
+    animation: splash-line 1700ms ease-in-out both;
   }
 
   @keyframes splash-emblem {

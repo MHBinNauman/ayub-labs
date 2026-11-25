@@ -176,6 +176,7 @@ function Drawer({
                                 <li key={service.href}>
                                   <Link
                                     href={service.href}
+                                    prefetch
                                     aria-current={current ? "page" : undefined}
                                     className={cn(
                                       "-mx-2 flex min-h-12 items-center gap-3 rounded-lg px-2 font-medium transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white",

@@ -260,6 +260,7 @@ export function MegaMenu({ item, groups, pathname }: MegaMenuProps) {
                         <li key={service.href}>
                           <Link
                             href={service.href}
+                            prefetch
                             aria-current={current ? "page" : undefined}
                             className={cn(
                               "-mx-2 flex min-h-11 items-center gap-3 rounded-lg px-2 py-1.5 text-sm font-semibold transition-colors hover:bg-tint hover:text-navy focus-visible:outline-2 focus-visible:outline-brand-blue",
