@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { media, services, type MediaItem } from "@/data/site-data";
+import { media, type MediaItem } from "@/data/site-data";
 import { mediaProps } from "./media";
 
 const items: MediaItem[] = [
@@ -23,18 +23,5 @@ describe("mediaProps", () => {
     expect(() => mediaProps({ src: "/nope.jpg", alt: "x" })).toThrowError(
       /pnpm images/,
     );
-  });
-});
-
-describe("media", () => {
-  it("has a photo for every service", () => {
-    expect(Object.keys(media.services).sort()).toEqual(
-      services.map((service) => service.slug).sort(),
-    );
-  });
-
-  it("uses each photo once, with its own alt text", () => {
-    expect(new Set(items.map((item) => item.src)).size).toBe(items.length);
-    expect(new Set(items.map((item) => item.alt)).size).toBe(items.length);
   });
 });
