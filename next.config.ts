@@ -1,6 +1,13 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import type { NextConfig } from "next";
+import {
+  PHASE_DEVELOPMENT_SERVER,
+  PHASE_PRODUCTION_BUILD,
+} from "next/constants";
 import { legacyRedirects } from "./src/data/site-data";
 import { securityHeaders } from "./src/lib/security-headers";
+import { validateMediaFiles } from "./src/lib/validate";
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
@@ -12,6 +19,12 @@ const nextConfig: NextConfig = {
         as: "*.css",
       },
     },
+  },
+  // All photos are local (public/), so there are no remotePatterns. No width
+  // above 2400: that is the widest copy `pnpm images` writes.
+  images: {
+    formats: ["image/avif", "image/webp"],
+    deviceSizes: [480, 640, 768, 1024, 1280, 1536, 1920, 2400],
   },
   // Old WordPress URLs → new pages (see legacyRedirects in site-data.ts).
   // Permanent ones send a classic 301 (Next's `permanent: true` would send
@@ -35,4 +48,12 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default function config(phase: string): NextConfig {
+  // Not when serving: on Vercel public/ is not on the function's disk.
+  if (phase === PHASE_PRODUCTION_BUILD || phase === PHASE_DEVELOPMENT_SERVER) {
+    validateMediaFiles((publicPath) =>
+      existsSync(join(process.cwd(), "public", publicPath)),
+    );
+  }
+  return nextConfig;
+}

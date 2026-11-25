@@ -49,3 +49,9 @@ next-env.d.ts
 
 # lighthouse ci
 /.lighthouseci/
+
+# photo originals (large); only the copies made by `pnpm images` are committed
+/public/images/stock/*
+!/public/images/stock/optimized/
+/public/images/real/*
+!/public/images/real/optimized/

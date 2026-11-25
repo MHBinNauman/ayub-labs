@@ -7,3 +7,4 @@ AGENTS.md
 playwright-report
 test-results
 src/data/tests.generated.ts
+src/data/media.generated.ts

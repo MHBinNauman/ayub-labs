@@ -349,6 +349,62 @@ export const navigation: { navItems: NavItem[] } = {
 };
 
 /* ------------------------------------------------------------------ */
+/* 8b. MEDIA: every photo on the site                                  */
+/* ------------------------------------------------------------------ */
+
+/**
+ * To swap in a real photo: put it in public/images/real, run `pnpm images`,
+ * then change one entry here (kind, src, alt).
+ * `src` is the copy in "optimized", never the original. `alt` says what is in
+ * the picture; validate.ts fails the build if it is empty or the file is missing.
+ */
+export interface MediaItem {
+  kind: "stock" | "real";
+  src: string;
+  alt: string;
+}
+
+export interface HeroSlide extends MediaItem {
+  /** Which side of the photo to keep in view when it is cropped. */
+  focal: "right" | "center";
+}
+
+export type BannerKey = "about" | "services" | "reports" | "locations" | "contact";
+
+export const media: {
+  hero: HeroSlide[];
+  /** By service slug. A service with no photo is left out. */
+  services: Partial<Record<string, MediaItem>>;
+  banners: Record<BannerKey, MediaItem>;
+} = {
+  hero: [
+    { kind: "stock", src: "/images/stock/optimized/hero-1-lab.jpg", focal: "right", alt: "Gloved hands drawing liquid from a small vial beside a rack of blue-capped test tubes" },
+    { kind: "stock", src: "/images/stock/optimized/hero-2-samples.jpg", focal: "center", alt: "Twelve glass test tubes of blue liquid in a wooden rack, seen from above" },
+    { kind: "stock", src: "/images/stock/optimized/hero-3-care.jpg", focal: "center", alt: "Gloved hands at the controls of an ultrasound machine, holding the scanning probe" },
+  ],
+  services: {
+    haematology: { kind: "stock", src: "/images/stock/optimized/svc-haematology.jpg", alt: "Gloved hand sorting barcoded blood sample tubes in a lab rack" },
+    microbiology: { kind: "stock", src: "/images/stock/optimized/svc-microbiology.jpg", alt: "Gloved hands streaking a sample onto a red culture plate" },
+    histopathology: { kind: "stock", src: "/images/stock/optimized/svc-histopathology.jpg", alt: "Gloved hand placing a dish under a laboratory microscope" },
+    "pcr-lab": { kind: "stock", src: "/images/stock/optimized/svc-pcr.jpg", alt: "Gloved hands pipetting into small sample tubes in a molecular lab" },
+    "bone-marrow-aspiration-trephine-biopsy": { kind: "stock", src: "/images/stock/optimized/svc-bone-marrow.jpg", alt: "Gloved hands adjusting a laboratory microscope" },
+    ecg: { kind: "stock", src: "/images/stock/optimized/svc-ecg.jpg", alt: "Patient monitor screen showing a green heartbeat trace" },
+    "ultrasound-doppler": { kind: "stock", src: "/images/stock/optimized/svc-ultrasound.jpg", alt: "Ultrasound machine with a screen, control panel and scanning probes beside an examination bed" },
+    dermatology: { kind: "stock", src: "/images/stock/optimized/svc-dermatology.jpg", alt: "Doctor in a white coat going through a medical history form with a patient" },
+    "diet-nutrition": { kind: "stock", src: "/images/stock/optimized/svc-nutrition.jpg", alt: "Dietitian filling in a weekly meal plan with a client, with fresh fruit on the table" },
+    telemedicine: { kind: "stock", src: "/images/stock/optimized/svc-telemedicine.jpg", alt: "Doctor typing on a laptop with a stethoscope on the desk" },
+    pharmacy: { kind: "stock", src: "/images/stock/optimized/svc-pharmacy.jpg", alt: "Pharmacy shelves stocked with boxes of medicine" },
+  },
+  banners: {
+    about: { kind: "stock", src: "/images/stock/optimized/banner-about.jpg", alt: "Two people working at a laboratory bench with tubing and glass bottles, in black and white" },
+    services: { kind: "stock", src: "/images/stock/optimized/banner-services.jpg", alt: "Person in a white coat working at a laboratory bench" },
+    reports: { kind: "stock", src: "/images/stock/optimized/banner-reports.jpg", alt: "Laboratory bench with a notebook and racks of labelled sample tubes" },
+    locations: { kind: "stock", src: "/images/stock/optimized/banner-locations.jpg", alt: "Faisal Mosque in Islamabad at sunset" },
+    contact: { kind: "stock", src: "/images/stock/optimized/banner-contact.jpg", alt: "Reception desk under a lit Reception sign" },
+  },
+};
+
+/* ------------------------------------------------------------------ */
 /* 9. BRAND TOKENS (measured from live logo files + theme CSS)         */
 /* ------------------------------------------------------------------ */
 
@@ -420,4 +476,5 @@ export const openQuestions = [
   "Does each branch have its own email, or is info@ayyublabs.com used for both?",
   "Our story timeline: which year did each branch open, and any other milestones worth listing?",
   "Frequently asked questions with approved answers (shown on the home page)?",
+  "Replace before launch: banner-about (black-and-white 1960s photo with identifiable people; reads as our own history), banner-reports (a person's name and another university are readable), banner-contact (another organisation's reception), svc-ecg (patient monitor with a low oxygen reading, not an ECG), svc-pharmacy (readable prescription brands).",
 ] as const;

@@ -1,6 +1,13 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import * as siteData from "@/data/site-data";
-import { findSiteDataIssues, validateSiteData } from "./validate";
+import {
+  findMissingMediaFiles,
+  findSiteDataIssues,
+  validateMediaFiles,
+  validateSiteData,
+} from "./validate";
 
 type Data = typeof siteData;
 type Mutable<T> = { -readonly [K in keyof T]: Mutable<T[K]> };
@@ -40,6 +47,70 @@ describe("validateSiteData", () => {
       ]);
     },
   );
+
+  it.each(["", "   "])("rejects a photo with empty alt text (%j)", (alt) => {
+    const issues = issuesAfter((data) => {
+      data.media.banners.about.alt = alt;
+    });
+    expect(issues).toEqual([
+      "media.banners.about.alt: alt text must not be empty",
+    ]);
+  });
+
+  it.each(["Image of a lab", "A photo of a lab", "picture of a lab"])(
+    "rejects alt text that starts like %j",
+    (alt) => {
+      const issues = issuesAfter((data) => {
+        data.media.hero[0].alt = alt;
+      });
+      expect(issues).toEqual([
+        expect.stringMatching(/^media\.hero\[0\]\.alt: alt text says/),
+      ]);
+    },
+  );
+
+  it("rejects a photo that was never processed", () => {
+    const issues = issuesAfter((data) => {
+      data.media.banners.contact.src = "/images/stock/optimized/nope.jpg";
+    });
+    expect(issues).toEqual([
+      expect.stringMatching(/^media\.banners\.contact\.src: .*pnpm images/),
+    ]);
+  });
+
+  it("rejects an original instead of its optimised copy", () => {
+    const issues = issuesAfter((data) => {
+      data.media.banners.contact.src = "/images/stock/banner-contact.jpg";
+    });
+    expect(issues).toEqual([
+      expect.stringMatching(/^media\.banners\.contact\.src: must be an optim/),
+    ]);
+  });
+
+  it("rejects a kind that does not match the folder", () => {
+    const issues = issuesAfter((data) => {
+      data.media.hero[1].kind = "real";
+    });
+    expect(issues).toEqual([
+      expect.stringMatching(/^media\.hero\[1\]\.kind: is "real" but/),
+    ]);
+  });
+
+  it("rejects a photo for a service that does not exist", () => {
+    const issues = issuesAfter((data) => {
+      data.media.services["no-such-service"] = data.media.services.ecg;
+    });
+    expect(issues).toEqual([
+      'media.services.no-such-service: unknown service slug "no-such-service"',
+    ]);
+  });
+
+  it("rejects a hero without exactly 3 slides", () => {
+    const issues = issuesAfter((data) => {
+      data.media.hero.pop();
+    });
+    expect(issues).toEqual(["media.hero: the hero needs exactly 3 slides"]);
+  });
 
   it("rejects a nav link listed twice", () => {
     const issues = issuesAfter((data) => {
@@ -209,5 +280,25 @@ describe("validateSiteData", () => {
       "faqs[0].answer: must not be empty",
       'faqs[1]: duplicate FAQ question "Sample?"',
     ]);
+  });
+});
+
+describe("media files", () => {
+  it("every photo exists on disk", () => {
+    expect(
+      findMissingMediaFiles((path) =>
+        existsSync(join(process.cwd(), "public", path)),
+      ),
+    ).toEqual([]);
+  });
+
+  it("names each entry whose file is missing", () => {
+    const missing = siteData.media.banners.locations.src;
+    expect(findMissingMediaFiles((path) => path !== missing)).toEqual([
+      `media.banners.locations.src: public${missing} does not exist`,
+    ]);
+    expect(() => validateMediaFiles((path) => path !== missing)).toThrowError(
+      /failed validation \(1 issue\)/,
+    );
   });
 });

@@ -27,7 +27,7 @@ Marketing and patient-access website for **Ayyub Labs & Clinics** (diagnostic la
 
 ## Images
 - All photos go through next/image with explicit sizes.
-- Stock lives in public/images/stock; real photos later in public/images/real.
+- Stock lives in public/images/stock; real photos later in public/images/real. Originals are not in git: run `pnpm images` after adding one and commit its resized copy in `optimized/`, which is what `media` points at. Use `mediaProps()` (src/lib/media.ts) for size and blur.
 - Every image is referenced from a `media` object in site-data.ts (never a hard-coded path in a component), with alt text written for a patient (what's in the picture, not "image of").
 
 ## Structure

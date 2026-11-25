@@ -3,19 +3,24 @@
  *
  * The root layout calls validateSiteData() at module scope, so `next build`
  * (and the dev server) fail with a readable list of problems instead of
- * shipping a broken phone link or placeholder text. Server-only: do not
+ * shipping a broken phone link or placeholder text. next.config.ts calls
+ * validateMediaFiles() to check that every photo exists. Server-only: do not
  * import this from a client component.
  */
 import { z } from "zod";
-import * as siteData from "@/data/site-data";
+// Relative imports: next.config.ts loads this file, and its loader does not
+// resolve "@/" in the files it imports.
+import { generatedMedia } from "../data/media.generated";
+import * as siteData from "../data/site-data";
 import type {
   Branch,
   DayHours,
   DayKey,
+  MediaItem,
   NavItem,
   Service,
   TestItem,
-} from "@/data/site-data";
+} from "../data/site-data";
 
 /* ------------------------------------------------------------------ */
 /* Primitives                                                          */
@@ -135,6 +140,25 @@ const navItemSchema: z.ZodType<NavItem> = z.strictObject({
   href: sitePath,
   hasMegaMenu: z.boolean().optional(),
 });
+
+const mediaItemFields = {
+  kind: z.enum(["stock", "real"]),
+  src: z
+    .string()
+    .regex(
+      /^\/images\/(stock|real)\/optimized\/[a-z0-9-]+\.(jpg|png)$/,
+      "must be an optimised photo, e.g. /images/real/optimized/reception.jpg",
+    ),
+  alt: z
+    .string()
+    .refine((alt) => alt.trim() !== "", "alt text must not be empty")
+    .refine(
+      (alt) => !/^\s*(an? )?(image|photo|photograph|picture) of\b/i.test(alt),
+      'alt text says what is in the picture, not "image of"',
+    ),
+};
+
+const mediaItemSchema: z.ZodType<MediaItem> = z.strictObject(mediaItemFields);
 
 /** Reports each value of `key` that appears more than once in a list. */
 function unique<T>(key: (item: T) => string, noun: string) {
@@ -285,6 +309,25 @@ const siteDataSchema = z.strictObject({
       .superRefine(unique((item) => item.href, "nav link")),
   }),
 
+  media: z.strictObject({
+    hero: z
+      .array(
+        z.strictObject({
+          ...mediaItemFields,
+          focal: z.enum(["right", "center"]),
+        }),
+      )
+      .length(3, "the hero needs exactly 3 slides"),
+    services: z.record(z.string(), mediaItemSchema),
+    banners: z.strictObject({
+      about: mediaItemSchema,
+      services: mediaItemSchema,
+      reports: mediaItemSchema,
+      locations: mediaItemSchema,
+      contact: mediaItemSchema,
+    }),
+  }),
+
   brandTokens: z.strictObject({
     colors: z.strictObject({
       logoBlue: color,
@@ -420,6 +463,23 @@ function scanRenderedText(
 /* Checks that span more than one export                               */
 /* ------------------------------------------------------------------ */
 
+type MediaEntry = { path: PropertyKey[]; item: MediaItem };
+
+/** Every photo in `media`, with where it is in the data. */
+function mediaEntries(media: SiteData["media"]): MediaEntry[] {
+  return [
+    ...media.hero.map((item, i) => ({ path: ["media", "hero", i], item })),
+    ...Object.entries(media.services).map(([key, item]) => ({
+      path: ["media", "services", key],
+      item,
+    })),
+    ...Object.entries(media.banners).map(([key, item]) => ({
+      path: ["media", "banners", key],
+      item,
+    })),
+  ];
+}
+
 function crossChecks(data: SiteData): Issue[] {
   const issues: Issue[] = [];
   const branchIds = new Set(data.branches.map((branch) => branch.id));
@@ -446,6 +506,30 @@ function crossChecks(data: SiteData): Issue[] {
       }
     });
   });
+
+  for (const key of Object.keys(data.media.services)) {
+    if (!serviceSlugs.has(key)) {
+      issues.push({
+        path: ["media", "services", key],
+        message: `unknown service slug "${key}"`,
+      });
+    }
+  }
+
+  for (const { path, item } of mediaEntries(data.media)) {
+    if (!item.src.startsWith(`/images/${item.kind}/`)) {
+      issues.push({
+        path: [...path, "kind"],
+        message: `is "${item.kind}" but the file is ${item.src}`,
+      });
+    }
+    if (!Object.hasOwn(generatedMedia, item.src)) {
+      issues.push({
+        path: [...path, "src"],
+        message: `${item.src} is not in media.generated.ts; add the photo and run \`pnpm images\``,
+      });
+    }
+  }
 
   // Test codes identify a test across the whole directory.
   const codes = new Map<string, string>();
@@ -539,7 +623,37 @@ export function findSiteDataIssues(data: unknown = { ...siteData }): string[] {
 
 /** Throws, listing every problem, if site-data.ts is not safe to render. */
 export function validateSiteData(data?: unknown): void {
-  const issues = findSiteDataIssues(data);
+  throwIfAny(findSiteDataIssues(data));
+}
+
+/**
+ * Photos in `media` whose file does not exist, as "path: message" lines.
+ * `exists` is given the path below public/, e.g. "/images/real/…".
+ */
+export function findMissingMediaFiles(
+  exists: (publicPath: string) => boolean,
+  media: SiteData["media"] = siteData.media as SiteData["media"],
+): string[] {
+  return mediaEntries(media)
+    .filter(({ item }) => !exists(item.src))
+    .map(
+      ({ path, item }) =>
+        `${formatPath([...path, "src"])}: public${item.src} does not exist`,
+    );
+}
+
+/**
+ * Throws if a photo in `media` has no file. Called from next.config.ts for
+ * builds and the dev server, not from the root layout: on Vercel the layout
+ * also runs on request (unknown URLs), where public/ is not on disk.
+ */
+export function validateMediaFiles(
+  exists: (publicPath: string) => boolean,
+): void {
+  throwIfAny(findMissingMediaFiles(exists));
+}
+
+function throwIfAny(issues: string[]): void {
   if (issues.length > 0) {
     throw new Error(
       `src/data/site-data.ts failed validation (${issues.length} ${
