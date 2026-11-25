@@ -1,11 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { brand } from "../src/data/site-data";
-import {
-  SPLASH_FADE_MS,
-  SPLASH_KEY,
-  SPLASH_MAX_MS,
-  SPLASH_MIN_MS,
-} from "../src/lib/splash";
+import { SPLASH_FADE_MS, SPLASH_HOLD_MS, SPLASH_KEY } from "../src/lib/splash";
 
 // Runs against the production build (see playwright.config.ts).
 
@@ -129,35 +124,33 @@ test.describe("splash screen", () => {
     expect((await frames(tab)).some((frame) => frame.visible)).toBe(true);
   });
 
-  test("stays for the minimum on a fast load", async ({ page }) => {
-    await recordFrames(page);
-    await page.goto("/");
-    await expect(splash(page)).toHaveCount(0);
+  for (const { name, stall } of [
+    { name: "fast", stall: 0 },
+    { name: "slow", stall: 6000 },
+  ]) {
+    test(`two seconds on screen on a ${name} load`, async ({ page }) => {
+      await recordFrames(page);
+      if (stall) await stallLoad(page, stall);
+      await page.goto("/", { waitUntil: "commit" });
+      await expect(splash(page)).toBeVisible();
+      await expect(splash(page)).toHaveCount(0);
 
-    const recorded = await framesUntil(page, "out");
-    const first = recorded.find((frame) => frame.visible);
-    const leaving = recorded.find((frame) => frame.state === "out");
-    const shown = leaving!.time - first!.time;
-    // A frame of tolerance: the recorder and the timer start in either order.
-    expect(shown).toBeGreaterThan(SPLASH_MIN_MS - 50);
-    expect(shown).toBeLessThan(SPLASH_MAX_MS + 150);
-  });
-
-  test("gives up waiting on a slow load", async ({ page }) => {
-    await recordFrames(page);
-    await stallLoad(page, 5000);
-    await page.goto("/", { waitUntil: "commit" });
-    await expect(splash(page)).toBeVisible();
-    await expect(splash(page)).toHaveCount(0);
-
-    const recorded = await framesUntil(page, "done");
-    const first = recorded.find((frame) => frame.visible);
-    const gone = recorded.find((frame) => frame.state === "done");
-    expect(gone!.time - first!.time).toBeLessThan(
-      SPLASH_MAX_MS + SPLASH_FADE_MS + 250,
-    );
-    expect(await page.evaluate(() => document.readyState)).not.toBe("complete");
-  });
+      const recorded = await framesUntil(page, "done");
+      const time = (found: Frame | undefined) => found!.time;
+      const first = time(recorded.find((frame) => frame.visible));
+      const fading = time(recorded.find((frame) => frame.state === "out"));
+      const done = time(recorded.find((frame) => frame.state === "done"));
+      // Solid long enough to read, however fast the page is…
+      expect(fading - first).toBeGreaterThan(SPLASH_HOLD_MS - 50);
+      // …and never longer, however slow it is.
+      expect(done - first).toBeLessThan(SPLASH_HOLD_MS + SPLASH_FADE_MS + 400);
+      if (stall) {
+        expect(await page.evaluate(() => document.readyState)).not.toBe(
+          "complete",
+        );
+      }
+    });
+  }
 
   test("does not block the page while it fades", async ({ page }) => {
     await page.goto("/");

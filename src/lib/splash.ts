@@ -14,11 +14,9 @@ export const SPLASH_KEY = "al_splash_seen";
 /** Fired on window when the state becomes "done". */
 export const SPLASH_EVENT = "al-splash-done";
 
-/** Shown at least this long, so it never flickers. */
-export const SPLASH_MIN_MS = 500;
-/** Never shown longer than this, however slow the page. Matches .splash-line. */
-export const SPLASH_MAX_MS = 1200;
-/** Matches the transition on .splash. */
+/** How long it stays solid. Matches the animation on .splash-line. */
+export const SPLASH_HOLD_MS = 1700;
+/** Matches the transition on .splash. Two seconds on screen in all. */
 export const SPLASH_FADE_MS = 300;
 
 /**
@@ -32,16 +30,16 @@ catch(e){d.dataset.splash="skip"}
 })()`;
 
 /**
- * For <body>, right after the splash. Dismisses on window load or after the
- * maximum, whichever is first, but not before the minimum. Both are counted
- * from the first frame, not from when the script ran: on a slow phone the
- * first paint can come much later, and the splash would only flicker. Under
- * reduced motion there is no minimum and no fade.
+ * For <body>, right after the splash. Holds it long enough to read, then
+ * fades it, however fast or slow the page is. Counted from the first frame,
+ * not from when the script ran: on a slow phone the first paint can come much
+ * later, and the splash would only flicker. Under reduced motion it goes as
+ * soon as the page has loaded, without a fade.
  */
 export const splashBodyScript = `(function(){
 var d=document.documentElement;
 if(d.dataset.splash)return;
-var start,loaded=false,over=false;
+var over=false;
 var reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
 function done(){d.dataset.splash="done";dispatchEvent(new Event("${SPLASH_EVENT}"))}
 function dismiss(){
@@ -52,16 +50,9 @@ if(reduced){done();return}
 d.dataset.splash="out";
 setTimeout(done,${SPLASH_FADE_MS});
 }
-function settle(){
-if(reduced){if(loaded)dismiss();return}
-if(loaded&&start!==undefined)setTimeout(dismiss,Math.max(0,${SPLASH_MIN_MS}-(performance.now()-start)));
+requestAnimationFrame(function(){setTimeout(dismiss,${SPLASH_HOLD_MS})});
+if(reduced){
+if(document.readyState==="complete")dismiss();
+else addEventListener("load",dismiss,{once:true});
 }
-function onload(){loaded=true;settle()}
-requestAnimationFrame(function(){
-start=performance.now();
-setTimeout(dismiss,${SPLASH_MAX_MS});
-settle();
-});
-if(document.readyState==="complete")onload();
-else addEventListener("load",onload,{once:true});
 })()`;
