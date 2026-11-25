@@ -44,7 +44,7 @@ export function BranchStatusChip({
           className={cn(
             "size-2.5 shrink-0 rounded-full",
             !status && "bg-ink/20",
-            status?.isOpen && "bg-status-open",
+            status?.isOpen && "bg-brand-blue",
             status && !status.isOpen && "bg-brand-red",
           )}
         />

@@ -10,7 +10,7 @@ export function MapLoading() {
       aria-hidden="true"
       className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-tint text-sm font-semibold text-navy"
     >
-      <span className="grid size-10 place-items-center rounded-full bg-white text-brand-red shadow-card motion-safe:animate-pulse">
+      <span className="grid size-10 place-items-center rounded-full bg-white text-brand-red shadow-card">
         <MapPin className="size-5" />
       </span>
       Loading map…

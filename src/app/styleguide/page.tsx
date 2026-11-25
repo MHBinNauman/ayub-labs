@@ -94,12 +94,6 @@ const swatches: {
     value: brandTokens.colors.whatsapp,
     use: "WhatsApp button only",
   },
-  {
-    utility: "status-open",
-    className: "bg-status-open",
-    value: "globals.css",
-    use: "Open-now dot only",
-  },
 ];
 
 const weights: { className: string; weight: number }[] = [

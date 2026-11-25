@@ -43,7 +43,7 @@ export function CopyAddressButton({ text }: { text: string }) {
         className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-ink/15 bg-white px-4 text-sm font-semibold text-navy transition-colors hover:border-navy focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue"
       >
         {status === "copied" ? (
-          <Check aria-hidden="true" className="size-4 text-status-open" />
+          <Check aria-hidden="true" className="size-4 text-brand-blue" />
         ) : (
           <Copy aria-hidden="true" className="size-4" />
         )}
