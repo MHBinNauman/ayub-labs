@@ -47,6 +47,10 @@ async function framesUntil(page: Page, state: string) {
 const seen = (page: Page) =>
   page.evaluate((key) => sessionStorage.getItem(key), SPLASH_KEY);
 
+/** The splash state: null while it is showing (see lib/splash.ts). */
+const state = (page: Page) =>
+  page.evaluate(() => document.documentElement.dataset.splash ?? null);
+
 /** Holds back one image, so window "load" does not fire for a while. */
 async function stallLoad(page: Page, ms: number) {
   await page.route("**/_next/image*", async (route) => {
@@ -151,6 +155,45 @@ test.describe("splash screen", () => {
       }
     });
   }
+
+  test("a tap closes it early, and presses nothing underneath", async ({
+    page,
+    context,
+    isMobile,
+  }) => {
+    // Once parsed, so its script has run.
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await expect(splash(page)).toBeVisible();
+
+    // Right on top of the floating WhatsApp button, which would open a tab.
+    const button = page.getByRole("link", { name: "Chat on WhatsApp" });
+    await expect(button).toBeInViewport();
+    const box = (await button.boundingBox())!;
+    const point = [box.x + box.width / 2, box.y + box.height / 2] as const;
+
+    expect(await state(page)).toBeNull();
+    if (isMobile) await page.touchscreen.tap(...point);
+    else await page.mouse.click(...point);
+    expect(await state(page)).toMatch(/^(out|done)$/);
+
+    await expect(splash(page)).toHaveCount(0);
+    expect(await seen(page)).toBe("1");
+    expect(context.pages()).toHaveLength(1);
+    expect(new URL(page.url()).pathname).toBe("/");
+
+    // The next tap reaches the page.
+    await page.getByRole("link", { name: "Get your report" }).last().click();
+    await expect(page).toHaveURL("/reports");
+  });
+
+  test("a key closes it early", async ({ page }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await expect(splash(page)).toBeVisible();
+    expect(await state(page)).toBeNull();
+    await page.keyboard.press("Tab");
+    expect(await state(page)).toMatch(/^(out|done)$/);
+    await expect(splash(page)).toHaveCount(0);
+  });
 
   test("does not block the page while it fades", async ({ page }) => {
     await page.goto("/");

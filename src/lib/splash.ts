@@ -35,6 +35,11 @@ catch(e){d.dataset.splash="skip"}
  * not from when the script ran: on a slow phone the first paint can come much
  * later, and the splash would only flicker. Under reduced motion it goes as
  * soon as the page has loaded, without a fade.
+ *
+ * A tap or any key closes it early, so it never keeps anyone from calling. It
+ * is the click that closes it, not the press: the splash is still on top then,
+ * so the same tap cannot land on a button underneath. The listener is on the
+ * splash itself because iOS sends no click from a plain element otherwise.
  */
 export const splashBodyScript = `(function(){
 var d=document.documentElement;
@@ -51,6 +56,8 @@ d.dataset.splash="out";
 setTimeout(done,${SPLASH_FADE_MS});
 }
 requestAnimationFrame(function(){setTimeout(dismiss,${SPLASH_HOLD_MS})});
+document.querySelector(".splash").addEventListener("click",dismiss);
+addEventListener("keydown",dismiss,{once:true});
 if(reduced){
 if(document.readyState==="complete")dismiss();
 else addEventListener("load",dismiss,{once:true});
