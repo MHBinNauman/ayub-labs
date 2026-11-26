@@ -5,10 +5,10 @@ import { UNVERIFIED_HOURS_NOTE } from "@/components/sections/BranchCard";
 import { EnquiryForm } from "@/components/sections/EnquiryForm";
 import { MapEmbed } from "@/components/sections/MapEmbed";
 import { WeekHoursTable } from "@/components/sections/WeekHoursTable";
-import { Breadcrumbs, Container } from "@/components/ui";
+import { Container, PageBanner } from "@/components/ui";
 import { Reveal, REVEAL_STAGGER } from "@/components/ui/Reveal";
 import { Tabs } from "@/components/ui/Tabs";
-import { branches, contact, type Branch } from "@/data/site-data";
+import { branches, contact, media, type Branch } from "@/data/site-data";
 import { weekHoursTable } from "@/lib/hours";
 import { mailto, mapsEmbed, tel, whatsapp } from "@/lib/links";
 import { routes } from "@/lib/nav";
@@ -105,17 +105,12 @@ export default function ContactPage() {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
-      <section className="bg-surface py-8 sm:py-10">
-        <Container>
-          <Breadcrumbs items={[crumbs[0], { label: crumbs[1].label }]} />
-          <h1 className="mt-6 text-3xl font-bold tracking-tight text-balance text-navy sm:text-4xl">
-            Contact us
-          </h1>
-          <p className="mt-3 max-w-2xl text-lg text-pretty text-muted">
-            {intro}
-          </p>
-        </Container>
-      </section>
+      <PageBanner
+        crumbs={[crumbs[0], { label: crumbs[1].label }]}
+        title="Contact us"
+        intro={intro}
+        media={media.banners.contact}
+      />
 
       <Container className="py-14 lg:py-20">
         <Reveal stagger={REVEAL_STAGGER} className="space-y-14 lg:space-y-20">

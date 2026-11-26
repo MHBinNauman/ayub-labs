@@ -37,6 +37,23 @@ test.describe("/reports", () => {
     await expect(page.getByText(policies.reportRelease.value)).toBeVisible();
   });
 
+  test("shared report band with three steps jumps to the form", async ({
+    page,
+  }) => {
+    await expect(
+      page.getByRole("heading", { level: 2, name: "Access your reports" }),
+    ).toBeVisible();
+    await expect(
+      page
+        .getByRole("list", { name: "How to get your report" })
+        .getByRole("listitem"),
+    ).toHaveCount(3);
+    const jump = page.getByRole("link", { name: "Request your report" });
+    await expect(jump).toHaveAttribute("href", "#request-form");
+    await jump.click();
+    await expect(form(page)).toBeInViewport();
+  });
+
   test("empty submit shows every error and focuses the first field", async ({
     page,
   }) => {

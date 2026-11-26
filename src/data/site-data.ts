@@ -376,6 +376,8 @@ export const media: {
   /** By service slug. A service with no photo is left out. */
   services: Partial<Record<string, MediaItem>>;
   banners: Record<BannerKey, MediaItem>;
+  /** Photos for the About page's own panels (the banner is banners.about). */
+  about: { lab: MediaItem };
 } = {
   hero: [
     { kind: "stock", src: "/images/stock/optimized/hero-1-lab.jpg", focal: "right", alt: "Gloved hands drawing liquid from a small vial beside a rack of blue-capped test tubes" },
@@ -401,6 +403,10 @@ export const media: {
     reports: { kind: "stock", src: "/images/stock/optimized/banner-reports.jpg", alt: "Laboratory bench with a notebook and racks of labelled sample tubes" },
     locations: { kind: "stock", src: "/images/stock/optimized/banner-locations.jpg", alt: "Faisal Mosque in Islamabad at sunset" },
     contact: { kind: "stock", src: "/images/stock/optimized/banner-contact.jpg", alt: "Reception desk under a lit Reception sign" },
+  },
+  about: {
+    // Same stock photo as hero slide 1 until real photos of the lab arrive.
+    lab: { kind: "stock", src: "/images/stock/optimized/hero-1-lab.jpg", alt: "Gloved hands drawing liquid from a small vial beside a rack of blue-capped test tubes" },
   },
 };
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { pageTitles } from "@/lib/page-titles";
+import { AboutSplit } from "@/components/sections/AboutTeaser";
 import { ContactCTA } from "@/components/sections/ContactCTA";
 import { DoctorsSection } from "@/components/sections/DoctorsSection";
 import { QualityPromise } from "@/components/sections/QualityPromise";
@@ -8,15 +9,18 @@ import {
   type RegistrationTile,
 } from "@/components/sections/RegistrationTiles";
 import { StoryTimeline } from "@/components/sections/StoryTimeline";
-import { Breadcrumbs, Container } from "@/components/ui";
-import { brand, doctors, qualityPromise } from "@/data/site-data";
+import { PageBanner } from "@/components/ui";
+import { brand, doctors, media, qualityPromise } from "@/data/site-data";
 import { routes } from "@/lib/nav";
 import { breadcrumbJsonLd, JsonLd, pageMetadata } from "@/lib/seo";
 import {
   branchNames,
+  cities,
+  joinList,
   resolvedFeatures,
   storyTimeline,
   verifiedRegistrations,
+  whyChooseItems,
 } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
@@ -43,6 +47,11 @@ const tiles: RegistrationTile[] = verifiedRegistrations.map((registration) => ({
 
 const promise = qualityPromise.filter((point) => point.verified);
 
+/** The banner's one line, from facts in site-data.ts. */
+const intro = brand.foundedYear.verified
+  ? `Serving patients in ${joinList(cities)} since ${brand.foundedYear.value}.`
+  : `Serving patients in ${joinList(cities)}.`;
+
 /**
  * The About copy (brand.aboutDraft) is our rewrite and awaits client
  * approval. Visible only under `next dev`; compiled out of production builds.
@@ -52,7 +61,7 @@ function DraftCopyNotice() {
   return (
     <p
       role="note"
-      className="mt-4 max-w-2xl rounded-md border-l-4 border-brand-red bg-white px-4 py-2 text-sm text-ink"
+      className="mt-4 max-w-2xl rounded-md border-l-4 border-brand-red bg-surface px-4 py-2 text-sm text-ink"
     >
       <strong className="text-brand-red-text">Draft copy.</strong> The client
       has not approved this introduction yet. (Shown in development only.)
@@ -64,19 +73,23 @@ export default function AboutPage() {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
-      <section className="bg-surface py-8 sm:py-10">
-        <Container>
-          <Breadcrumbs items={[crumbs[0], { label: crumbs[1].label }]} />
-          <h1 className="mt-6 text-3xl font-bold tracking-tight text-balance text-navy sm:text-4xl">
-            About {brand.displayName}
-          </h1>
-          <p className="mt-3 max-w-2xl text-lg text-pretty text-ink">
-            {brand.aboutDraft}
-          </p>
-          <DraftCopyNotice />
-        </Container>
-      </section>
+      <PageBanner
+        crumbs={[crumbs[0], { label: crumbs[1].label }]}
+        title={`About ${brand.displayName}`}
+        intro={intro}
+        media={media.banners.about}
+      />
 
+      <AboutSplit
+        headingId="lab-heading"
+        eyebrow="About us"
+        title="Our lab"
+        photo={media.about.lab}
+        body={brand.aboutDraft}
+        note={<DraftCopyNotice />}
+        checklistTitle="Why choose us"
+        items={whyChooseItems}
+      />
       <StoryTimeline entries={storyTimeline()} />
       <RegistrationTiles tiles={tiles} />
       <QualityPromise tagline={brand.tagline.value} points={promise} />

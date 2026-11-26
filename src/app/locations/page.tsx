@@ -4,9 +4,9 @@ import { BranchCardFrame } from "@/components/sections/BranchCardFrame";
 import { LocationsControls } from "@/components/sections/LocationsControls";
 import { LocationsMap } from "@/components/sections/LocationsMap";
 import type { FinderBranch } from "@/components/sections/locations-types";
-import { Breadcrumbs, Container } from "@/components/ui";
+import { Container, PageBanner } from "@/components/ui";
 import { Reveal, REVEAL_STAGGER } from "@/components/ui/Reveal";
-import { brand, branches } from "@/data/site-data";
+import { branches, brand, media } from "@/data/site-data";
 import { mapsEmbed } from "@/lib/links";
 import { routes } from "@/lib/nav";
 import { pageTitles } from "@/lib/page-titles";
@@ -52,17 +52,12 @@ export default function LocationsPage() {
         <JsonLd key={branch.id} data={branchJsonLd(branch)} />
       ))}
 
-      <section className="bg-surface py-8 sm:py-10">
-        <Container>
-          <Breadcrumbs items={[crumbs[0], { label: crumbs[1].label }]} />
-          <h1 className="mt-6 text-3xl font-bold tracking-tight text-balance text-navy sm:text-4xl">
-            {pageTitles.locations}
-          </h1>
-          <p className="mt-3 max-w-2xl text-lg text-pretty text-muted">
-            {keepHyphens(intro)}
-          </p>
-        </Container>
-      </section>
+      <PageBanner
+        crumbs={[crumbs[0], { label: crumbs[1].label }]}
+        title={pageTitles.locations}
+        intro={keepHyphens(intro)}
+        media={media.banners.locations}
+      />
 
       <Container className="py-14 lg:py-20">
         <Reveal stagger={REVEAL_STAGGER}>

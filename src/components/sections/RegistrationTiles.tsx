@@ -18,7 +18,9 @@ export type RegistrationTile = {
 
 /**
  * Regulator badges with a one-line, plain-language explanation of what each
- * body does. Registration is the only trust claim the site makes.
+ * body does. Registration is the only trust claim the site makes. White
+ * tiles on the surface band, with the shared card lift on hover
+ * (card-hover); each tile reveals in turn.
  */
 export function RegistrationTiles({ tiles }: { tiles: RegistrationTile[] }) {
   if (tiles.length === 0) return null;
@@ -38,7 +40,8 @@ export function RegistrationTiles({ tiles }: { tiles: RegistrationTile[] }) {
         {tiles.map((tile) => (
           <li
             key={tile.id}
-            className="flex flex-col gap-5 rounded-card bg-white p-6 shadow-card ring-1 ring-ink/5 sm:flex-row sm:items-start"
+            data-reveal
+            className="card-hover flex flex-col gap-5 rounded-card bg-white p-6 shadow-card ring-1 ring-ink/5 sm:flex-row sm:items-start"
           >
             <div className="relative size-24 shrink-0">
               <Image

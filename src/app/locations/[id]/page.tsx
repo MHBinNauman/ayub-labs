@@ -7,10 +7,15 @@ import { UNVERIFIED_HOURS_NOTE } from "@/components/sections/BranchCard";
 import { CopyAddressButton } from "@/components/sections/CopyAddressButton";
 import { MapEmbed } from "@/components/sections/MapEmbed";
 import { WeekHoursTable } from "@/components/sections/WeekHoursTable";
-import { Breadcrumbs, Button, Container } from "@/components/ui";
+import { Button, Container, PageBanner } from "@/components/ui";
 import { Reveal, REVEAL_STAGGER } from "@/components/ui/Reveal";
 import { BranchStatusChip } from "@/components/ui/BranchStatusChip";
-import { branches, serviceCategories, type Branch } from "@/data/site-data";
+import {
+  branches,
+  media,
+  serviceCategories,
+  type Branch,
+} from "@/data/site-data";
 import { formatWeekHours, weekHoursTable } from "@/lib/hours";
 import { mapsDirections, mapsEmbed, tel, whatsapp } from "@/lib/links";
 import { routes, serviceHref } from "@/lib/nav";
@@ -92,24 +97,20 @@ export default async function BranchPage({
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
       <JsonLd data={branchJsonLd(branch)} />
 
-      <section className="bg-surface py-8 sm:py-10">
-        <Container>
-          <Breadcrumbs items={[crumbs[0], crumbs[1], { label: branch.name }]} />
-          <p className="mt-6 text-sm font-semibold tracking-wide text-brand-red-text uppercase">
-            {branch.city} · {branch.area}
-          </p>
-          <h1 className="mt-1 text-3xl font-bold tracking-tight text-navy sm:text-4xl">
-            {branch.name}
-          </h1>
-          <BranchStatusChip
-            branch={{
-              hours: branch.hours,
-              hoursVerified: branch.hoursVerified,
-            }}
-            className="mt-3 w-fit"
-          />
-        </Container>
-      </section>
+      <PageBanner
+        crumbs={[crumbs[0], crumbs[1], { label: branch.name }]}
+        title={branch.name}
+        eyebrow={`${branch.city} · ${branch.area}`}
+        media={media.banners.locations}
+      >
+        <BranchStatusChip
+          branch={{
+            hours: branch.hours,
+            hoursVerified: branch.hoursVerified,
+          }}
+          className="mt-3 w-fit"
+        />
+      </PageBanner>
 
       <Container className="py-14 lg:py-20">
         <Reveal

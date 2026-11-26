@@ -2,6 +2,7 @@
 
 import {
   useId,
+  useLayoutEffect,
   useRef,
   useState,
   type KeyboardEvent,
@@ -24,11 +25,37 @@ type TabsProps = {
  * order (roving tabindex); Left/Right/Home/End move between tabs and select
  * as they go. Every panel stays in the DOM, so hidden content is still in the
  * HTML for search engines.
+ *
+ * Motion (transform and opacity only, none under reduced motion):
+ * - One red underline slides to the selected tab. It is a 1px-wide bar moved
+ *   and stretched with translateX/scaleX, measured from the tab. Until
+ *   hydration, the selected tab draws its own static underline instead.
+ * - Panels crossfade. They share one grid cell, so the box is as tall as the
+ *   tallest and nothing below shifts; a hidden panel is `visibility: hidden`
+ *   once its fade ends, which keeps it out of the tab order and the
+ *   accessibility tree.
  */
 export function Tabs({ tabs, label, defaultTabId, className }: TabsProps) {
   const baseId = useId();
   const [activeId, setActiveId] = useState(defaultTabId ?? tabs[0]?.id);
   const tabRefs = useRef(new Map<string, HTMLButtonElement>());
+  const listRef = useRef<HTMLDivElement>(null);
+  const [indicator, setIndicator] = useState<{ x: number; width: number }>();
+
+  // Place the underline under the selected tab, and keep it there as the
+  // tab list resizes (fonts loading, window resizing, scrolling sideways).
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    const tab = activeId ? tabRefs.current.get(activeId) : undefined;
+    if (!list || !tab) return;
+    const measure = () =>
+      setIndicator({ x: tab.offsetLeft, width: tab.offsetWidth });
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(list);
+    observer.observe(tab);
+    return () => observer.disconnect();
+  }, [activeId]);
 
   function onKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
     const last = tabs.length - 1;
@@ -60,9 +87,10 @@ export function Tabs({ tabs, label, defaultTabId, className }: TabsProps) {
   return (
     <div className={className}>
       <div
+        ref={listRef}
         role="tablist"
         aria-label={label}
-        className="flex overflow-x-auto border-b border-ink/10"
+        className="relative flex overflow-x-auto border-b border-ink/10"
       >
         {tabs.map((tab, index) => {
           const selected = tab.id === activeId;
@@ -84,7 +112,10 @@ export function Tabs({ tabs, label, defaultTabId, className }: TabsProps) {
               className={cn(
                 "-mb-px min-h-11 shrink-0 border-b-2 px-4 py-2 font-semibold transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-blue",
                 selected
-                  ? "border-brand-red text-navy"
+                  ? // The sliding underline takes over once it is measured.
+                    indicator
+                    ? "border-transparent text-navy"
+                    : "border-brand-red text-navy"
                   : "border-transparent text-muted hover:text-navy",
               )}
             >
@@ -92,21 +123,40 @@ export function Tabs({ tabs, label, defaultTabId, className }: TabsProps) {
             </button>
           );
         })}
+        {indicator && (
+          <span
+            aria-hidden="true"
+            data-tab-indicator=""
+            className="pointer-events-none absolute bottom-0 left-0 h-0.5 w-px origin-left bg-brand-red motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-house"
+            style={{
+              transform: `translateX(${indicator.x}px) scaleX(${indicator.width})`,
+            }}
+          />
+        )}
       </div>
 
-      {tabs.map((tab) => (
-        <div
-          key={tab.id}
-          role="tabpanel"
-          id={`${baseId}-panel-${tab.id}`}
-          aria-labelledby={`${baseId}-tab-${tab.id}`}
-          hidden={tab.id !== activeId}
-          tabIndex={0}
-          className="pt-6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue"
-        >
-          {tab.content}
-        </div>
-      ))}
+      <div className="grid pt-6">
+        {tabs.map((tab) => {
+          const shown = tab.id === activeId;
+          return (
+            <div
+              key={tab.id}
+              role="tabpanel"
+              id={`${baseId}-panel-${tab.id}`}
+              aria-labelledby={`${baseId}-tab-${tab.id}`}
+              tabIndex={0}
+              data-active={shown || undefined}
+              className={cn(
+                "[grid-area:1/1] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue",
+                "motion-safe:transition-[opacity,visibility] motion-safe:duration-300 motion-safe:ease-out",
+                shown ? "visible opacity-100" : "invisible opacity-0",
+              )}
+            >
+              {tab.content}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

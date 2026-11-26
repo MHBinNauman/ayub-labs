@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { pageTitles } from "@/lib/page-titles";
-import { Breadcrumbs, Container } from "@/components/ui";
+import { Container, PageBanner } from "@/components/ui";
 import { Reveal } from "@/components/ui/Reveal";
 import { ServicesBrowser } from "@/components/sections/ServicesBrowser";
-import { branches, contact, services } from "@/data/site-data";
+import { branches, contact, media, services } from "@/data/site-data";
 import { QUERY_TOKEN } from "@/lib/message-template";
 import { routes, toSearchableService } from "@/lib/nav";
 import { breadcrumbJsonLd, JsonLd, pageMetadata } from "@/lib/seo";
@@ -44,17 +44,12 @@ export default function ServicesPage() {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
-      <section className="bg-surface py-8 sm:py-10">
-        <Container>
-          <Breadcrumbs items={[crumbs[0], { label: crumbs[1].label }]} />
-          <h1 className="mt-6 text-3xl font-bold tracking-tight text-balance text-navy sm:text-4xl">
-            Services
-          </h1>
-          <p className="mt-3 max-w-2xl text-lg text-pretty text-muted">
-            {keepHyphens(intro)}
-          </p>
-        </Container>
-      </section>
+      <PageBanner
+        crumbs={[crumbs[0], { label: crumbs[1].label }]}
+        title="Services"
+        intro={keepHyphens(intro)}
+        media={media.banners.services}
+      />
 
       <Container className="py-14 lg:py-20">
         {/*

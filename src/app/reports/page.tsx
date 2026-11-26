@@ -9,10 +9,11 @@ import type { Metadata } from "next";
 import { pageTitles } from "@/lib/page-titles";
 import Link from "next/link";
 import { UNVERIFIED_HOURS_NOTE } from "@/components/sections/BranchCard";
+import { ReportAccess } from "@/components/sections/ReportCTA";
 import { ReportRequestForm } from "@/components/sections/ReportRequestForm";
-import { Breadcrumbs, Container } from "@/components/ui";
+import { Container, PageBanner } from "@/components/ui";
 import { Reveal, REVEAL_STAGGER } from "@/components/ui/Reveal";
-import { branches, contact, policies } from "@/data/site-data";
+import { branches, contact, media, policies } from "@/data/site-data";
 import { formatWeekHours } from "@/lib/hours";
 import { whatsapp } from "@/lib/links";
 import { routes } from "@/lib/nav";
@@ -34,6 +35,9 @@ const crumbs = [
   { label: "Home", href: "/" },
   { label: "Reports", href: routes.reports },
 ];
+
+/** The request form's anchor, the target of the band's button. */
+const REQUEST_FORM_ID = "request-form";
 
 const portalSteps = [
   "Find the Lab No. on the receipt you got when your sample was taken.",
@@ -81,7 +85,11 @@ function RequestCard() {
     whatsapp: branch.whatsapp ?? contact.whatsapp.number,
   }));
   return (
-    <div className="rounded-card bg-white p-6 shadow-card ring-1 ring-ink/5 sm:p-8">
+    <div
+      id={REQUEST_FORM_ID}
+      // Clears the sticky header when the band's button jumps here.
+      className="scroll-mt-24 rounded-card bg-white p-6 shadow-card ring-1 ring-ink/5 sm:p-8"
+    >
       <h2 className="text-2xl font-bold text-balance text-navy">
         Request your report on WhatsApp
       </h2>
@@ -111,20 +119,25 @@ export default function ReportsPage() {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
-      <section className="bg-surface py-8 sm:py-10">
-        <Container>
-          <Breadcrumbs items={[crumbs[0], { label: crumbs[1].label }]} />
-          <h1 className="mt-6 text-3xl font-bold tracking-tight text-balance text-navy sm:text-4xl">
-            Your test report
-          </h1>
-          <p className="mt-3 max-w-2xl text-lg text-pretty text-muted">
-            {intro}
-          </p>
-        </Container>
-      </section>
+      <PageBanner
+        crumbs={[crumbs[0], { label: crumbs[1].label }]}
+        title="Your test report"
+        intro={intro}
+        media={media.banners.reports}
+      />
 
       <Container className="py-14 lg:py-20">
         <Reveal stagger={REVEAL_STAGGER} className="space-y-14 lg:space-y-20">
+          {/* Shared with the homepage. Without a portal its button jumps to the form below. */}
+          <div>
+            <ReportAccess
+              requestLink={{
+                href: `#${REQUEST_FORM_ID}`,
+                label: "Request your report",
+              }}
+            />
+          </div>
+
           {portal ? <PortalCard url={portal} /> : <RequestCard />}
 
           <section aria-labelledby="collect-heading">

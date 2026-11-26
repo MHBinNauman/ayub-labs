@@ -11,5 +11,6 @@ export { Breadcrumbs, type Crumb } from "./Breadcrumbs";
 export { Button, type ButtonProps } from "./Button";
 export { Card } from "./Card";
 export { Container } from "./Container";
+export { PageBanner } from "./PageBanner";
 export { Section } from "./Section";
 export { SectionHeading } from "./SectionHeading";

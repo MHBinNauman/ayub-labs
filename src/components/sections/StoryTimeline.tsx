@@ -5,7 +5,9 @@ import type { StoryEntry } from "@/lib/site";
 /**
  * "Our story": a vertical timeline built from storyTimeline() in site.ts,
  * i.e. the dated milestones in site-data.ts plus a generated "Today" entry.
- * An ordered list, so screen readers announce it as a sequence.
+ * An ordered list, so screen readers announce it as a sequence. Each
+ * milestone is marked data-reveal, so Section reveals them one after another
+ * as they scroll in.
  */
 export function StoryTimeline({ entries }: { entries: StoryEntry[] }) {
   if (entries.length === 0) return null;
@@ -19,7 +21,11 @@ export function StoryTimeline({ entries }: { entries: StoryEntry[] }) {
       />
       <ol className="relative mt-10 max-w-2xl space-y-10 border-l-2 border-navy/20 pl-8 sm:pl-10">
         {entries.map((entry) => (
-          <li key={`${entry.when}-${entry.title}`} className="relative">
+          <li
+            key={`${entry.when}-${entry.title}`}
+            data-reveal
+            className="relative"
+          >
             <span
               aria-hidden="true"
               className={cn(

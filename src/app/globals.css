@@ -90,6 +90,36 @@
     );
 }
 
+/*
+ * Inner-page banner overlay (PageBanner.tsx). Stops are CSS variables set
+ * from BANNER_OVERLAY in lib/banner.ts, which banner.test.ts checks for
+ * contrast. Below lg the copy spans the width: flat navy. From lg navy holds
+ * under the copy, then eases to logo blue on the right.
+ */
+@utility banner-overlay {
+  background-color: color-mix(
+    in srgb,
+    var(--color-navy) var(--banner-navy),
+    transparent
+  );
+
+  @media (width >= 64rem) {
+    background-color: transparent;
+    background-image: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-navy) var(--banner-navy), transparent) 0%,
+      color-mix(in srgb, var(--color-navy) var(--banner-navy), transparent)
+        var(--banner-hold),
+      color-mix(
+          in srgb,
+          var(--color-brand-blue) var(--banner-blue),
+          transparent
+        )
+        100%
+    );
+  }
+}
+
 /* The photo layer fades in over its first fifth, so no edge shows at the seam. */
 @utility hero-fade {
   mask-image: linear-gradient(90deg, transparent 0%, black 20%);
@@ -559,5 +589,28 @@ dialog[data-scroll-lock]::backdrop {
   from {
     opacity: 0;
     transform: translateX(12px);
+  }
+}
+
+/*
+ * Page banner parallax (PageBanner.tsx): over the first screen of scroll the
+ * photo moves down 0.15x the scroll (15vh over 100vh). Scroll-driven, so no
+ * JavaScript and nothing on the main thread. Desktop only (the photo layer
+ * reaches 15vh above the banner there, so no gap opens); none on phones,
+ * under reduced motion, or in browsers without scroll timelines.
+ */
+@keyframes banner-parallax {
+  to {
+    transform: translateY(15vh);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (width >= 64rem) {
+  @supports (animation-timeline: scroll()) {
+    .banner-parallax {
+      animation: banner-parallax linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
   }
 }

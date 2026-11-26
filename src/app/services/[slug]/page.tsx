@@ -4,12 +4,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BranchContact } from "@/components/sections/BranchContact";
 import { TestTable } from "@/components/sections/TestTable";
-import { Breadcrumbs, Button, Container } from "@/components/ui";
+import { Button, Container, PageBanner } from "@/components/ui";
 import { Reveal, REVEAL_STAGGER } from "@/components/ui/Reveal";
 import { ServiceCard } from "@/components/ui/ServiceCard";
 import { ServiceIcon } from "@/components/ui/ServiceIcon";
 import {
   contact,
+  media,
   serviceCategories,
   services,
   type Service,
@@ -137,55 +138,50 @@ export default async function ServicePage({
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
       {structured && <JsonLd data={structured} />}
 
-      <section className="bg-surface py-8 sm:py-10">
-        <Container>
-          <Breadcrumbs
-            items={[crumbs[0], crumbs[1], { label: service.name }]}
-          />
-          <div className="mt-6 flex items-start gap-4">
-            {serviceIcon(service.icon) && (
-              <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-white text-brand-blue shadow-card sm:size-16">
-                <ServiceIcon name={service.icon} className="size-7 sm:size-8" />
-              </span>
-            )}
-            <div className="min-w-0">
-              <Link
-                href={`${routes.services}?category=${service.category}`}
-                className="inline-flex min-h-11 items-center text-sm font-semibold tracking-wide text-brand-red-text uppercase underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-brand-blue"
-              >
-                {category.label}
-              </Link>
-              <h1 className="text-3xl font-bold tracking-tight text-balance text-navy sm:text-4xl">
-                {service.name}
-              </h1>
-            </div>
-          </div>
-          <p className="mt-4 max-w-2xl text-lg text-pretty text-ink">
-            {service.summary}
-          </p>
-          <DraftCopyNotice service={service} />
+      <PageBanner
+        crumbs={[crumbs[0], crumbs[1], { label: service.name }]}
+        title={service.name}
+        intro={service.summary}
+        // A service's own photo; the Services banner if it has none.
+        media={media.services[service.slug] ?? media.banners.services}
+        icon={
+          serviceIcon(service.icon) && (
+            <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-white text-brand-blue shadow-card sm:size-16">
+              <ServiceIcon name={service.icon} className="size-7 sm:size-8" />
+            </span>
+          )
+        }
+        eyebrow={
+          <Link
+            href={`${routes.services}?category=${service.category}`}
+            className="inline-flex min-h-11 items-center underline-offset-4 hover:text-white hover:underline focus-visible:outline-2 focus-visible:outline-white"
+          >
+            {category.label}
+          </Link>
+        }
+      >
+        <DraftCopyNotice service={service} />
 
-          {offeredAt.length > 0 && (
-            <div className="mt-6 flex flex-wrap items-center gap-2">
-              <span className="text-sm font-semibold text-muted">
-                Available at
-              </span>
-              <ul className="flex flex-wrap gap-2">
-                {offeredAt.map((branch) => (
-                  <li key={branch.id}>
-                    <Link
-                      href={`${routes.locations}/${branch.id}`}
-                      className="inline-flex min-h-11 items-center rounded-full border border-ink/15 bg-white px-4 text-sm font-semibold text-navy transition-colors hover:border-navy focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue"
-                    >
-                      {branch.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </Container>
-      </section>
+        {offeredAt.length > 0 && (
+          <div className="mt-6 flex flex-wrap items-center gap-2">
+            <span className="text-sm font-semibold text-white/80">
+              Available at
+            </span>
+            <ul className="flex flex-wrap gap-2">
+              {offeredAt.map((branch) => (
+                <li key={branch.id}>
+                  <Link
+                    href={`${routes.locations}/${branch.id}`}
+                    className="inline-flex min-h-11 items-center rounded-full border border-white/40 bg-white/10 px-4 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-navy focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  >
+                    {branch.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </PageBanner>
 
       {/*
        * DOM order is content → branches → related, so phones read the branch

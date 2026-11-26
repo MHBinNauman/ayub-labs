@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
-import { brand, registrations } from "../src/data/site-data";
+import { brand, media, registrations } from "../src/data/site-data";
+import { whyChooseItems } from "../src/lib/site";
 
 test.describe("/about", () => {
   test("page structure", async ({ page }) => {
@@ -11,12 +12,53 @@ test.describe("/about", () => {
       page.getByRole("main").getByText(brand.aboutDraft),
     ).toBeVisible();
     for (const name of [
+      "Our lab",
       "How we got here",
       "Who we are registered with",
       `“${brand.tagline.value}”`,
       "Ready when you are",
     ]) {
       await expect(page.getByRole("heading", { level: 2, name })).toBeVisible();
+    }
+  });
+
+  test("'Our lab' panel: lab photo, About copy and the facts checklist", async ({
+    page,
+  }) => {
+    await page.goto("/about");
+    const section = page.locator("section", {
+      has: page.locator("#lab-heading"),
+    });
+    await expect(
+      section.getByRole("heading", { level: 2, name: "Our lab" }),
+    ).toBeVisible();
+    await expect(
+      section.getByRole("img", { name: media.about.lab.alt }),
+    ).toBeVisible();
+    await expect(
+      section.getByRole("heading", { level: 3, name: "Why choose us" }),
+    ).toBeVisible();
+    await expect(section.getByRole("list").getByRole("listitem")).toHaveCount(
+      whyChooseItems.length,
+    );
+  });
+
+  test("milestones reveal one by one; registration tiles lift", async ({
+    page,
+  }) => {
+    await page.goto("/about");
+    const story = page.locator("section", {
+      has: page.locator("#story-heading"),
+    });
+    const milestones = story.getByRole("listitem");
+    for (const milestone of await milestones.all()) {
+      await expect(milestone).toHaveAttribute("data-reveal");
+    }
+    const tiles = page
+      .locator("section", { has: page.locator("#registrations-heading") })
+      .getByRole("listitem");
+    for (const tile of await tiles.all()) {
+      await expect(tile).toHaveClass(/card-hover/);
     }
   });
 

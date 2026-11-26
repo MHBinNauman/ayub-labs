@@ -326,6 +326,7 @@ const siteDataSchema = z.strictObject({
       locations: mediaItemSchema,
       contact: mediaItemSchema,
     }),
+    about: z.strictObject({ lab: mediaItemSchema }),
   }),
 
   brandTokens: z.strictObject({
@@ -476,6 +477,10 @@ function mediaEntries(media: SiteData["media"]): MediaEntry[] {
     })),
     ...Object.entries(media.banners).map(([key, item]) => ({
       path: ["media", "banners", key],
+      item,
+    })),
+    ...Object.entries(media.about).map(([key, item]) => ({
+      path: ["media", "about", key],
       item,
     })),
   ];

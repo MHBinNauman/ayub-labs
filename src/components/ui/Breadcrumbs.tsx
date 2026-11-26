@@ -5,17 +5,33 @@ export type Crumb = { label: string; href?: string };
 
 const chip = "flex min-h-11 items-center px-4 py-2";
 
+/** Ancestor chips: navy on light pages, translucent white on a photo banner. */
+const ancestorTones = {
+  light: {
+    link: "bg-navy hover:bg-brand-blue focus-visible:outline-brand-blue",
+    plain: "bg-navy",
+  },
+  onDark: {
+    link: "bg-white/15 hover:bg-white/25 focus-visible:outline-white",
+    plain: "bg-white/15",
+  },
+};
+
 /**
- * Chip-style breadcrumb trail. Ancestors are navy links; the last item is the
- * current page, shown as a red chip with an arrow-shaped right edge.
+ * Chip-style breadcrumb trail. Ancestors are links; the last item is the
+ * current page, shown as a red chip with an arrow-shaped right edge. Use
+ * tone="onDark" on a navy photo banner (PageBanner).
  */
 export function Breadcrumbs({
   items,
+  tone = "light",
   className,
 }: {
   items: Crumb[];
+  tone?: keyof typeof ancestorTones;
   className?: string;
 }) {
+  const ancestor = ancestorTones[tone];
   return (
     <nav aria-label="Breadcrumb" className={className}>
       <ol className="flex flex-wrap gap-1 text-sm font-semibold text-white">
@@ -42,13 +58,14 @@ export function Breadcrumbs({
                   className={cn(
                     chip,
                     rounded,
-                    "bg-navy transition-colors hover:bg-brand-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue",
+                    "transition-colors focus-visible:outline-2 focus-visible:outline-offset-2",
+                    ancestor.link,
                   )}
                 >
                   {item.label}
                 </Link>
               ) : (
-                <span className={cn(chip, rounded, "bg-navy")}>
+                <span className={cn(chip, rounded, ancestor.plain)}>
                   {item.label}
                 </span>
               )}

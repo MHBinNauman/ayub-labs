@@ -6,6 +6,7 @@ const items: MediaItem[] = [
   ...media.hero,
   ...Object.values(media.services).filter((item) => item !== undefined),
   ...Object.values(media.banners),
+  ...Object.values(media.about),
 ];
 
 describe("mediaProps", () => {

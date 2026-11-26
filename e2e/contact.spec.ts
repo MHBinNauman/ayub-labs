@@ -30,7 +30,7 @@ test.describe("/contact", () => {
     const first = tabs.getByRole("tab", { name: saddar.name });
     await expect(first).toHaveAttribute("aria-selected", "true");
 
-    const panel = page.getByRole("tabpanel");
+    const panel = page.getByRole("tabpanel", { name: saddar.name });
     await expect(
       panel.locator(`a[href="tel:${saddar.phones[0]}"]`),
     ).toBeVisible();
@@ -42,7 +42,31 @@ test.describe("/contact", () => {
     await first.focus();
     await page.keyboard.press("ArrowRight");
     await expect(tabs.getByRole("tab", { name: f8.name })).toBeFocused();
-    await expect(page.getByRole("tabpanel")).toContainText(f8.addressLines[0]);
+    await expect(page.getByRole("tabpanel", { name: f8.name })).toContainText(
+      f8.addressLines[0],
+    );
+  });
+
+  test("the underline slides and the panels crossfade", async ({ page }) => {
+    const tabs = page.getByRole("tablist", { name: "Branches" });
+    const indicator = tabs.locator("[data-tab-indicator]");
+    await expect(indicator).toBeAttached();
+    const before = await indicator.evaluate((el) => el.style.transform);
+
+    await tabs.getByRole("tab", { name: f8.name }).click();
+    await expect
+      .poll(() => indicator.evaluate((el) => el.style.transform))
+      .not.toBe(before);
+    // The old panel fades out of view and out of the accessibility tree.
+    await expect(
+      page.getByRole("tabpanel", { name: saddar.name }),
+    ).toBeHidden();
+    await expect(page.getByRole("tabpanel", { name: f8.name })).toBeVisible();
+    expect(
+      await page
+        .locator('[role="tabpanel"][data-active]')
+        .evaluate((el) => getComputedStyle(el).transitionProperty),
+    ).toContain("opacity");
   });
 
   test("no map loads until asked for", async ({ page }) => {

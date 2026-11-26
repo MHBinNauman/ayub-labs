@@ -7,6 +7,7 @@ const photos = [
   ...media.hero,
   ...Object.values(media.services).filter((item) => item !== undefined),
   ...Object.values(media.banners),
+  ...Object.values(media.about),
 ];
 
 /** The optimiser URL next/image would use for a photo. */

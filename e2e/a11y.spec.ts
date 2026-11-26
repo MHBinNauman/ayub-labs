@@ -14,6 +14,18 @@ const paths = [
 async function seriousViolations(page: Page): Promise<string[]> {
   // Scan the page itself, not the splash laid over it.
   await expect(page.locator(".splash")).toHaveCount(0);
+  // Contrast is measured on finished frames: a UI fade caught mid-way (the
+  // mobile drawer's items, a crossfade) would read as low contrast. Only
+  // short animations are waited for; the hero's slow zoom and the
+  // scroll-driven banner parallax never settle and don't change colours.
+  await page.waitForFunction(() =>
+    document.getAnimations().every((animation) => {
+      if (animation.playState !== "running") return true;
+      if (animation.timeline !== document.timeline) return true;
+      const duration = Number(animation.effect?.getTiming().duration);
+      return !(duration <= 1000);
+    }),
+  );
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
     // Google's map iframe is third-party content we cannot change.
