@@ -59,6 +59,103 @@
 }
 
 /*
+ * Hero overlays (Hero.tsx). The stops are CSS variables set from
+ * HERO_OVERLAY in lib/hero.ts, which hero.test.ts checks for contrast.
+ * Below lg the photo is the whole background: navy from --hero-top to
+ * --hero-bottom. From lg the photo fills the right side and melts into the
+ * navy on its left, with a short fade to navy at the foot.
+ */
+@utility hero-mask-mobile {
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-navy) var(--hero-top), transparent),
+    color-mix(in srgb, var(--color-navy) var(--hero-bottom), transparent)
+  );
+}
+
+@utility hero-mask {
+  background-image:
+    linear-gradient(0deg, var(--color-navy) 0%, transparent 30%),
+    linear-gradient(
+      90deg,
+      var(--color-navy) 0%,
+      color-mix(in srgb, var(--color-navy) var(--hero-seam), transparent) 22%,
+      color-mix(in srgb, var(--color-navy) 45%, transparent) 55%,
+      color-mix(in srgb, var(--color-brand-blue) 15%, transparent) 100%
+    );
+}
+
+/* The photo layer fades in over its first fifth, so no edge shows at the seam. */
+@utility hero-fade {
+  mask-image: linear-gradient(90deg, transparent 0%, black 20%);
+}
+
+/*
+ * Hero slideshow (HeroSlider.tsx). The incoming slide fades in on top while
+ * the outgoing one stays put underneath, so no navy shows through mid-fade.
+ * Durations are set inline from lib/hero.ts.
+ */
+.hero-slide {
+  opacity: 0;
+  z-index: 0;
+  transition-property: opacity;
+  transition-timing-function: ease-in-out;
+}
+
+.hero-slide[data-state="active"] {
+  opacity: 1;
+  z-index: 2;
+}
+
+.hero-slide[data-state="leaving"] {
+  opacity: 1;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* The zoom carries on while a slide fades out, so it never snaps back on screen. */
+  .hero-slide:is([data-state="active"], [data-state="leaving"]) .hero-zoom {
+    animation-name: hero-zoom;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+
+  .hero-float {
+    animation: hero-float 6s ease-in-out infinite alternate;
+  }
+
+  /* Paused slideshow (hover, focus, button, hidden tab): everything holds still. */
+  .hero-slider[data-paused] .hero-zoom,
+  [data-hero]:has(.hero-slider[data-paused]) .hero-float {
+    animation-play-state: paused;
+  }
+
+  @keyframes hero-zoom {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.06);
+    }
+  }
+
+  @keyframes hero-float {
+    from {
+      transform: translateY(-8px);
+    }
+    to {
+      transform: translateY(8px);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide {
+    transition: none;
+  }
+}
+
+/*
  * In-page jumps (skip link, #anchors) land below the sticky part of the
  * header: the band (64px) below lg, the nav strip (56px) from lg.
  */

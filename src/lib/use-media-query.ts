@@ -14,9 +14,25 @@ function subscribeTo(query: string) {
 
 const subscribeDesktop = subscribeTo(DESKTOP_QUERY);
 const isDesktop = () => window.matchMedia(DESKTOP_QUERY).matches;
-const isDesktopOnServer = () => false;
+/** Media queries are unknown during prerender and hydration. */
+const falseOnServer = () => false;
 
 /** True from the lg breakpoint up. */
 export function useIsDesktop(): boolean {
-  return useSyncExternalStore(subscribeDesktop, isDesktop, isDesktopOnServer);
+  return useSyncExternalStore(subscribeDesktop, isDesktop, falseOnServer);
+}
+
+export const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+
+const subscribeReducedMotion = subscribeTo(REDUCED_MOTION_QUERY);
+const prefersReducedMotion = () =>
+  window.matchMedia(REDUCED_MOTION_QUERY).matches;
+
+/** True when the visitor asks for reduced motion. False during prerender. */
+export function useReducedMotion(): boolean {
+  return useSyncExternalStore(
+    subscribeReducedMotion,
+    prefersReducedMotion,
+    falseOnServer,
+  );
 }

@@ -24,6 +24,7 @@ Marketing and patient-access website for **Ayyub Labs & Clinics** (diagnostic la
 - Page transitions use React's <ViewTransition> (PageTransition.tsx, timings in globals.css); motion is the fallback for Back/Forward and older browsers. Fades may use ease-in/ease-out so they can be seen; movement keeps the house easing.
 - Every animation is disabled or reduced under prefers-reduced-motion.
 - Reveal-on-scroll runs once; no looping animations except the hero slider and the loader.
+- Hero slider exception (src/lib/hero.ts): 1.2s crossfade, Ken Burns zoom 1.00→1.06 over a slide's 7.2s, and a 6s ±8px float on the seam illustration. All stop when the slider pauses and under reduced motion.
 - No animation may delay the LCP element or hide it with opacity:0 on first paint.
 
 ## Images
