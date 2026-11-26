@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/Container";
 import type { NavItem } from "@/data/site-data";
 import { ariaCurrent, isActivePath, type ServiceMenuGroup } from "@/lib/paths";
 import { MegaMenu } from "./MegaMenu";
-import { navItemClass } from "./nav-styles";
+import { navItemClass, navUnderlineClass } from "./nav-styles";
 
 type NavStripProps = {
   items: NavItem[];
@@ -16,6 +16,10 @@ type NavStripProps = {
 /**
  * Desktop (lg+) main navigation: the white strip that stays visible when the
  * header sticks. `pathname` is null while it is unknown (see Header.tsx).
+ *
+ * 90% white with a backdrop blur: it only looks different once the page
+ * scrolls beneath it, so there is no state to animate. Ink on it stays far
+ * above AA.
  */
 export function NavStripView({
   items,
@@ -25,7 +29,7 @@ export function NavStripView({
   return (
     <nav
       aria-label="Main"
-      className="relative hidden border-b border-ink/10 bg-nav-strip lg:block"
+      className="relative hidden border-b border-ink/10 bg-nav-strip/90 backdrop-blur-md lg:block"
     >
       <Container>
         <ul className="-mx-4 flex h-14">
@@ -45,6 +49,9 @@ export function NavStripView({
                   className={navItemClass(isActivePath(pathname, item.href))}
                 >
                   {item.label}
+                  {isActivePath(pathname, item.href) && (
+                    <span aria-hidden="true" className={navUnderlineClass} />
+                  )}
                 </Link>
               </li>
             ),

@@ -10,12 +10,11 @@ import { ServiceIcon } from "./ServiceIcon";
 /** A service card plus its photo (mediaProps, built on the server), if it has one. */
 export type ServicePhotoCardData = ServiceCardData & { image?: MediaProps };
 
-const HOUSE_EASE = "ease-[cubic-bezier(0.22,1,0.36,1)]";
-
 /**
  * Homepage service card: a 16:10 photo on top, then name, two-line summary
- * and "Learn more". On hover the photo zooms slowly to 1.05 under a 15% navy
- * wash and the arrow nudges right. A service with no photo shows its icon on
+ * and "Learn more". On hover it takes the shared card lift (card-hover in
+ * globals.css, which also zooms the data-card-media photo to 1.05), a 15%
+ * navy wash fades over the photo and the arrow nudges right. A service with no photo shows its icon on
  * the tint panel instead, so the grid stays even.
  *
  * The name is a stretched link, so the whole card is the click target while
@@ -35,11 +34,15 @@ export function ServicePhotoCard({
   return (
     <li
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-card bg-white shadow-card ring-1 ring-ink/5 motion-safe:transition-shadow motion-safe:hover:shadow-card-hover",
+        // No overflow-hidden here: it would clip card-hover's shadow layer.
+        "group card-hover flex flex-col rounded-card bg-white shadow-card ring-1 ring-ink/5",
         className,
       )}
     >
-      <div className="relative aspect-[16/10] overflow-hidden bg-tint">
+      <div
+        data-card-media
+        className="relative aspect-[16/10] overflow-hidden rounded-t-card bg-tint"
+      >
         {image ? (
           <>
             <Image
@@ -49,10 +52,7 @@ export function ServicePhotoCard({
               blurDataURL={image.blurDataURL}
               fill
               sizes="(min-width: 1024px) 384px, (min-width: 640px) 50vw, 100vw"
-              className={cn(
-                "object-cover group-hover:scale-105 motion-safe:transition-transform motion-safe:duration-600",
-                HOUSE_EASE,
-              )}
+              className="object-cover"
             />
             <span
               aria-hidden="true"
@@ -85,12 +85,7 @@ export function ServicePhotoCard({
           className="mt-auto flex items-center gap-1.5 pt-4 text-sm font-semibold text-brand-blue"
         >
           Learn more
-          <ArrowRight
-            className={cn(
-              "size-4 group-hover:translate-x-1 motion-safe:transition-transform motion-safe:duration-300",
-              HOUSE_EASE,
-            )}
-          />
+          <ArrowRight className="size-4 group-hover:translate-x-1 motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-house" />
         </span>
       </div>
     </li>

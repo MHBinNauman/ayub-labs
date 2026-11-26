@@ -3,7 +3,7 @@ import { cn } from "@/lib/cn";
 
 type CardProps = HTMLAttributes<HTMLElement> & {
   as?: "div" | "article" | "section" | "li";
-  /** Lift 2px with a deeper shadow on hover. Off under reduced motion. */
+  /** The shared card hover: lift 3px with a deeper shadow (card-hover in globals.css). */
   lift?: boolean;
 };
 
@@ -17,8 +17,7 @@ export function Card({
     <Tag
       className={cn(
         "rounded-card bg-white p-6 shadow-card",
-        lift &&
-          "motion-safe:transition motion-safe:duration-200 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-card-hover",
+        lift && "card-hover",
         className,
       )}
       {...props}

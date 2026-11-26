@@ -11,6 +11,7 @@ import Link from "next/link";
 import { UNVERIFIED_HOURS_NOTE } from "@/components/sections/BranchCard";
 import { ReportRequestForm } from "@/components/sections/ReportRequestForm";
 import { Breadcrumbs, Container } from "@/components/ui";
+import { Reveal, REVEAL_STAGGER } from "@/components/ui/Reveal";
 import { branches, contact, policies } from "@/data/site-data";
 import { formatWeekHours } from "@/lib/hours";
 import { whatsapp } from "@/lib/links";
@@ -122,70 +123,72 @@ export default function ReportsPage() {
         </Container>
       </section>
 
-      <Container className="space-y-14 py-14 lg:space-y-20 lg:py-20">
-        {portal ? <PortalCard url={portal} /> : <RequestCard />}
+      <Container className="py-14 lg:py-20">
+        <Reveal stagger={REVEAL_STAGGER} className="space-y-14 lg:space-y-20">
+          {portal ? <PortalCard url={portal} /> : <RequestCard />}
 
-        <section aria-labelledby="collect-heading">
-          <h2
-            id="collect-heading"
-            className="text-2xl font-bold text-balance text-navy"
-          >
-            Collect in person
-          </h2>
-          <ul className="mt-6 grid gap-6 md:grid-cols-2">
-            {branches.map((branch) => (
-              <li
-                key={branch.id}
-                className="flex flex-col rounded-card bg-surface p-6"
-              >
-                <h3 className="text-lg font-bold text-balance text-navy">
-                  {branch.name}
-                </h3>
-                <div className="mt-3 flex gap-3 text-sm text-ink">
-                  <Clock
-                    aria-hidden="true"
-                    className="mt-0.5 size-5 shrink-0 text-brand-blue"
-                  />
-                  <span>
-                    <span className="sr-only">Opening hours: </span>
-                    {formatWeekHours(branch).map((row) => (
-                      <span key={row.days} className="block">
-                        {row.label}
-                      </span>
-                    ))}
-                    {!branch.hoursVerified && (
-                      <span className="mt-1 block text-xs font-semibold text-brand-red-text">
-                        {UNVERIFIED_HOURS_NOTE}
-                      </span>
-                    )}
-                  </span>
-                </div>
-                <Link
-                  href={`${routes.locations}/${branch.id}`}
-                  className="group mt-3 inline-flex min-h-11 w-fit items-center gap-1.5 text-sm font-semibold text-brand-blue underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-brand-blue"
+          <section aria-labelledby="collect-heading">
+            <h2
+              id="collect-heading"
+              className="text-2xl font-bold text-balance text-navy"
+            >
+              Collect in person
+            </h2>
+            <ul className="mt-6 grid gap-6 md:grid-cols-2">
+              {branches.map((branch) => (
+                <li
+                  key={branch.id}
+                  className="flex flex-col rounded-card bg-surface p-6"
                 >
-                  Address and directions
-                  <span className="sr-only">: {branch.name}</span>
-                  <ArrowRight
-                    aria-hidden="true"
-                    className="size-4 motion-safe:transition-transform motion-safe:group-hover:translate-x-0.5"
-                  />
-                </Link>
-              </li>
-            ))}
-          </ul>
+                  <h3 className="text-lg font-bold text-balance text-navy">
+                    {branch.name}
+                  </h3>
+                  <div className="mt-3 flex gap-3 text-sm text-ink">
+                    <Clock
+                      aria-hidden="true"
+                      className="mt-0.5 size-5 shrink-0 text-brand-blue"
+                    />
+                    <span>
+                      <span className="sr-only">Opening hours: </span>
+                      {formatWeekHours(branch).map((row) => (
+                        <span key={row.days} className="block">
+                          {row.label}
+                        </span>
+                      ))}
+                      {!branch.hoursVerified && (
+                        <span className="mt-1 block text-xs font-semibold text-brand-red-text">
+                          {UNVERIFIED_HOURS_NOTE}
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                  <Link
+                    href={`${routes.locations}/${branch.id}`}
+                    className="group mt-3 inline-flex min-h-11 w-fit items-center gap-1.5 text-sm font-semibold text-brand-blue underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-brand-blue"
+                  >
+                    Address and directions
+                    <span className="sr-only">: {branch.name}</span>
+                    <ArrowRight
+                      aria-hidden="true"
+                      className="size-4 motion-safe:transition-transform motion-safe:group-hover:translate-x-0.5"
+                    />
+                  </Link>
+                </li>
+              ))}
+            </ul>
 
-          <p
-            role="note"
-            className="mt-6 flex max-w-2xl gap-3 rounded-md border-l-4 border-navy bg-tint px-4 py-3 text-sm text-ink"
-          >
-            <ShieldCheck
-              aria-hidden="true"
-              className="mt-0.5 size-5 shrink-0 text-navy"
-            />
-            {policies.reportRelease.value}
-          </p>
-        </section>
+            <p
+              role="note"
+              className="mt-6 flex max-w-2xl gap-3 rounded-md border-l-4 border-navy bg-tint px-4 py-3 text-sm text-ink"
+            >
+              <ShieldCheck
+                aria-hidden="true"
+                className="mt-0.5 size-5 shrink-0 text-navy"
+              />
+              {policies.reportRelease.value}
+            </p>
+          </section>
+        </Reveal>
       </Container>
     </>
   );

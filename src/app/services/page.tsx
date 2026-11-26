@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { pageTitles } from "@/lib/page-titles";
 import { Breadcrumbs, Container } from "@/components/ui";
+import { Reveal } from "@/components/ui/Reveal";
 import { ServicesBrowser } from "@/components/sections/ServicesBrowser";
 import { branches, contact, services } from "@/data/site-data";
 import { QUERY_TOKEN } from "@/lib/message-template";
@@ -60,7 +61,10 @@ export default function ServicesPage() {
          * Prerendered unfiltered, so the static HTML lists every service;
          * the island applies ?category= and ?q= once it runs in the browser.
          */}
-        <ServicesBrowser {...props} />
+        {/* An interactive tool: it reveals as one block, never per row. */}
+        <Reveal>
+          <ServicesBrowser {...props} />
+        </Reveal>
       </Container>
     </>
   );

@@ -20,20 +20,24 @@
 
   --radius-card: 0.75rem;
 
-  --animate-menu-in: menu-in 0.16s ease-out;
-  --animate-drawer-in: drawer-in 0.22s ease-out;
+  /* House easing (CLAUDE.md motion rules). Also a utility: ease-house. */
+  --ease-house: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Mega menu: fades in and drops 6px. */
+  --animate-menu-in: menu-in 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  /* Mobile drawer: slides in from the right. */
+  --animate-drawer-in: drawer-in 300ms cubic-bezier(0.22, 1, 0.36, 1);
 
   @keyframes menu-in {
     from {
       opacity: 0;
-      transform: translateY(-4px);
+      transform: translateY(-6px);
     }
   }
 
   @keyframes drawer-in {
     from {
-      opacity: 0;
-      transform: translateX(16px);
+      transform: translateX(100%);
     }
   }
 
@@ -277,18 +281,25 @@ dialog[data-scroll-lock]::backdrop {
   view-transition-name: floating-whatsapp;
 }
 
+.vt-to-top {
+  view-transition-name: to-top;
+}
+
 ::view-transition-group(site-header),
-::view-transition-group(floating-whatsapp) {
+::view-transition-group(floating-whatsapp),
+::view-transition-group(to-top) {
   z-index: 10;
 }
 
 ::view-transition-old(site-header),
-::view-transition-old(floating-whatsapp) {
+::view-transition-old(floating-whatsapp),
+::view-transition-old(to-top) {
   display: none;
 }
 
 ::view-transition-new(site-header),
-::view-transition-new(floating-whatsapp) {
+::view-transition-new(floating-whatsapp),
+::view-transition-new(to-top) {
   animation: none;
 }
 
@@ -377,5 +388,176 @@ dialog[data-scroll-lock]::backdrop {
     from {
       transform: scaleX(0);
     }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Site-wide motion (CLAUDE.md motion rules). Transform and opacity    */
+/* only; every rule below is static under reduced motion.              */
+/* ------------------------------------------------------------------ */
+
+/*
+ * Header (Header.tsx). HeaderShadow sets data-stuck once only the sticky part
+ * is left. A shadow layer fades in, so box-shadow itself never animates.
+ */
+.site-header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: var(--shadow-card);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.site-header[data-stuck]::after {
+  opacity: 1;
+}
+
+/*
+ * Below lg the navy band is the pinned part. Once it pins it reads 8px
+ * slimmer: the header moves up 8px (that strip is above the viewport) and
+ * the band's contents move down 4px to stay centred; the logo scales to 0.88.
+ * Content scrolls beneath, so no seam can show.
+ */
+@media (width < 64rem) {
+  .site-header[data-stuck] {
+    translate: 0 -8px;
+  }
+
+  .site-header[data-stuck] .header-band-inner {
+    translate: 0 4px;
+  }
+
+  .site-header[data-stuck] .header-logo {
+    scale: 0.88;
+  }
+}
+
+/*
+ * The active nav item's underline is its own view-transition element, so on
+ * a page change the browser slides it from the old item to the new one. It
+ * sits above the header's group (z-index 10).
+ */
+.nav-underline {
+  view-transition-name: nav-underline;
+}
+
+::view-transition-group(nav-underline) {
+  z-index: 11;
+  animation-duration: 400ms;
+  animation-timing-function: var(--ease-house);
+}
+
+/*
+ * One hover for every clickable card: lift 3px, a deeper shadow fades in
+ * (a layer, so box-shadow never animates) and a photo marked
+ * data-card-media zooms to 1.05. Keyboard focus inside gets the same.
+ * Reduced motion keeps the shadow and drops the movement.
+ */
+@layer components {
+  .card-hover {
+    position: relative;
+  }
+
+  .card-hover::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: var(--shadow-card-hover);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .card-hover:has(:focus-visible)::before {
+    opacity: 1;
+  }
+
+  @media (hover: hover) {
+    .card-hover:hover::before {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .card-hover {
+      transition: translate 300ms var(--ease-house);
+    }
+
+    .card-hover::before {
+      transition: opacity 300ms var(--ease-house);
+    }
+
+    .card-hover [data-card-media] img {
+      transition: scale 600ms var(--ease-house);
+    }
+
+    .card-hover:has(:focus-visible) {
+      translate: 0 -3px;
+    }
+
+    @media (hover: hover) {
+      .card-hover:hover {
+        translate: 0 -3px;
+      }
+
+      .card-hover:hover [data-card-media] img {
+        scale: 1.05;
+      }
+    }
+  }
+}
+
+/*
+ * WhatsApp button (FloatingWhatsApp.tsx): one soft ring, 3s after the first
+ * page load of a session. The head script (lib/wa-ping.ts) sets data-wa-ping
+ * only on that load. `forwards`, not `both`, so the ring is invisible during
+ * the delay. Runs once, never loops; none under reduced motion.
+ */
+.wa-ping {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Header compaction eases in and out. */
+  .site-header,
+  .site-header .header-band-inner,
+  .site-header .header-logo {
+    transition:
+      translate 300ms var(--ease-house),
+      scale 300ms var(--ease-house),
+      opacity 200ms var(--ease-house);
+  }
+
+  .site-header::after {
+    transition: opacity 200ms var(--ease-house);
+  }
+
+  [data-wa-ping] .wa-ping {
+    animation: wa-ping 1000ms ease-out 3s 1 forwards;
+  }
+
+  /* Mobile drawer (MobileNav.tsx): items follow the panel in, 40ms apart. */
+  .drawer-item {
+    animation: drawer-item 300ms var(--ease-house)
+      calc(120ms + var(--i, 0) * 40ms) both;
+  }
+}
+
+@keyframes wa-ping {
+  from {
+    opacity: 0.5;
+    scale: 1;
+  }
+  to {
+    opacity: 0;
+    scale: 1.7;
+  }
+}
+
+@keyframes drawer-item {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
   }
 }

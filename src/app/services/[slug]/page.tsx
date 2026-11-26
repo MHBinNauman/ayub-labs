@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { BranchContact } from "@/components/sections/BranchContact";
 import { TestTable } from "@/components/sections/TestTable";
 import { Breadcrumbs, Button, Container } from "@/components/ui";
+import { Reveal, REVEAL_STAGGER } from "@/components/ui/Reveal";
 import { ServiceCard } from "@/components/ui/ServiceCard";
 import { ServiceIcon } from "@/components/ui/ServiceIcon";
 import {
@@ -191,46 +192,54 @@ export default async function ServicePage({
        * card at the bottom of the main content; from lg the aside moves to a
        * sticky right column spanning both rows. One markup for both layouts.
        */}
-      <Container className="grid gap-10 py-14 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12 lg:py-20">
-        <div className="min-w-0 lg:col-start-1 lg:row-start-1">
-          {service.tests.length > 0 ? (
-            <TestTable tests={service.tests} serviceName={service.name} />
-          ) : (
-            <AskAboutTests service={service} />
-          )}
-        </div>
-
-        <aside
-          aria-labelledby="visit-heading"
-          className="rounded-card bg-white p-6 shadow-card ring-1 ring-ink/5 lg:sticky lg:top-20 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start"
+      <Container className="py-14 lg:py-20">
+        <Reveal
+          stagger={REVEAL_STAGGER}
+          className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12"
         >
-          <h2 id="visit-heading" className="text-xl font-bold text-navy">
-            Visit or call
-          </h2>
-          <ul className="mt-4 divide-y divide-ink/10">
-            {offeredAt.map((branch) => (
-              <li key={branch.id} className="py-5 first:pt-0 last:pb-0">
-                <BranchContact branch={branch} compact />
-              </li>
-            ))}
-          </ul>
-        </aside>
+          <div className="min-w-0 lg:col-start-1 lg:row-start-1">
+            {service.tests.length > 0 ? (
+              <TestTable tests={service.tests} serviceName={service.name} />
+            ) : (
+              <AskAboutTests service={service} />
+            )}
+          </div>
 
-        {related.length > 0 && (
-          <section
-            aria-labelledby="related-heading"
-            className="min-w-0 lg:col-start-1 lg:row-start-2"
+          <aside
+            aria-labelledby="visit-heading"
+            className="rounded-card bg-white p-6 shadow-card ring-1 ring-ink/5 lg:sticky lg:top-20 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start"
           >
-            <h2 id="related-heading" className="text-2xl font-bold text-navy">
-              More in {category.label}
+            <h2 id="visit-heading" className="text-xl font-bold text-navy">
+              Visit or call
             </h2>
-            <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:gap-6">
-              {related.map((other) => (
-                <ServiceCard key={other.slug} service={toServiceCard(other)} />
+            <ul className="mt-4 divide-y divide-ink/10">
+              {offeredAt.map((branch) => (
+                <li key={branch.id} className="py-5 first:pt-0 last:pb-0">
+                  <BranchContact branch={branch} compact />
+                </li>
               ))}
             </ul>
-          </section>
-        )}
+          </aside>
+
+          {related.length > 0 && (
+            <section
+              aria-labelledby="related-heading"
+              className="min-w-0 lg:col-start-1 lg:row-start-2"
+            >
+              <h2 id="related-heading" className="text-2xl font-bold text-navy">
+                More in {category.label}
+              </h2>
+              <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:gap-6">
+                {related.map((other) => (
+                  <ServiceCard
+                    key={other.slug}
+                    service={toServiceCard(other)}
+                  />
+                ))}
+              </ul>
+            </section>
+          )}
+        </Reveal>
       </Container>
     </>
   );

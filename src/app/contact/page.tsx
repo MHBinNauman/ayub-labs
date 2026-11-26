@@ -6,6 +6,7 @@ import { EnquiryForm } from "@/components/sections/EnquiryForm";
 import { MapEmbed } from "@/components/sections/MapEmbed";
 import { WeekHoursTable } from "@/components/sections/WeekHoursTable";
 import { Breadcrumbs, Container } from "@/components/ui";
+import { Reveal, REVEAL_STAGGER } from "@/components/ui/Reveal";
 import { Tabs } from "@/components/ui/Tabs";
 import { branches, contact, type Branch } from "@/data/site-data";
 import { weekHoursTable } from "@/lib/hours";
@@ -116,48 +117,50 @@ export default function ContactPage() {
         </Container>
       </section>
 
-      <Container className="space-y-14 py-14 lg:space-y-20 lg:py-20">
-        <section aria-label="Our branches">
-          <Tabs
-            label="Branches"
-            defaultTabId={primary.id}
-            tabs={branches.map((branch) => ({
-              id: branch.id,
-              label: branch.name,
-              content: <BranchPanel branch={branch} />,
-            }))}
-          />
-        </section>
-
-        <section
-          aria-labelledby="enquiry-heading"
-          className="rounded-card bg-surface p-6 sm:p-8"
-        >
-          <h2 id="enquiry-heading" className="text-2xl font-bold text-navy">
-            Send us a message
-          </h2>
-          <p className="mt-2 max-w-2xl text-muted">
-            Your message opens in your own WhatsApp or email app. This website
-            doesn&apos;t store or send it anywhere.
-          </p>
-          <div className="mt-6">
-            <EnquiryForm
-              whatsappNumber={contact.whatsapp.number}
-              email={email}
+      <Container className="py-14 lg:py-20">
+        <Reveal stagger={REVEAL_STAGGER} className="space-y-14 lg:space-y-20">
+          <section aria-label="Our branches">
+            <Tabs
+              label="Branches"
+              defaultTabId={primary.id}
+              tabs={branches.map((branch) => ({
+                id: branch.id,
+                label: branch.name,
+                content: <BranchPanel branch={branch} />,
+              }))}
             />
-          </div>
-          <noscript>
-            <p className="mt-6">
-              <a
-                href={whatsapp(contact.whatsapp.number, whatsappGreeting)}
-                className={linkClass}
-              >
-                <MessageCircle aria-hidden="true" className="size-5" />
-                Message us on WhatsApp
-              </a>
+          </section>
+
+          <section
+            aria-labelledby="enquiry-heading"
+            className="rounded-card bg-surface p-6 sm:p-8"
+          >
+            <h2 id="enquiry-heading" className="text-2xl font-bold text-navy">
+              Send us a message
+            </h2>
+            <p className="mt-2 max-w-2xl text-muted">
+              Your message opens in your own WhatsApp or email app. This website
+              doesn&apos;t store or send it anywhere.
             </p>
-          </noscript>
-        </section>
+            <div className="mt-6">
+              <EnquiryForm
+                whatsappNumber={contact.whatsapp.number}
+                email={email}
+              />
+            </div>
+            <noscript>
+              <p className="mt-6">
+                <a
+                  href={whatsapp(contact.whatsapp.number, whatsappGreeting)}
+                  className={linkClass}
+                >
+                  <MessageCircle aria-hidden="true" className="size-5" />
+                  Message us on WhatsApp
+                </a>
+              </p>
+            </noscript>
+          </section>
+        </Reveal>
       </Container>
     </>
   );

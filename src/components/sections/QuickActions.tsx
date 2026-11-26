@@ -62,40 +62,40 @@ export function QuickActions() {
   return (
     <section aria-label="Quick actions" className="relative z-10 -mt-12">
       <Container>
-        <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-5">
-          {actions.map(({ title, line, href, Icon, external }, index) => {
-            const className =
-              // Phones: 2×2 tiles with the icon on top. sm–lg: rows. lg: four columns.
-              "group flex h-full flex-col items-start gap-3 rounded-card bg-white p-4 shadow-card-hover ring-1 ring-ink/5 transition-shadow hover:shadow-card focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue sm:flex-row sm:items-center sm:gap-4 sm:p-5 lg:flex-col lg:items-start lg:p-6";
-            const content = (
-              <>
-                <span className="relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-xl bg-tint text-brand-blue sm:size-12">
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-0 scale-0 rounded-[inherit] bg-brand-blue group-hover:scale-100 group-focus-visible:scale-100 motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)]"
-                  />
-                  <Icon
-                    aria-hidden="true"
-                    className="relative size-5 group-hover:text-white group-focus-visible:text-white motion-safe:transition-colors motion-safe:duration-300 sm:size-6"
-                  />
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="flex items-center gap-1.5 font-bold text-navy">
-                    {title}
-                    <ArrowRight
+        <Reveal stagger={0.06}>
+          <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-5">
+            {actions.map(({ title, line, href, Icon, external }) => {
+              const className =
+                // Phones: 2×2 tiles with the icon on top. sm–lg: rows. lg: four columns.
+                "group card-hover flex h-full flex-col items-start gap-3 rounded-card bg-white p-4 shadow-card-hover ring-1 ring-ink/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue sm:flex-row sm:items-center sm:gap-4 sm:p-5 lg:flex-col lg:items-start lg:p-6";
+              const content = (
+                <>
+                  <span className="relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-xl bg-tint text-brand-blue sm:size-12">
+                    <span
                       aria-hidden="true"
-                      className="size-4 text-brand-red motion-safe:transition-transform motion-safe:group-hover:translate-x-1"
+                      className="absolute inset-0 scale-0 rounded-[inherit] bg-brand-blue group-hover:scale-100 group-focus-visible:scale-100 motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-house"
+                    />
+                    <Icon
+                      aria-hidden="true"
+                      className="relative size-5 group-hover:text-white group-focus-visible:text-white motion-safe:transition-colors motion-safe:duration-300 sm:size-6"
                     />
                   </span>
-                  <span className="mt-0.5 block text-xs text-muted sm:text-sm">
-                    {line}
+                  <span className="min-w-0 flex-1">
+                    <span className="flex items-center gap-1.5 font-bold text-navy">
+                      {title}
+                      <ArrowRight
+                        aria-hidden="true"
+                        className="size-4 text-brand-red motion-safe:transition-transform motion-safe:group-hover:translate-x-1"
+                      />
+                    </span>
+                    <span className="mt-0.5 block text-xs text-muted sm:text-sm">
+                      {line}
+                    </span>
                   </span>
-                </span>
-              </>
-            );
-            return (
-              <li key={title}>
-                <Reveal delay={index * 0.06} className="h-full">
+                </>
+              );
+              return (
+                <li key={title} data-reveal>
                   {external ? (
                     <a
                       href={href}
@@ -110,11 +110,11 @@ export function QuickActions() {
                       {content}
                     </Link>
                   )}
-                </Reveal>
-              </li>
-            );
-          })}
-        </ul>
+                </li>
+              );
+            })}
+          </ul>
+        </Reveal>
       </Container>
     </section>
   );

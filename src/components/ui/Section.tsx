@@ -1,6 +1,7 @@
 import type { ComponentPropsWithoutRef } from "react";
 import { cn } from "@/lib/cn";
 import { Container } from "./Container";
+import { Reveal, REVEAL_STAGGER } from "./Reveal";
 
 const spacings = {
   sm: "py-8 sm:py-10",
@@ -21,23 +22,38 @@ type SectionProps = ComponentPropsWithoutRef<"section"> & {
   background?: keyof typeof backgrounds;
   /** Wrap children in a Container. Turn off for full-bleed content. */
   contained?: boolean;
+  /**
+   * Reveal the content as it scrolls into view, children 80ms apart (mark
+   * grid items `data-reveal` to stagger them one by one). On by default;
+   * turn off for sections that must never move, such as interactive tools.
+   */
+  reveal?: boolean;
 };
 
-/** A page band with consistent vertical rhythm and an optional background. */
+/**
+ * A page band with consistent vertical rhythm, an optional background and
+ * the site-wide scroll reveal.
+ */
 export function Section({
   spacing = "md",
   background = "white",
   contained = true,
+  reveal = true,
   className,
   children,
   ...props
 }: SectionProps) {
+  const content = reveal ? (
+    <Reveal stagger={REVEAL_STAGGER}>{children}</Reveal>
+  ) : (
+    children
+  );
   return (
     <section
       className={cn(spacings[spacing], backgrounds[background], className)}
       {...props}
     >
-      {contained ? <Container>{children}</Container> : children}
+      {contained ? <Container>{content}</Container> : content}
     </section>
   );
 }

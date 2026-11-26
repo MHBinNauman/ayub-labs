@@ -25,6 +25,9 @@ Marketing and patient-access website for **Ayyub Labs & Clinics** (diagnostic la
 - Every animation is disabled or reduced under prefers-reduced-motion.
 - Reveal-on-scroll runs once; no looping animations except the hero slider and the loader.
 - Hero slider exception (src/lib/hero.ts): 1.2s crossfade, Ken Burns zoom 1.00→1.06 over a slide's 7.2s, and a 6s ±8px float on the seam illustration. All stop when the slider pauses and under reduced motion.
+- WhatsApp ping exception (src/lib/wa-ping.ts): one 1000ms ring on the floating button, 3s after the first load of a session; never loops, none under reduced motion.
+- Shared vocabulary, reuse it rather than inventing new motion: `ease-house` utility / `--ease-house`; `<Reveal>` (16px fade-up, amount 0.2, once, `stagger` + `data-reveal`; `Section` reveals by default); `card-hover` for clickable cards (3px lift, shadow layer, `data-card-media` photo zoom 1.05); Button lift 1px + press 0.98. Shadows fade in as a layer's opacity, never by animating box-shadow.
+- Header (globals.css `.site-header`): once pinned, a shadow layer fades in and below lg the band compacts by transform only (translate −8px, logo scale 0.88). The active nav underline slides between items as the `nav-underline` view-transition element; no motion/react `layoutId` (bundle cost).
 - No animation may delay the LCP element or hide it with opacity:0 on first paint.
 
 ## Images

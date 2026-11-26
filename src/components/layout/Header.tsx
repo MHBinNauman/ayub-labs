@@ -24,6 +24,9 @@ const HEADER_ID = "site-header";
  *             strip sticks.
  * Keep these heights in sync with TopBar, the band below and the sentinel in
  * HeaderShadow.
+ *
+ * Once pinned (data-stuck) a shadow fades in and, below lg, the band reads
+ * 8px slimmer with the logo at 0.88 (`.site-header` rules in globals.css).
  */
 export function Header() {
   const whatsappHref = whatsapp(contact.whatsapp.number, whatsappGreeting);
@@ -35,13 +38,13 @@ export function Header() {
       <HeaderShadow headerId={HEADER_ID} />
       <header
         id={HEADER_ID}
-        className="vt-header sticky -top-11 z-40 transition-shadow duration-200 data-stuck:shadow-card lg:-top-33"
+        className="site-header vt-header sticky -top-11 z-40 lg:-top-33"
       >
         <TopBar />
 
         <div className="bg-navy">
-          <Container className="flex h-16 items-center justify-between gap-2 lg:h-22">
-            <Logo eager />
+          <Container className="header-band-inner flex h-16 items-center justify-between gap-2 lg:h-22">
+            <Logo eager className="header-logo origin-left" />
 
             <div className="flex shrink-0 items-center gap-2 lg:gap-3">
               <Button

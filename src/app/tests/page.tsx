@@ -6,6 +6,7 @@ import {
   type ServiceOption,
 } from "@/components/sections/TestDirectory";
 import { Breadcrumbs, Container } from "@/components/ui";
+import { Reveal } from "@/components/ui/Reveal";
 import { contact, services } from "@/data/site-data";
 import { QUERY_TOKEN } from "@/lib/message-template";
 import { routes } from "@/lib/nav";
@@ -93,29 +94,32 @@ export default function TestsPage() {
       </section>
 
       <Container className="py-8 sm:py-10">
-        {tests.length > 0 ? (
-          <TestDirectory
-            tests={tests}
-            services={serviceOptions}
-            homeSampling={
-              resolvedFeatures.homeSampling &&
-              tests.some((test) => test.homeSampling)
-            }
-            whatsappNumber={contact.whatsapp.number}
-            bookTemplate={testBookingTemplate}
-            askTemplate={searchQuestionMessage(QUERY_TOKEN)}
-          />
-        ) : (
-          <div className="rounded-card bg-surface p-8 text-center">
-            <FlaskConical
-              aria-hidden="true"
-              className="mx-auto size-8 text-brand-blue"
+        {/* An interactive tool: it reveals as one block, never per row. */}
+        <Reveal>
+          {tests.length > 0 ? (
+            <TestDirectory
+              tests={tests}
+              services={serviceOptions}
+              homeSampling={
+                resolvedFeatures.homeSampling &&
+                tests.some((test) => test.homeSampling)
+              }
+              whatsappNumber={contact.whatsapp.number}
+              bookTemplate={testBookingTemplate}
+              askTemplate={searchQuestionMessage(QUERY_TOKEN)}
             />
-            <p className="mt-3 text-lg font-bold text-navy">
-              No tests have been imported yet
-            </p>
-          </div>
-        )}
+          ) : (
+            <div className="rounded-card bg-surface p-8 text-center">
+              <FlaskConical
+                aria-hidden="true"
+                className="mx-auto size-8 text-brand-blue"
+              />
+              <p className="mt-3 text-lg font-bold text-navy">
+                No tests have been imported yet
+              </p>
+            </div>
+          )}
+        </Reveal>
       </Container>
     </>
   );

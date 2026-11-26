@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Section, SectionHeading } from "@/components/ui";
-import { Reveal } from "@/components/ui/Reveal";
 import { branches, media } from "@/data/site-data";
 import { mapsEmbed } from "@/lib/links";
 import { mediaProps } from "@/lib/media";
@@ -19,15 +18,13 @@ export function LocationsPreview() {
 
   return (
     <Section spacing="lg" aria-labelledby="locations-heading">
-      <Reveal>
-        <SectionHeading
-          id="locations-heading"
-          eyebrow="Locations"
-          title="Visit a branch"
-          sub={`${branches.length} ${branches.length === 1 ? "branch" : "branches"} in ${joinList(cities)}.`}
-        />
-      </Reveal>
-      <Reveal className="mt-10">
+      <SectionHeading
+        id="locations-heading"
+        eyebrow="Locations"
+        title="Visit a branch"
+        sub={`${branches.length} ${branches.length === 1 ? "branch" : "branches"} in ${joinList(cities)}.`}
+      />
+      <div className="mt-10">
         <div className="overflow-hidden rounded-card bg-white shadow-card ring-1 ring-ink/5">
           <div className="relative h-36 sm:h-44">
             <Image
@@ -66,7 +63,7 @@ export function LocationsPreview() {
             }))}
           />
         </div>
-      </Reveal>
+      </div>
     </Section>
   );
 }

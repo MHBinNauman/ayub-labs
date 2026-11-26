@@ -19,7 +19,7 @@ import { cn } from "@/lib/cn";
 import { isActivePath, type ServiceMenuGroup } from "@/lib/paths";
 import { serviceIcon } from "@/lib/service-icons";
 import { useHydrated } from "@/lib/use-hydrated";
-import { navItemClass } from "./nav-styles";
+import { navItemClass, navUnderlineClass } from "./nav-styles";
 
 /** Hover must rest this long before the menu opens, so passing over it does nothing. */
 const OPEN_DELAY_MS = 120;
@@ -227,10 +227,11 @@ export function MegaMenu({ item, groups, pathname }: MegaMenuProps) {
         <ChevronDown
           aria-hidden="true"
           className={cn(
-            "size-4 motion-safe:transition-transform",
+            "size-4 motion-safe:transition-transform motion-safe:duration-200 motion-safe:ease-house",
             open && "rotate-180",
           )}
         />
+        {active && <span aria-hidden="true" className={navUnderlineClass} />}
       </button>
 
       <div

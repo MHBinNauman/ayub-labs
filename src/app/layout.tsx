@@ -4,6 +4,7 @@ import {
   FloatingWhatsApp,
   Footer,
   Header,
+  ScrollToTop,
   SkipLink,
   Splash,
 } from "@/components/layout";
@@ -11,6 +12,7 @@ import { brand } from "@/data/site-data";
 import { JsonLd, organizationJsonLd } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site-url";
 import { splashHeadScript } from "@/lib/splash";
+import { waPingHeadScript } from "@/lib/wa-ping";
 import { validateSiteData } from "@/lib/validate";
 import "./globals.css";
 
@@ -44,15 +46,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    // The head script may add data-splash before React hydrates.
+    // The head scripts may add data-splash / data-wa-ping before React hydrates.
     <html lang="en" className={montserrat.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: splashHeadScript }} />
+        <script dangerouslySetInnerHTML={{ __html: waPingHeadScript }} />
         <noscript>
           <style>{".splash { display: none }"}</style>
         </noscript>
       </head>
-      <body className="bg-white font-sans text-ink antialiased">
+      {/* relative: page-height sentinels (ScrollToTop) are clamped to the body. */}
+      <body className="relative bg-white font-sans text-ink antialiased">
         <Splash />
         <JsonLd data={organizationJsonLd()} />
         <SkipLink targetId={MAIN_ID} />
@@ -62,6 +66,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <Footer />
+        <ScrollToTop mainId={MAIN_ID} />
         <FloatingWhatsApp />
       </body>
     </html>

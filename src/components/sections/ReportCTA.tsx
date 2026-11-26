@@ -22,7 +22,8 @@ export function ReportCTA({
   return (
     <section aria-labelledby="report-heading" className="py-16 sm:py-24">
       <Container>
-        <Reveal>
+        {/* The band, then each step in turn. */}
+        <Reveal stagger={0.15}>
           <div className="flex flex-col gap-6 rounded-card bg-linear-110 from-navy to-brand-blue p-6 text-white shadow-card sm:p-8 md:flex-row md:items-center md:justify-between lg:p-12">
             <div className="flex gap-5">
               <span className="hidden size-14 shrink-0 place-items-center rounded-xl bg-white/10 ring-1 ring-white/20 sm:grid">
@@ -67,40 +68,37 @@ export function ReportCTA({
               </Button>
             )}
           </div>
-        </Reveal>
 
-        {steps.length > 0 && (
-          <div className="relative mt-8">
-            {/* Connector behind the step numbers, md and up. */}
-            <span
-              aria-hidden="true"
-              className="absolute top-12 right-[16.66%] left-[16.66%] hidden h-0.5 bg-tint md:block"
-            />
-            <ol
-              aria-label="How to get your report"
-              className="relative grid gap-4 md:grid-cols-3 md:gap-6"
-            >
-              {steps.map((step, index) => (
-                <li key={step} className="relative">
-                  <Reveal
-                    delay={index * 0.15}
-                    className="flex h-full items-center gap-4 rounded-card bg-white p-5 shadow-card ring-1 ring-ink/5 md:flex-col md:p-6 md:text-center"
-                  >
-                    <span
-                      aria-hidden="true"
-                      className="grid size-12 shrink-0 place-items-center rounded-full bg-navy text-lg font-bold text-white ring-4 ring-white"
-                    >
-                      {index + 1}
-                    </span>
-                    <span className="font-semibold text-balance text-navy">
-                      {step}
-                    </span>
-                  </Reveal>
-                </li>
-              ))}
-            </ol>
-          </div>
-        )}
+          {steps.length > 0 && (
+            <div className="relative mt-8">
+              {/* Connector behind the step numbers, md and up. */}
+              <span
+                aria-hidden="true"
+                className="absolute top-12 right-[16.66%] left-[16.66%] hidden h-0.5 bg-tint md:block"
+              />
+              <ol
+                aria-label="How to get your report"
+                className="relative grid gap-4 md:grid-cols-3 md:gap-6"
+              >
+                {steps.map((step, index) => (
+                  <li key={step} data-reveal className="relative">
+                    <div className="flex h-full items-center gap-4 rounded-card bg-white p-5 shadow-card ring-1 ring-ink/5 md:flex-col md:p-6 md:text-center">
+                      <span
+                        aria-hidden="true"
+                        className="grid size-12 shrink-0 place-items-center rounded-full bg-navy text-lg font-bold text-white ring-4 ring-white"
+                      >
+                        {index + 1}
+                      </span>
+                      <span className="font-semibold text-balance text-navy">
+                        {step}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+        </Reveal>
       </Container>
     </section>
   );

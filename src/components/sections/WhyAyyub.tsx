@@ -9,7 +9,6 @@ import { cacheLife } from "next/cache";
 import type { ReactNode } from "react";
 import { Section, SectionHeading } from "@/components/ui";
 import { CountUp } from "@/components/ui/CountUp";
-import { Reveal } from "@/components/ui/Reveal";
 import { brand, branches } from "@/data/site-data";
 import {
   joinList,
@@ -89,29 +88,27 @@ export async function WhyAyyub() {
 
   return (
     <Section spacing="lg" background="surface" aria-labelledby="why-heading">
-      <Reveal>
-        <SectionHeading
-          id="why-heading"
-          eyebrow={`Why ${brand.shortName}`}
-          title="Facts you can check"
-          align="center"
-        />
-      </Reveal>
+      <SectionHeading
+        id="why-heading"
+        eyebrow={`Why ${brand.shortName}`}
+        title="Facts you can check"
+        align="center"
+      />
       <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-        {items.map(({ id, title, text, Icon }, index) => (
-          <li key={id}>
-            <Reveal
-              delay={index * 0.06}
-              className="h-full rounded-card border-t-4 border-brand-red bg-white p-6 shadow-card"
-            >
-              <span className="grid size-12 place-items-center rounded-full bg-tint text-brand-blue">
-                <Icon aria-hidden="true" className="size-6" />
-              </span>
-              <h3 className="mt-4 text-xl font-bold text-balance text-navy">
-                {title}
-              </h3>
-              <p className="mt-2 text-sm text-muted">{keepHyphens(text)}</p>
-            </Reveal>
+        {items.map(({ id, title, text, Icon }) => (
+          // Section reveals the heading, then each card in turn.
+          <li
+            key={id}
+            data-reveal
+            className="rounded-card border-t-4 border-brand-red bg-white p-6 shadow-card"
+          >
+            <span className="grid size-12 place-items-center rounded-full bg-tint text-brand-blue">
+              <Icon aria-hidden="true" className="size-6" />
+            </span>
+            <h3 className="mt-4 text-xl font-bold text-balance text-navy">
+              {title}
+            </h3>
+            <p className="mt-2 text-sm text-muted">{keepHyphens(text)}</p>
           </li>
         ))}
       </ul>

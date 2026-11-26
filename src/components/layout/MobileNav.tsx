@@ -7,6 +7,7 @@ import {
   useEffect,
   useRef,
   useState,
+  type CSSProperties,
   type MouseEvent,
   type ReactNode,
 } from "react";
@@ -126,12 +127,18 @@ function Drawer({
           className="flex-1 overflow-y-auto overscroll-contain px-2 py-3 sm:px-4"
         >
           <ul className="divide-y divide-white/10">
-            {items.map((item) => {
+            {items.map((item, index) => {
               const active = isActivePath(pathname, item.href);
+              // Items follow the panel in, 40ms apart (.drawer-item in globals.css).
+              const stagger = { "--i": index } as CSSProperties;
 
               if (!item.hasMegaMenu) {
                 return (
-                  <li key={item.href} className="py-1">
+                  <li
+                    key={item.href}
+                    className="drawer-item py-1"
+                    style={stagger}
+                  >
                     <Link
                       href={item.href}
                       aria-current={ariaCurrent(pathname, item.href)}
@@ -144,7 +151,11 @@ function Drawer({
               }
 
               return (
-                <li key={item.href} className="py-1">
+                <li
+                  key={item.href}
+                  className="drawer-item py-1"
+                  style={stagger}
+                >
                   <details open={active} className="accordion-item group">
                     <summary
                       aria-current={active ? "true" : undefined}
@@ -156,7 +167,7 @@ function Drawer({
                       {item.label}
                       <ChevronDown
                         aria-hidden="true"
-                        className="size-5 group-open:rotate-180 motion-safe:transition-transform"
+                        className="size-5 group-open:rotate-180 motion-safe:transition-transform motion-safe:duration-200 motion-safe:ease-house"
                       />
                     </summary>
                     <div className="px-3 pb-3">
@@ -212,7 +223,10 @@ function Drawer({
           </ul>
         </nav>
 
-        <div className="shrink-0 border-t border-white/15 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-6">
+        <div
+          className="drawer-item shrink-0 border-t border-white/15 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-6"
+          style={{ "--i": items.length } as CSSProperties}
+        >
           {actionBar}
         </div>
       </div>

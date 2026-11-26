@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Section, SectionHeading } from "@/components/ui";
-import { Reveal } from "@/components/ui/Reveal";
 import type { ServicePhotoCardData } from "@/components/ui/ServicePhotoCard";
 import { media, services } from "@/data/site-data";
 import { mediaProps } from "@/lib/media";
@@ -29,7 +28,7 @@ export function ServicesShowcase() {
 
   return (
     <Section spacing="lg" aria-labelledby="services-heading">
-      <Reveal className="flex flex-wrap items-end justify-between gap-4">
+      <div className="flex flex-wrap items-end justify-between gap-4">
         <SectionHeading
           id="services-heading"
           eyebrow="Services"
@@ -42,10 +41,8 @@ export function ServicesShowcase() {
         >
           View all services
         </Link>
-      </Reveal>
-      <Reveal>
-        <ServicesTabs services={cards} tabs={tabs} />
-      </Reveal>
+      </div>
+      <ServicesTabs services={cards} tabs={tabs} />
     </Section>
   );
 }

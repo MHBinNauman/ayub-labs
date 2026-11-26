@@ -37,7 +37,8 @@ export function ServiceCard({
   return (
     <li
       className={cn(
-        "group relative flex gap-4 rounded-card bg-white p-4 shadow-card ring-1 ring-ink/5 motion-safe:transition-shadow motion-safe:hover:shadow-card-hover sm:flex-col sm:gap-0 sm:p-6",
+        // card-hover: the shared card lift and shadow (globals.css).
+        "group card-hover flex gap-4 rounded-card bg-white p-4 shadow-card ring-1 ring-ink/5 sm:flex-col sm:gap-0 sm:p-6",
         className,
       )}
     >

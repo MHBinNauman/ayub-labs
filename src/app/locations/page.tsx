@@ -5,6 +5,7 @@ import { LocationsControls } from "@/components/sections/LocationsControls";
 import { LocationsMap } from "@/components/sections/LocationsMap";
 import type { FinderBranch } from "@/components/sections/locations-types";
 import { Breadcrumbs, Container } from "@/components/ui";
+import { Reveal, REVEAL_STAGGER } from "@/components/ui/Reveal";
 import { brand, branches } from "@/data/site-data";
 import { mapsEmbed } from "@/lib/links";
 import { routes } from "@/lib/nav";
@@ -64,32 +65,34 @@ export default function LocationsPage() {
       </section>
 
       <Container className="py-14 lg:py-20">
-        {/* Row 1: finder (40%) and map (60%). The map is desktop only. */}
-        <div className="grid gap-8 lg:grid-cols-[2fr_3fr]">
-          <LocationsControls branches={finderBranches} cities={cityOptions} />
-          <div
-            id="locations-map"
-            className="hidden h-[28rem] overflow-hidden rounded-card shadow-card ring-1 ring-ink/5 lg:block"
-          >
-            <LocationsMap branches={finderBranches} />
-          </div>
-        </div>
-
-        {/* Row 2: one card per branch. */}
-        <ul
-          aria-label="Branch details"
-          className="mt-10 grid gap-6 md:grid-cols-2"
-        >
-          {branches.map((branch) => (
-            <BranchCardFrame
-              key={branch.id}
-              branchId={branch.id}
-              branches={refs}
+        <Reveal stagger={REVEAL_STAGGER}>
+          {/* Row 1: finder (40%) and map (60%). The map is desktop only. */}
+          <div className="grid gap-8 lg:grid-cols-[2fr_3fr]">
+            <LocationsControls branches={finderBranches} cities={cityOptions} />
+            <div
+              id="locations-map"
+              className="hidden h-[28rem] overflow-hidden rounded-card shadow-card ring-1 ring-ink/5 lg:block"
             >
-              <BranchCard branch={branch} />
-            </BranchCardFrame>
-          ))}
-        </ul>
+              <LocationsMap branches={finderBranches} />
+            </div>
+          </div>
+
+          {/* Row 2: one card per branch. */}
+          <ul
+            aria-label="Branch details"
+            className="mt-10 grid gap-6 md:grid-cols-2"
+          >
+            {branches.map((branch) => (
+              <BranchCardFrame
+                key={branch.id}
+                branchId={branch.id}
+                branches={refs}
+              >
+                <BranchCard branch={branch} />
+              </BranchCardFrame>
+            ))}
+          </ul>
+        </Reveal>
       </Container>
     </>
   );

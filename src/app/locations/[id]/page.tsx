@@ -8,6 +8,7 @@ import { CopyAddressButton } from "@/components/sections/CopyAddressButton";
 import { MapEmbed } from "@/components/sections/MapEmbed";
 import { WeekHoursTable } from "@/components/sections/WeekHoursTable";
 import { Breadcrumbs, Button, Container } from "@/components/ui";
+import { Reveal, REVEAL_STAGGER } from "@/components/ui/Reveal";
 import { BranchStatusChip } from "@/components/ui/BranchStatusChip";
 import { branches, serviceCategories, type Branch } from "@/data/site-data";
 import { formatWeekHours, weekHoursTable } from "@/lib/hours";
@@ -110,105 +111,110 @@ export default async function BranchPage({
         </Container>
       </section>
 
-      <Container className="grid gap-10 py-14 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-12 lg:py-20">
-        <div className="min-w-0 space-y-10">
-          <section aria-labelledby="address-heading">
-            <h2 id="address-heading" className="text-xl font-bold text-navy">
-              Address
-            </h2>
-            <address className="mt-3 text-lg text-ink not-italic">
-              {branch.addressLines.map((line) => (
-                <span key={line} className="block">
-                  {line}
-                </span>
-              ))}
-            </address>
-            <div className="mt-3">
-              <CopyAddressButton text={addressText(branch)} />
-            </div>
-            <ul className="mt-4 flex flex-wrap gap-x-5">
-              {branch.phones.map((phone) => (
-                <li key={phone}>
-                  <a
-                    href={tel(phone)}
-                    className="inline-flex min-h-11 items-center gap-2 font-semibold text-navy underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-brand-blue"
-                  >
-                    <Phone
-                      aria-hidden="true"
-                      className="size-4 text-brand-blue"
-                    />
-                    <span className="sr-only">Call </span>
-                    {formatPhone(phone)}
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <Button
-                href={directions}
-                target="_blank"
-                aria-label={`Directions to ${branch.name}`}
-              >
-                <Navigation aria-hidden="true" className="size-5" />
-                Directions
-              </Button>
-              {branch.phones[0] && (
+      <Container className="py-14 lg:py-20">
+        <Reveal
+          stagger={REVEAL_STAGGER}
+          className="grid gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-12"
+        >
+          <div className="min-w-0 space-y-10">
+            <section aria-labelledby="address-heading">
+              <h2 id="address-heading" className="text-xl font-bold text-navy">
+                Address
+              </h2>
+              <address className="mt-3 text-lg text-ink not-italic">
+                {branch.addressLines.map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))}
+              </address>
+              <div className="mt-3">
+                <CopyAddressButton text={addressText(branch)} />
+              </div>
+              <ul className="mt-4 flex flex-wrap gap-x-5">
+                {branch.phones.map((phone) => (
+                  <li key={phone}>
+                    <a
+                      href={tel(phone)}
+                      className="inline-flex min-h-11 items-center gap-2 font-semibold text-navy underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-brand-blue"
+                    >
+                      <Phone
+                        aria-hidden="true"
+                        className="size-4 text-brand-blue"
+                      />
+                      <span className="sr-only">Call </span>
+                      {formatPhone(phone)}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-4 flex flex-wrap gap-3">
                 <Button
-                  href={tel(branch.phones[0])}
-                  variant="secondary"
-                  aria-label={`Call ${branch.name}`}
-                >
-                  <Phone aria-hidden="true" className="size-5" />
-                  Call
-                </Button>
-              )}
-              {branch.whatsapp && (
-                <Button
-                  href={whatsapp(
-                    branch.whatsapp,
-                    branchWhatsappMessage(branch),
-                  )}
+                  href={directions}
                   target="_blank"
-                  variant="whatsapp"
-                  aria-label={`WhatsApp ${branch.name}`}
+                  aria-label={`Directions to ${branch.name}`}
                 >
-                  <MessageCircle aria-hidden="true" className="size-5" />
-                  WhatsApp
+                  <Navigation aria-hidden="true" className="size-5" />
+                  Directions
                 </Button>
-              )}
-            </div>
-          </section>
+                {branch.phones[0] && (
+                  <Button
+                    href={tel(branch.phones[0])}
+                    variant="secondary"
+                    aria-label={`Call ${branch.name}`}
+                  >
+                    <Phone aria-hidden="true" className="size-5" />
+                    Call
+                  </Button>
+                )}
+                {branch.whatsapp && (
+                  <Button
+                    href={whatsapp(
+                      branch.whatsapp,
+                      branchWhatsappMessage(branch),
+                    )}
+                    target="_blank"
+                    variant="whatsapp"
+                    aria-label={`WhatsApp ${branch.name}`}
+                  >
+                    <MessageCircle aria-hidden="true" className="size-5" />
+                    WhatsApp
+                  </Button>
+                )}
+              </div>
+            </section>
 
-          <section aria-labelledby="hours-heading">
-            <h2 id="hours-heading" className="text-xl font-bold text-navy">
-              Opening hours
-            </h2>
-            {!branch.hoursVerified && (
-              <p
-                role="note"
-                className="mt-3 rounded-md border-l-4 border-brand-red bg-surface px-4 py-2 text-sm font-semibold text-ink"
-              >
-                {UNVERIFIED_HOURS_NOTE}
-              </p>
-            )}
-            <div className="mt-3 overflow-hidden rounded-card bg-white shadow-card ring-1 ring-ink/5">
-              <WeekHoursTable
-                rows={weekHoursTable(branch)}
-                caption={`Opening hours, ${branch.name}`}
+            <section aria-labelledby="hours-heading">
+              <h2 id="hours-heading" className="text-xl font-bold text-navy">
+                Opening hours
+              </h2>
+              {!branch.hoursVerified && (
+                <p
+                  role="note"
+                  className="mt-3 rounded-md border-l-4 border-brand-red bg-surface px-4 py-2 text-sm font-semibold text-ink"
+                >
+                  {UNVERIFIED_HOURS_NOTE}
+                </p>
+              )}
+              <div className="mt-3 overflow-hidden rounded-card bg-white shadow-card ring-1 ring-ink/5">
+                <WeekHoursTable
+                  rows={weekHoursTable(branch)}
+                  caption={`Opening hours, ${branch.name}`}
+                />
+              </div>
+            </section>
+          </div>
+
+          <div className="min-w-0">
+            <div className="aspect-4/3 overflow-hidden rounded-card shadow-card ring-1 ring-ink/5 lg:sticky lg:top-20">
+              <MapEmbed
+                src={mapsEmbed(branch.mapQuery)}
+                title={`Map of ${branch.name}`}
+                label={branch.name}
               />
             </div>
-          </section>
-        </div>
-
-        <div className="min-w-0">
-          <div className="aspect-4/3 overflow-hidden rounded-card shadow-card ring-1 ring-ink/5 lg:sticky lg:top-20">
-            <MapEmbed
-              src={mapsEmbed(branch.mapQuery)}
-              title={`Map of ${branch.name}`}
-              label={branch.name}
-            />
           </div>
-        </div>
+        </Reveal>
       </Container>
 
       {serviceGroups.length > 0 && (
@@ -217,30 +223,35 @@ export default async function BranchPage({
           className="bg-surface py-14 lg:py-20"
         >
           <Container>
-            <h2 id="services-heading" className="text-2xl font-bold text-navy">
-              Services available
-            </h2>
-            <div className="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-              {serviceGroups.map((group) => (
-                <div key={group.category}>
-                  <h3 className="text-xs font-bold tracking-wider text-muted uppercase">
-                    {group.label}
-                  </h3>
-                  <ul className="mt-2">
-                    {group.items.map((service) => (
-                      <li key={service.slug}>
-                        <Link
-                          href={serviceHref(service.slug)}
-                          className="inline-flex min-h-11 items-center font-semibold text-navy underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-brand-blue"
-                        >
-                          {service.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+            <Reveal stagger={REVEAL_STAGGER}>
+              <h2
+                id="services-heading"
+                className="text-2xl font-bold text-navy"
+              >
+                Services available
+              </h2>
+              <div className="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                {serviceGroups.map((group) => (
+                  <div key={group.category}>
+                    <h3 className="text-xs font-bold tracking-wider text-muted uppercase">
+                      {group.label}
+                    </h3>
+                    <ul className="mt-2">
+                      {group.items.map((service) => (
+                        <li key={service.slug}>
+                          <Link
+                            href={serviceHref(service.slug)}
+                            className="inline-flex min-h-11 items-center font-semibold text-navy underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-brand-blue"
+                          >
+                            {service.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
           </Container>
         </section>
       )}
@@ -251,38 +262,40 @@ export default async function BranchPage({
           className="py-14 lg:py-20"
         >
           <Container>
-            <h2
-              id="registrations-heading"
-              className="text-2xl font-bold text-navy"
-            >
-              Registered with
-            </h2>
-            <ul className="mt-6 flex flex-wrap gap-4">
-              {registrations.map((registration) => (
-                <li
-                  key={registration.id}
-                  className="flex items-center gap-4 rounded-card bg-white p-4 pr-6 shadow-card ring-1 ring-ink/5"
-                >
-                  <span className="relative block size-16 shrink-0">
-                    <Image
-                      src={registration.logo}
-                      alt=""
-                      fill
-                      sizes="64px"
-                      className="object-contain"
-                    />
-                  </span>
-                  <span>
-                    <span className="block font-bold text-navy">
-                      {registration.name}
+            <Reveal stagger={REVEAL_STAGGER}>
+              <h2
+                id="registrations-heading"
+                className="text-2xl font-bold text-navy"
+              >
+                Registered with
+              </h2>
+              <ul className="mt-6 flex flex-wrap gap-4">
+                {registrations.map((registration) => (
+                  <li
+                    key={registration.id}
+                    className="flex items-center gap-4 rounded-card bg-white p-4 pr-6 shadow-card ring-1 ring-ink/5"
+                  >
+                    <span className="relative block size-16 shrink-0">
+                      <Image
+                        src={registration.logo}
+                        alt=""
+                        fill
+                        sizes="64px"
+                        className="object-contain"
+                      />
                     </span>
-                    <span className="block text-sm text-muted">
-                      {registration.claim} · {registration.short}
+                    <span>
+                      <span className="block font-bold text-navy">
+                        {registration.name}
+                      </span>
+                      <span className="block text-sm text-muted">
+                        {registration.claim} · {registration.short}
+                      </span>
                     </span>
-                  </span>
-                </li>
-              ))}
-            </ul>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
           </Container>
         </section>
       )}

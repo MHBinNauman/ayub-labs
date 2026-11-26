@@ -4,9 +4,17 @@ import { cn } from "@/lib/cn";
 
 // `ui-button` opts out of the generic pressed state in globals.css.
 // Pressed: one step darker (derived from the variant's own colour, so no new
-// hue enters the palette) and, unless reduced motion is on, a 1px press.
+// hue enters the palette) and, unless reduced motion is on, scaled to 0.98.
+// Tailwind v4 writes translate and scale as their own properties, so those
+// are what transition.
 const base =
-  "ui-button inline-flex items-center justify-center gap-2 rounded-lg py-2 text-center font-semibold transition-[color,background-color,border-color,filter,transform] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue active:brightness-90 motion-safe:active:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-busy:cursor-progress aria-busy:opacity-75";
+  "ui-button relative inline-flex items-center justify-center gap-2 rounded-lg py-2 text-center font-semibold transition-[color,background-color,border-color,filter,translate,scale] duration-200 ease-house focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue active:brightness-90 motion-safe:active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 aria-busy:cursor-progress aria-busy:opacity-75";
+
+// Hover for every solid or outlined button: a 1px lift and a shadow. The
+// shadow is a layer that fades in, so box-shadow itself never animates; under
+// reduced motion it still appears, without the lift.
+const lift =
+  "motion-safe:hover:-translate-y-px after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:opacity-0 after:shadow-card-hover after:transition-opacity after:duration-200 after:ease-house hover:after:opacity-100";
 
 const variants = {
   primary: "bg-navy text-white hover:bg-brand-blue",
@@ -57,7 +65,13 @@ export function Button({
   className,
   ...props
 }: ButtonProps) {
-  const classes = cn(base, variants[variant], sizes[size], className);
+  const classes = cn(
+    base,
+    variant !== "ghost" && lift,
+    variants[variant],
+    sizes[size],
+    className,
+  );
 
   if (typeof props.href === "string") {
     const { href, ...anchorProps } = props;
