@@ -3,8 +3,10 @@ import { FaqSection } from "@/components/sections/FaqSection";
 import { homeTitle } from "@/lib/page-titles";
 import { pageMetadata } from "@/lib/seo";
 import {
+  AboutTeaser,
   DoctorsSection,
   Hero,
+  HomeCTA,
   LocationsPreview,
   QuickActions,
   ReportCTA,
@@ -52,15 +54,17 @@ export default function HomePage() {
       <Hero />
       <QuickActions />
       <ServicesShowcase />
-      {resolvedFeatures.statsSection && <StatsSection stats={stats} />}
+      <AboutTeaser />
       <WhyAyyub />
+      {resolvedFeatures.statsSection && <StatsSection stats={stats} />}
+      <ReportCTA />
       {resolvedFeatures.doctorsSection && <DoctorsSection doctors={doctors} />}
       <LocationsPreview />
       <FaqSection faqs={faqs} />
       {resolvedFeatures.testimonials && (
         <TestimonialsSection testimonials={testimonials} />
       )}
-      <ReportCTA />
+      <HomeCTA />
     </>
   );
 }

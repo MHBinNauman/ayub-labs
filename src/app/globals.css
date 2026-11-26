@@ -15,6 +15,7 @@
   --color-ink: #1e2a3a;
   --color-muted: #5b6472;
   --color-whatsapp: #25d366; /* WhatsApp button only */
+  --color-pale-blue: #e3eefb; /* paleBlue: end of the homepage CTA band */
   --color-nav-strip: #ffffff; /* desktop nav strip under the navy header band */
 
   --radius-card: 0.75rem;
@@ -213,6 +214,12 @@ dialog[data-scroll-lock]::backdrop {
  */
 ::view-transition-group(*) {
   animation-duration: 0.3s;
+}
+
+/* Homepage service cards gliding to their new grid place (ServicesTabs.tsx). */
+::view-transition-group(.svc-card) {
+  animation-duration: 400ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Taps during a transition reach the page instead of being swallowed. */

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { brand, branches, contact, services } from "@/data/site-data";
+import { brand, branches, contact, features, services } from "@/data/site-data";
 import {
   keepHyphens,
   branchesByCity,
@@ -9,6 +9,11 @@ import {
   cities,
   addressText,
   branchesOffering,
+  branchShortName,
+  countWord,
+  offersOneVisitCare,
+  reportSteps,
+  whyChooseItems,
   currentYear,
   formatPhone,
   formatPKR,
@@ -196,5 +201,35 @@ describe("keepHyphens", () => {
 
   it("leaves a spaced dash alone", () => {
     expect(keepHyphens("Mon - Sat")).toBe("Mon - Sat");
+  });
+});
+
+describe("homepage checklist and steps", () => {
+  it("lists only facts held in site-data", () => {
+    expect(whyChooseItems).toEqual([
+      `Serving patients since ${founded}`,
+      `Registered with ${registeredWithShort}`,
+      `${countWord(branches.length)} branches (${joinList(branches.map(branchShortName), "&")})`,
+      ...(offersOneVisitCare ? ["Lab, clinic & pharmacy in one visit"] : []),
+      "Report help on WhatsApp",
+    ]);
+    expect(whyChooseItems).toContain("Two branches (Saddar & F-8)");
+    expect(whyChooseItems.join(" ")).not.toMatch(/accredit|ISO|#1|100%/i);
+  });
+
+  it("says how a report is collected, following the portal flag", () => {
+    expect(reportSteps).toHaveLength(3);
+    expect(reportSteps.at(-1)).toBe(
+      features.reportPortalUrl
+        ? "Get your report (online or collect in person)"
+        : "Get your report (WhatsApp or collect in person)",
+    );
+  });
+
+  it("shortens branch names and spells small counts", () => {
+    expect(branchShortName({ name: "Saddar, Rawalpindi" })).toBe("Saddar");
+    expect(branchShortName({ name: "F-8, Islamabad" })).toBe("F-8");
+    expect(countWord(2)).toBe("Two");
+    expect(countWord(12)).toBe("12");
   });
 });

@@ -2,7 +2,10 @@
 
 import { startTransition, useId, useState, ViewTransition } from "react";
 import { CategoryTabs, categoryTabId } from "@/components/ui/CategoryTabs";
-import { ServiceCard, type ServiceCardData } from "@/components/ui/ServiceCard";
+import {
+  ServicePhotoCard,
+  type ServicePhotoCardData,
+} from "@/components/ui/ServicePhotoCard";
 
 export type ServiceTab = {
   id: string;
@@ -17,15 +20,19 @@ export type ServiceTab = {
  *
  * Switching tabs runs inside a React transition with each card wrapped in a
  * <ViewTransition>: the browser's View Transitions API animates cards that
- * stay to their new grid position and fades the rest in or out. No animation
- * library ships to the client, and browsers without support simply swap.
- * Reduced motion is honoured in globals.css.
+ * stay to their new grid position and fades the rest in or out (timing in
+ * globals.css, `.svc-card`). No animation library ships to the client, and
+ * browsers without support simply swap. Reduced motion is honoured in
+ * globals.css.
+ *
+ * On phones the tab row scrolls sideways; its right edge fades out to show
+ * there is more, with end padding so the last tab can scroll clear of it.
  */
 export function ServicesTabs({
   services,
   tabs,
 }: {
-  services: ServiceCardData[];
+  services: ServicePhotoCardData[];
   tabs: ServiceTab[];
 }) {
   const baseId = useId();
@@ -51,6 +58,7 @@ export function ServicesTabs({
         label="Service categories"
         idPrefix={baseId}
         controlsId={panelId}
+        className="[mask-image:linear-gradient(to_right,#000_calc(100%-2.5rem),transparent)] pr-10 sm:[mask-image:none] sm:pr-0"
       />
 
       <div
@@ -61,8 +69,12 @@ export function ServicesTabs({
       >
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           {activeServices.map((service) => (
-            <ViewTransition key={service.slug} name={`svc-${service.slug}`}>
-              <ServiceCard service={service} headingLevel="h3" />
+            <ViewTransition
+              key={service.slug}
+              name={`svc-${service.slug}`}
+              default="svc-card"
+            >
+              <ServicePhotoCard service={service} headingLevel="h3" />
             </ViewTransition>
           ))}
         </ul>

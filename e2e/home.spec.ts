@@ -1,5 +1,11 @@
 import { expect, test, type Page } from "@playwright/test";
 import { brand, branches, media, services } from "../src/data/site-data";
+import {
+  keepHyphens,
+  reportSteps,
+  whyChooseItems,
+  yearsServing,
+} from "../src/lib/site";
 import { SPLASH_KEY } from "../src/lib/splash";
 
 test("home page has the SEO title and hero heading", async ({ page }) => {
@@ -40,7 +46,10 @@ test("status chip goes live after hydration", async ({ page }) => {
 test("services tabs filter the grid", async ({ page }) => {
   await page.goto("/");
   const tabs = page.getByRole("tablist", { name: "Service categories" });
-  const panel = page.getByRole("tabpanel");
+  // The locations card has a tab panel too.
+  const panel = page
+    .locator("section", { has: page.locator("#services-heading") })
+    .getByRole("tabpanel");
   await expect(panel.getByRole("listitem")).toHaveCount(services.length);
 
   await tabs.getByRole("tab", { name: /Diagnostics/ }).click();
@@ -56,19 +65,142 @@ test("services tabs filter the grid", async ({ page }) => {
   await expect(tabs.getByRole("tab", { name: /Clinics/ })).toBeFocused();
 });
 
-test("one location card per branch with directions and call", async ({
+test("the locations card switches branch, with directions and call for each", async ({
   page,
 }) => {
   await page.goto("/");
+  const section = page.locator("section", {
+    has: page.locator("#locations-heading"),
+  });
+  const tabs = section.getByRole("tablist", { name: "Branches" });
   for (const branch of branches) {
+    await tabs.getByRole("tab", { name: branch.name }).click();
+    await expect(tabs.getByRole("tab", { name: branch.name })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
     await expect(
-      page.getByRole("link", { name: `Directions to ${branch.name}` }).first(),
+      section.getByRole("link", { name: `Directions to ${branch.name}` }),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: `Call ${branch.name}` }),
+      section.getByRole("link", { name: `Call ${branch.name}` }),
     ).toBeVisible();
+    // The other branches' panels have faded out of view and the a11y tree.
+    for (const other of branches.filter((b) => b.id !== branch.id)) {
+      await expect(
+        section.getByRole("link", { name: `Call ${other.name}` }),
+      ).toBeHidden();
+    }
   }
 });
+
+test("section order below the hero", async ({ page }) => {
+  await page.goto("/");
+  const headings = await page
+    .locator("main h2")
+    .evaluateAll((nodes) => nodes.map((node) => node.id));
+  expect(headings).toEqual([
+    "services-heading",
+    "about-heading",
+    "why-heading",
+    "report-heading",
+    "locations-heading",
+    "home-cta-heading",
+  ]);
+});
+
+test("service cards show a photo for each service that has one", async ({
+  page,
+}) => {
+  await page.goto("/");
+  // The locations card has a tab panel too.
+  const panel = page
+    .locator("section", { has: page.locator("#services-heading") })
+    .getByRole("tabpanel");
+  for (const service of services) {
+    const card = panel.getByRole("listitem").filter({
+      has: page.getByRole("link", { name: service.name, exact: true }),
+    });
+    const photo = media.services[service.slug];
+    await expect(card.locator("img")).toHaveCount(photo ? 1 : 0);
+    if (photo) {
+      await expect(card.locator("img")).toHaveAttribute("alt", photo.alt);
+    }
+  }
+});
+
+test("about teaser: story link and a checklist of facts", async ({ page }) => {
+  await page.goto("/");
+  const section = page.locator("section", {
+    has: page.locator("#about-heading"),
+  });
+  await expect(section.getByText(brand.aboutDraft)).toBeVisible();
+  await expect(
+    section.getByText(String(brand.foundedYear.value), { exact: true }),
+  ).toBeVisible();
+  await expect(
+    section.getByRole("link", { name: "Read our story" }),
+  ).toHaveAttribute("href", "/about");
+  const checklist = section.getByRole("list");
+  await expect(checklist.getByRole("listitem")).toHaveText(
+    whyChooseItems.map(keepHyphens),
+  );
+  await expect(section).not.toContainText(/accredit/i);
+});
+
+test("reports band with three steps in order", async ({ page }) => {
+  await page.goto("/");
+  const section = page.locator("section", {
+    has: page.locator("#report-heading"),
+  });
+  await expect(
+    section.getByRole("heading", { name: "Access your reports" }),
+  ).toBeVisible();
+  await expect(
+    section
+      .getByRole("list", { name: "How to get your report" })
+      .getByRole("listitem"),
+  ).toContainText(reportSteps); // each item also shows its step number
+});
+
+test("closing band offers WhatsApp and a call", async ({ page }) => {
+  await page.goto("/");
+  const section = page.locator("section", {
+    has: page.locator("#home-cta-heading"),
+  });
+  await expect(
+    section.getByRole("heading", { name: "Have a question about a test?" }),
+  ).toBeVisible();
+  await expect(
+    section.getByRole("link", { name: "WhatsApp us" }),
+  ).toHaveAttribute("href", /^https:\/\/wa\.me\//);
+  await expect(section.getByRole("link", { name: /^Call / })).toHaveAttribute(
+    "href",
+    /^tel:\+92/,
+  );
+});
+
+for (const reducedMotion of ["no-preference", "reduce"] as const) {
+  test(`years figure ends on its final value (${reducedMotion})`, async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion });
+    await page.goto("/");
+    const section = page.locator("section", {
+      has: page.locator("#why-heading"),
+    });
+    await section.scrollIntoViewIfNeeded();
+    const years = yearsServing()!;
+    // Screen readers hear only the final label; the counting copy is aria-hidden.
+    const heading = section.getByRole("heading", {
+      level: 3,
+      name: years.label,
+    });
+    await expect(heading).toBeVisible();
+    // Once the count has run, the visible number has landed on the final value too.
+    await expect(heading.locator("[aria-hidden]")).toHaveText(years.label);
+  });
+}
 
 test.describe("maps", () => {
   test("phones load a map only on request", async ({ page, isMobile }) => {

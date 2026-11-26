@@ -12,6 +12,8 @@ const backgrounds = {
   white: "bg-white",
   surface: "bg-surface",
   tint: "bg-tint",
+  /** tint→white, for light feature bands. */
+  fade: "bg-linear-to-b from-tint to-white",
 };
 
 type SectionProps = ComponentPropsWithoutRef<"section"> & {

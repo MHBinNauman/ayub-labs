@@ -1,5 +1,7 @@
+export { AboutTeaser } from "./AboutTeaser";
 export { DoctorsSection } from "./DoctorsSection";
 export { Hero } from "./Hero";
+export { HomeCTA } from "./HomeCTA";
 export { LocationsPreview } from "./LocationsPreview";
 export { QuickActions } from "./QuickActions";
 export { ReportCTA } from "./ReportCTA";

@@ -6,18 +6,27 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cacheLife } from "next/cache";
+import type { ReactNode } from "react";
 import { Section, SectionHeading } from "@/components/ui";
+import { CountUp } from "@/components/ui/CountUp";
+import { Reveal } from "@/components/ui/Reveal";
 import { brand, branches } from "@/data/site-data";
 import {
   joinList,
   keepHyphens,
+  offersOneVisitCare,
   registeredWithShort,
-  servicesByCategory,
   verifiedRegistrations,
   yearsServing,
 } from "@/lib/site";
 
-type Pillar = { title: string; text: string; Icon: LucideIcon };
+type Pillar = {
+  /** Unique; also the React key. */
+  id: string;
+  title: ReactNode;
+  text: string;
+  Icon: LucideIcon;
+};
 
 /** yearsServing reads the clock; a day-long cache keeps the page static. */
 async function cachedYearsServing() {
@@ -36,7 +45,9 @@ async function pillars(): Promise<Pillar[]> {
   const years = await cachedYearsServing();
   if (years) {
     list.push({
-      title: years.label,
+      id: "years",
+      // Only this number counts up; the HTML already holds the final value.
+      title: <CountUp value={years.years} suffix="+ years" />,
       text: `Serving patients since ${brand.foundedYear.value}.`,
       Icon: CalendarCheck,
     });
@@ -44,6 +55,7 @@ async function pillars(): Promise<Pillar[]> {
 
   if (verifiedRegistrations.length > 0) {
     list.push({
+      id: "registered",
       title: `Registered with ${registeredWithShort}`,
       text: `${joinList(verifiedRegistrations.map((r) => r.name))}.`,
       Icon: BadgeCheck,
@@ -51,6 +63,7 @@ async function pillars(): Promise<Pillar[]> {
   }
 
   list.push({
+    id: "branches",
     title: `${branches.length} ${branches.length === 1 ? "branch" : "branches"}`,
     text: `${joinList(
       branches.map((b) => b.name),
@@ -59,13 +72,9 @@ async function pillars(): Promise<Pillar[]> {
     Icon: MapPin,
   });
 
-  const offered = new Set(servicesByCategory.map((group) => group.category));
-  if (
-    offered.has("laboratory") &&
-    offered.has("clinics") &&
-    offered.has("pharmacy")
-  ) {
+  if (offersOneVisitCare) {
     list.push({
+      id: "one-visit",
       title: "Lab, clinic & pharmacy in one visit",
       text: "Have tests done, see a specialist and collect medicines without a second trip.",
       Icon: Stethoscope,
@@ -80,25 +89,29 @@ export async function WhyAyyub() {
 
   return (
     <Section spacing="lg" background="surface" aria-labelledby="why-heading">
-      <SectionHeading
-        id="why-heading"
-        eyebrow={`Why ${brand.shortName}`}
-        title="Facts you can check"
-        align="center"
-      />
+      <Reveal>
+        <SectionHeading
+          id="why-heading"
+          eyebrow={`Why ${brand.shortName}`}
+          title="Facts you can check"
+          align="center"
+        />
+      </Reveal>
       <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-        {items.map(({ title, text, Icon }) => (
-          <li
-            key={title}
-            className="rounded-card border-t-4 border-brand-red bg-white p-6 shadow-card"
-          >
-            <span className="grid size-12 place-items-center rounded-full bg-tint text-brand-blue">
-              <Icon aria-hidden="true" className="size-6" />
-            </span>
-            <h3 className="mt-4 text-xl font-bold text-balance text-navy">
-              {title}
-            </h3>
-            <p className="mt-2 text-sm text-muted">{keepHyphens(text)}</p>
+        {items.map(({ id, title, text, Icon }, index) => (
+          <li key={id}>
+            <Reveal
+              delay={index * 0.06}
+              className="h-full rounded-card border-t-4 border-brand-red bg-white p-6 shadow-card"
+            >
+              <span className="grid size-12 place-items-center rounded-full bg-tint text-brand-blue">
+                <Icon aria-hidden="true" className="size-6" />
+              </span>
+              <h3 className="mt-4 text-xl font-bold text-balance text-navy">
+                {title}
+              </h3>
+              <p className="mt-2 text-sm text-muted">{keepHyphens(text)}</p>
+            </Reveal>
           </li>
         ))}
       </ul>

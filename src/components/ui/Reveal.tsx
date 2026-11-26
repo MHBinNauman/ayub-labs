@@ -44,7 +44,7 @@ export function Reveal({ children, delay = 0, className }: RevealProps) {
         animate(
           element,
           { opacity: 1, transform: "translateY(0px)" },
-          { duration: 0.5, delay, ease: "easeOut" },
+          { duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] },
         ).then(reset);
       },
       { amount: 0.15 },

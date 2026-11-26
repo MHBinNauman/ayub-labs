@@ -32,3 +32,15 @@ describe("composite", () => {
     expect(composite(colors.navy, 0, "#FFFFFF")).toEqual([255, 255, 255]);
   });
 });
+
+describe("paleBlue CTA band", () => {
+  it("keeps heading, body and muted text at AA on both gradient ends", () => {
+    // colors.tint is rgba(105,143,208,0.11), laid over the white page.
+    const tintOnWhite = composite([105, 143, 208], 0.11, "#FFFFFF");
+    for (const background of [colors.paleBlue, tintOnWhite]) {
+      for (const text of [colors.navy, colors.ink, colors.muted]) {
+        expect(contrastRatio(text, background)).toBeGreaterThanOrEqual(4.5);
+      }
+    }
+  });
+});

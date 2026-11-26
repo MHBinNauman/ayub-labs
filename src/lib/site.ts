@@ -171,6 +171,11 @@ export function branchWhatsappMessage(branch: Pick<Branch, "name">): string {
   return `Hello ${brand.shortName} (${branch.name}), I'd like to ask about…`;
 }
 
+/** A branch's name without its city: "Saddar, Rawalpindi" → "Saddar". */
+export function branchShortName(branch: Pick<Branch, "name">): string {
+  return branch.name.split(",")[0].trim();
+}
+
 /** Cities with a branch, in data order, e.g. ["Rawalpindi", "Islamabad"]. */
 export const cities: Branch["city"][] = branchesByCity.map(
   (group) => group.city,
@@ -326,6 +331,67 @@ export const servicesByCategory: ServiceGroup[] = (
     services: services.filter((service) => service.category === category),
   }))
   .filter((group) => group.services.length > 0);
+
+/**
+ * True when the lab, a clinic and the pharmacy are all on the service list,
+ * so a patient can have tests, see a specialist and collect medicines in one
+ * visit.
+ */
+export const offersOneVisitCare: boolean = (
+  ["laboratory", "clinics", "pharmacy"] as const
+).every((category) =>
+  servicesByCategory.some((group) => group.category === category),
+);
+
+/* ------------------------------------------------------------------ */
+/* Why choose us / report steps (homepage)                             */
+/* ------------------------------------------------------------------ */
+
+const countWords = [
+  "Zero",
+  "One",
+  "Two",
+  "Three",
+  "Four",
+  "Five",
+  "Six",
+  "Seven",
+  "Eight",
+  "Nine",
+  "Ten",
+];
+
+/** 2 → "Two"; numbers past ten stay as digits. */
+export function countWord(n: number): string {
+  return countWords[n] ?? String(n);
+}
+
+/**
+ * The "Why choose" checklist. Every line restates a fact held in
+ * site-data.ts and is left out when that fact is missing or unverified.
+ */
+export const whyChooseItems: string[] = [
+  brand.foundedYear.verified
+    ? `Serving patients since ${brand.foundedYear.value}`
+    : null,
+  verifiedRegistrations.length > 0
+    ? `Registered with ${registeredWithShort}`
+    : null,
+  branches.length > 0
+    ? `${countWord(branches.length)} ${branches.length === 1 ? "branch" : "branches"} (${joinList(branches.map(branchShortName), "&")})`
+    : null,
+  offersOneVisitCare ? "Lab, clinic & pharmacy in one visit" : null,
+  contact.whatsapp.number ? "Report help on WhatsApp" : null,
+].filter((item): item is string => item !== null);
+
+/** How a patient gets a report, in order. The last step follows the report portal flag. */
+export const reportSteps: string[] = [
+  "Visit a branch & give your sample",
+  "We process it in our lab",
+  features.reportPortalUrl
+    ? "Get your report (online or collect in person)"
+    : "Get your report (WhatsApp or collect in person)",
+];
 
 /* ------------------------------------------------------------------ */
 /* Test directory                                                      */

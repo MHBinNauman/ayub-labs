@@ -1,12 +1,22 @@
 import Link from "next/link";
 import { Section, SectionHeading } from "@/components/ui";
-import { services } from "@/data/site-data";
+import { Reveal } from "@/components/ui/Reveal";
+import type { ServicePhotoCardData } from "@/components/ui/ServicePhotoCard";
+import { media, services } from "@/data/site-data";
+import { mediaProps } from "@/lib/media";
 import { routes, toServiceCard } from "@/lib/nav";
 import { keepHyphens, offeringPhrase, servicesByCategory } from "@/lib/site";
 import { ServicesTabs, type ServiceTab } from "./ServicesTabs";
 
 export function ServicesShowcase() {
-  const cards = services.map(toServiceCard);
+  // Photos are resolved here, on the server, so blur previews stay out of the bundle.
+  const cards: ServicePhotoCardData[] = services.map((service) => {
+    const photo = media.services[service.slug];
+    return {
+      ...toServiceCard(service),
+      image: photo ? mediaProps(photo) : undefined,
+    };
+  });
   const tabs: ServiceTab[] = [
     { id: "all", label: "All", slugs: cards.map((card) => card.slug) },
     ...servicesByCategory.map((group) => ({
@@ -19,7 +29,7 @@ export function ServicesShowcase() {
 
   return (
     <Section spacing="lg" aria-labelledby="services-heading">
-      <div className="flex flex-wrap items-end justify-between gap-4">
+      <Reveal className="flex flex-wrap items-end justify-between gap-4">
         <SectionHeading
           id="services-heading"
           eyebrow="Services"
@@ -32,8 +42,10 @@ export function ServicesShowcase() {
         >
           View all services
         </Link>
-      </div>
-      <ServicesTabs services={cards} tabs={tabs} />
+      </Reveal>
+      <Reveal>
+        <ServicesTabs services={cards} tabs={tabs} />
+      </Reveal>
     </Section>
   );
 }

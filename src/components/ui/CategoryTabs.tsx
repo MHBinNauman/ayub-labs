@@ -3,7 +3,8 @@
 import { useRef, type KeyboardEvent } from "react";
 import { cn } from "@/lib/cn";
 
-export type CategoryTab = { id: string; label: string; count: number };
+/** `count` is shown as a pill after the label; leave it out to show none. */
+export type CategoryTab = { id: string; label: string; count?: number };
 
 type CategoryTabsProps = {
   tabs: CategoryTab[];
@@ -25,7 +26,7 @@ export function categoryTabId(idPrefix: string, tabId: string): string {
 /**
  * Pill-style tab bar following the WAI-ARIA tabs pattern: only the selected
  * tab is in the Tab order (roving tabindex); Left/Right/Home/End move and
- * select. Each tab shows how many items it holds. Controlled: the parent owns
+ * select. Each tab can show how many items it holds. Controlled: the parent owns
  * the selection, so it can keep it in state or in the URL.
  */
 export function CategoryTabs({
@@ -98,14 +99,16 @@ export function CategoryTabs({
             )}
           >
             {tab.label}
-            <span
-              className={cn(
-                "ml-2 rounded-full px-1.5 text-xs",
-                selected ? "bg-white/20" : "bg-surface text-muted",
-              )}
-            >
-              {tab.count}
-            </span>
+            {tab.count !== undefined && (
+              <span
+                className={cn(
+                  "ml-2 rounded-full px-1.5 text-xs",
+                  selected ? "bg-white/20" : "bg-surface text-muted",
+                )}
+              >
+                {tab.count}
+              </span>
+            )}
           </button>
         );
       })}

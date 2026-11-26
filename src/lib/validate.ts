@@ -339,6 +339,7 @@ const siteDataSchema = z.strictObject({
       muted: color,
       redText: color,
       whatsapp: color,
+      paleBlue: color,
     }),
     contrast: z.record(z.string(), z.number().positive()),
     font: z.strictObject({

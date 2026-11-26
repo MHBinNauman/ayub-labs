@@ -419,6 +419,7 @@ export const brandTokens = {
     muted: "#5B6472", // ours; theme grey #888C92 fails WCAG AA (3.38:1)
     redText: "#C8151D", // darker red for small text; #E81C24 is 4.18:1 on surface
     whatsapp: "#25D366", // WhatsApp brand green, button only
+    paleBlue: "#E3EEFB", // ours; end colour of the homepage CTA band (tint→paleBlue)
   },
   contrast: {
     "logoBlue/white": 7.06,
