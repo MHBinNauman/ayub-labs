@@ -33,7 +33,7 @@ export function LocationsPreview() {
               placeholder={banner.placeholder}
               blurDataURL={banner.blurDataURL}
               fill
-              sizes="(min-width: 1280px) 1216px, 100vw"
+              sizes="(min-width: 1280px) 1216px, (min-width: 1024px) calc(100vw - 4rem), (min-width: 640px) calc(100vw - 3rem), calc(100vw - 2rem)"
               className="object-cover"
             />
             <div

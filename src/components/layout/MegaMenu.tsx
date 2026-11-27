@@ -249,7 +249,7 @@ export function MegaMenu({ item, groups, pathname }: MegaMenuProps) {
                 <div key={group.category}>
                   <p
                     id={headingId}
-                    className="border-b border-ink/10 pb-2 text-xs font-bold tracking-wider text-muted uppercase"
+                    className="border-b border-ink/10 pb-2 text-sm font-bold tracking-wider text-muted uppercase"
                   >
                     {group.label}
                   </p>

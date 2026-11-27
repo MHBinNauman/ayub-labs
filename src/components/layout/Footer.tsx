@@ -19,7 +19,7 @@ import { Logo } from "./Logo";
 import { FacebookIcon, InstagramIcon } from "./SocialIcons";
 
 const linkClass =
-  "inline-flex min-h-11 items-center gap-2 rounded-sm text-white/80 transition-colors hover:text-white hover:underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
+  "inline-flex min-h-11 min-w-11 items-center gap-2 rounded-sm text-white/80 transition-colors hover:text-white hover:underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
 
 type SocialLink = {
   label: string;
@@ -192,7 +192,7 @@ export function Footer() {
                   </span>
                   <span
                     aria-hidden="true"
-                    className="text-xs font-semibold text-white/80"
+                    className="text-sm font-semibold text-white/80"
                   >
                     {registration.short}
                   </span>
@@ -204,7 +204,7 @@ export function Footer() {
       </Container>
 
       <div className="border-t border-white/15">
-        <Container className="flex flex-col gap-4 py-6 text-sm text-white/80 sm:flex-row sm:items-center sm:justify-between">
+        <Container className="flex flex-col gap-4 pt-6 pb-fab-zone text-sm text-white/80 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © <CopyrightYear /> {brand.displayName}
           </p>

@@ -37,7 +37,7 @@ export function BranchStatusChip({
   if (variant === "dot") {
     return (
       <span
-        className={cn("inline-flex items-center gap-1.5 text-xs", className)}
+        className={cn("inline-flex items-center gap-1.5 text-sm", className)}
       >
         <span
           aria-hidden="true"

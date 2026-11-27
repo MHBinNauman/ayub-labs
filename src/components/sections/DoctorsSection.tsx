@@ -25,7 +25,7 @@ export function DoctorsSection({ doctors }: { doctors: typeof doctorsData }) {
                   src={doctor.photo}
                   alt={doctor.name}
                   fill
-                  sizes="(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 100vw"
+                  sizes="(min-width: 64rem) 25vw, (min-width: 40rem) calc(50vw - 2.5rem), calc(100vw - 2rem)"
                   className="object-cover"
                 />
               ) : (
@@ -37,7 +37,7 @@ export function DoctorsSection({ doctors }: { doctors: typeof doctorsData }) {
               <p className="text-sm font-semibold text-ink">{doctor.title}</p>
               <p className="mt-1 text-sm text-muted">{doctor.qualifications}</p>
               {doctor.pmdcNo && (
-                <p className="mt-2 text-xs text-muted">PMDC {doctor.pmdcNo}</p>
+                <p className="mt-2 text-sm text-muted">PMDC {doctor.pmdcNo}</p>
               )}
             </div>
           </li>

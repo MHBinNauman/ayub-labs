@@ -2,6 +2,7 @@
 
 import { useRef, type KeyboardEvent } from "react";
 import { cn } from "@/lib/cn";
+import { revealInRow, ScrollRow } from "./ScrollRow";
 
 /** `count` is shown as a pill after the label; leave it out to show none. */
 export type CategoryTab = { id: string; label: string; count?: number };
@@ -16,7 +17,10 @@ type CategoryTabsProps = {
   idPrefix: string;
   /** Id of the single panel every tab controls. */
   controlsId: string;
+  /** Classes for the frame: margins and bleed. */
   className?: string;
+  /** Classes for the scrolling row itself: its side padding. */
+  rowClassName?: string;
 };
 
 export function categoryTabId(idPrefix: string, tabId: string): string {
@@ -37,6 +41,7 @@ export function CategoryTabs({
   idPrefix,
   controlsId,
   className,
+  rowClassName,
 }: CategoryTabsProps) {
   const tabRefs = useRef(new Map<string, HTMLButtonElement>());
 
@@ -62,16 +67,21 @@ export function CategoryTabs({
     event.preventDefault();
     const nextTab = tabs[next];
     onSelect(nextTab.id);
-    tabRefs.current.get(nextTab.id)?.focus();
+    const node = tabRefs.current.get(nextTab.id);
+    node?.focus();
+    if (node) revealInRow(node);
   }
 
   return (
-    <div
+    // Phones: one row that scrolls sideways, bleeding to the screen edges.
+    // From sm the pills wrap, so the row never scrolls there.
+    <ScrollRow
       role="tablist"
       aria-label={label}
+      frameClassName={cn("-mx-4 sm:mx-0", className)}
       className={cn(
-        "-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0",
-        className,
+        "flex scroll-px-4 gap-2 px-4 pb-1 sm:scroll-px-0 sm:flex-wrap sm:px-0",
+        rowClassName,
       )}
     >
       {tabs.map((tab, index) => {
@@ -89,7 +99,10 @@ export function CategoryTabs({
             aria-selected={selected}
             aria-controls={controlsId}
             tabIndex={selected ? 0 : -1}
-            onClick={() => onSelect(tab.id)}
+            onClick={(event) => {
+              revealInRow(event.currentTarget);
+              onSelect(tab.id);
+            }}
             onKeyDown={(event) => onKeyDown(event, index)}
             className={cn(
               "min-h-11 shrink-0 rounded-full border px-4 text-sm font-semibold whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue",
@@ -102,7 +115,7 @@ export function CategoryTabs({
             {tab.count !== undefined && (
               <span
                 className={cn(
-                  "ml-2 rounded-full px-1.5 text-xs",
+                  "ml-2 rounded-full px-1.5 text-sm",
                   selected ? "bg-white/20" : "bg-surface text-muted",
                 )}
               >
@@ -112,6 +125,6 @@ export function CategoryTabs({
           </button>
         );
       })}
-    </div>
+    </ScrollRow>
   );
 }

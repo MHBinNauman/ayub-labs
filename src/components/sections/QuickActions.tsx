@@ -88,7 +88,7 @@ export function QuickActions() {
                         className="size-4 text-brand-red motion-safe:transition-transform motion-safe:group-hover:translate-x-1"
                       />
                     </span>
-                    <span className="mt-0.5 block text-xs text-muted sm:text-sm">
+                    <span className="mt-0.5 block text-sm text-muted sm:text-sm">
                       {line}
                     </span>
                   </span>

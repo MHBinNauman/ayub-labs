@@ -51,7 +51,7 @@ export function ScrollToTop({ mainId = "main" }: { mainId?: string }) {
         aria-label="Back to top"
         data-shown={shown || undefined}
         className={cn(
-          "vt-to-top fixed bottom-20 left-4 z-30 grid size-12 place-items-center rounded-full bg-navy text-white shadow-card-hover hover:bg-brand-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue sm:left-6 lg:bottom-6",
+          "vt-to-top fixed fab-left z-30 grid size-12 place-items-center rounded-full bg-navy text-white shadow-card-hover hover:bg-brand-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue",
           "motion-safe:transition-[opacity,translate,visibility,background-color] motion-safe:duration-200 motion-safe:ease-house",
           shown
             ? "visible translate-y-0 opacity-100"

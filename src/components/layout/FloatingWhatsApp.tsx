@@ -6,8 +6,10 @@ import { whatsappGreeting } from "@/lib/site";
 const LABEL = "Chat on WhatsApp";
 
 /**
- * Fixed 56px WhatsApp button, bottom-right. Sits higher below lg (bottom-20)
- * to stay clear of the action bar at the foot of the mobile menu. CSS-only
+ * Fixed 56px WhatsApp button, 16px from the bottom-right corner (above the
+ * iPhone home indicator; fab-right in globals.css). Hidden while the mobile
+ * drawer is open, whose action bar has its own WhatsApp button. The footer
+ * ends in a safe zone (pb-fab-zone) so it covers nothing there. CSS-only
  * tooltip; no popup ever opens by itself. No client JavaScript: the one ping
  * per session is CSS keyed off <html data-wa-ping> (lib/wa-ping.ts).
  */
@@ -18,7 +20,7 @@ export function FloatingWhatsApp() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={LABEL}
-      className="vt-whatsapp group fixed right-4 bottom-20 z-30 grid size-14 place-items-center rounded-full bg-whatsapp text-ink shadow-card-hover transition-transform focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue motion-safe:hover:scale-105 sm:right-6 lg:bottom-6"
+      className="vt-whatsapp group fixed fab-right z-30 grid size-14 place-items-center rounded-full bg-whatsapp text-ink shadow-card-hover transition-transform focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue motion-safe:hover:scale-105"
     >
       <span
         aria-hidden="true"

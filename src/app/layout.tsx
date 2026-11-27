@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Montserrat } from "next/font/google";
 import {
   FloatingWhatsApp,
@@ -42,6 +42,14 @@ export const metadata: Metadata = {
     locale: "en_PK",
     type: "website",
   },
+};
+
+// "cover" lets the page run under a notch and the home indicator, and makes
+// env(safe-area-inset-*) report them; the gutters (px-gutter), the floating
+// buttons (fab-right/fab-left), the drawer and the footer's safe zone
+// (pb-fab-zone) keep content clear of both.
+export const viewport: Viewport = {
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

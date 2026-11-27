@@ -337,40 +337,45 @@ test.describe("hero slider", () => {
     ).toBeHidden();
   });
 
-  test.describe("on a 375×667 phone", () => {
-    test.use({ viewport: { width: 375, height: 667 } });
+  for (const { width, height } of [
+    { width: 375, height: 667 },
+    { width: 360, height: 740 },
+  ]) {
+    test.describe(`on a ${width}×${height} phone`, () => {
+      test.use({ viewport: { width, height } });
 
-    test("CTAs fit on the first screen, clear of the WhatsApp button", async ({
-      page,
-      isMobile,
-    }) => {
-      test.skip(!isMobile, "phone layout");
-      await page.goto("/");
-      const hero = page.locator("[data-hero]");
-      const ctas = [
-        hero.getByRole("link", { name: "WhatsApp us" }),
-        hero.getByRole("link", { name: "Call now" }),
-        hero.getByRole("link", { name: "Get your report" }),
-      ];
-      const fab = (await page
-        .getByRole("link", { name: "Chat on WhatsApp" })
-        .boundingBox())!;
-      const controls = (await slider(page)
-        .getByRole("button", { name: "Pause slideshow" })
-        .boundingBox())!;
-      type Box = typeof fab;
-      const overlaps = (a: Box, b: Box) =>
-        a.x < b.x + b.width &&
-        b.x < a.x + a.width &&
-        a.y < b.y + b.height &&
-        b.y < a.y + a.height;
+      test("CTAs fit on the first screen, clear of the WhatsApp button", async ({
+        page,
+        isMobile,
+      }) => {
+        test.skip(!isMobile, "phone layout");
+        await page.goto("/");
+        const hero = page.locator("[data-hero]");
+        const ctas = [
+          hero.getByRole("link", { name: "WhatsApp us" }),
+          hero.getByRole("link", { name: "Call now" }),
+          hero.getByRole("link", { name: "Get your report" }),
+        ];
+        const fab = (await page
+          .getByRole("link", { name: "Chat on WhatsApp" })
+          .boundingBox())!;
+        const controls = (await slider(page)
+          .getByRole("button", { name: "Pause slideshow" })
+          .boundingBox())!;
+        type Box = typeof fab;
+        const overlaps = (a: Box, b: Box) =>
+          a.x < b.x + b.width &&
+          b.x < a.x + a.width &&
+          a.y < b.y + b.height &&
+          b.y < a.y + a.height;
 
-      for (const cta of ctas) {
-        const box = (await cta.boundingBox())!;
-        expect(box.y + box.height).toBeLessThanOrEqual(667);
-        expect(overlaps(box, fab)).toBe(false);
-        expect(overlaps(box, controls)).toBe(false);
-      }
+        for (const cta of ctas) {
+          const box = (await cta.boundingBox())!;
+          expect(box.y + box.height).toBeLessThanOrEqual(height);
+          expect(overlaps(box, fab)).toBe(false);
+          expect(overlaps(box, controls)).toBe(false);
+        }
+      });
     });
-  });
+  }
 });

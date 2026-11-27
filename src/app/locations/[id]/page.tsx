@@ -234,7 +234,7 @@ export default async function BranchPage({
               <div className="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
                 {serviceGroups.map((group) => (
                   <div key={group.category}>
-                    <h3 className="text-xs font-bold tracking-wider text-muted uppercase">
+                    <h3 className="text-sm font-bold tracking-wider text-muted uppercase">
                       {group.label}
                     </h3>
                     <ul className="mt-2">
@@ -242,7 +242,7 @@ export default async function BranchPage({
                         <li key={service.slug}>
                           <Link
                             href={serviceHref(service.slug)}
-                            className="inline-flex min-h-11 items-center font-semibold text-navy underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-brand-blue"
+                            className="inline-flex min-h-11 min-w-11 items-center font-semibold text-navy underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-brand-blue"
                           >
                             {service.name}
                           </Link>

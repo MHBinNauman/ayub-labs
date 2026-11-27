@@ -20,6 +20,10 @@
 
   --radius-card: 0.75rem;
 
+  /* Floating WhatsApp button: its size and its gap from the screen edges. */
+  --fab-size: 3.5rem;
+  --fab-gap: 1rem;
+
   /* House easing (CLAUDE.md motion rules). Also a utility: ease-house. */
   --ease-house: cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -216,6 +220,53 @@ html:has(dialog[data-scroll-lock][open]) {
 /* Hide the backdrop of the full-screen drawer; the drawer covers the page anyway. */
 dialog[data-scroll-lock]::backdrop {
   background: transparent;
+}
+
+/*
+ * The floating buttons (WhatsApp bottom-right, Back to top bottom-left):
+ * 16px from the screen edges, and clear of the iPhone home indicator and
+ * a landscape notch (viewportFit "cover" in layout.tsx makes env() real).
+ * They step aside while the mobile drawer is open; its own action bar
+ * offers WhatsApp there.
+ */
+@utility fab-right {
+  right: max(var(--fab-gap), env(safe-area-inset-right));
+  bottom: calc(var(--fab-gap) + env(safe-area-inset-bottom));
+}
+@utility fab-left {
+  left: max(var(--fab-gap), env(safe-area-inset-left));
+  bottom: calc(var(--fab-gap) + env(safe-area-inset-bottom));
+}
+html:has(dialog[data-mobile-nav][open]) :is(.vt-whatsapp, .vt-to-top) {
+  visibility: hidden;
+}
+
+/*
+ * Page gutter (Container): 16px, 24px from sm, 32px from lg, and never less
+ * than a landscape notch or rounded corner (env(safe-area-inset-*)).
+ */
+@utility px-gutter {
+  --gutter: 1rem;
+  padding-left: max(var(--gutter), env(safe-area-inset-left));
+  padding-right: max(var(--gutter), env(safe-area-inset-right));
+
+  @media (width >= 40rem) {
+    --gutter: 1.5rem;
+  }
+  @media (width >= 64rem) {
+    --gutter: 2rem;
+  }
+}
+
+/*
+ * Bottom safe zone: the end of the page (the footer's last row) keeps the
+ * floating buttons' height plus a gap free below its content, so once the
+ * visitor has scrolled to the bottom nothing sits under a button.
+ */
+@utility pb-fab-zone {
+  padding-bottom: calc(
+    1.5rem + var(--fab-size) + 2 * var(--fab-gap) + env(safe-area-inset-bottom)
+  );
 }
 
 /*
@@ -612,5 +663,93 @@ dialog[data-scroll-lock]::backdrop {
       animation-timeline: scroll(root);
       animation-range: 0 100vh;
     }
+  }
+}
+
+/*
+ * Scroll rows (ScrollRow.tsx): tab bars and chip lists scroll sideways when
+ * they don't fit, snapping items to the start edge (set scroll-px-* to the
+ * row's own side padding). The scrollbar is hidden; the edge fades say
+ * there is more.
+ *
+ * Fades: opacity only, driven by the row's scroll timeline (named on the
+ * row, scoped to its frame so siblings can follow it). The start fade comes
+ * in over the first 2.5rem of scroll, the end fade goes over the last 2.5rem.
+ * A row that fits has an inactive timeline, so both stay at opacity 0, as
+ * they do in browsers without scroll timelines. Under reduced motion they
+ * switch on and off instead of easing.
+ */
+.scroll-row-frame {
+  --fade-bg: var(--color-white);
+  position: relative;
+  timeline-scope: --scroll-row;
+}
+.scroll-row {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  scroll-timeline: --scroll-row x;
+}
+.scroll-row::-webkit-scrollbar {
+  display: none;
+}
+.scroll-row > * {
+  scroll-snap-align: start;
+}
+.scroll-fade {
+  position: absolute;
+  inset-block: 0;
+  z-index: 1;
+  width: 2.5rem;
+  pointer-events: none;
+  opacity: 0;
+}
+.scroll-fade-start {
+  inset-inline-start: 0;
+  background-image: linear-gradient(to right, var(--fade-bg), transparent);
+}
+.scroll-fade-end {
+  inset-inline-end: 0;
+  background-image: linear-gradient(to left, var(--fade-bg), transparent);
+}
+@supports (animation-timeline: scroll()) {
+  .scroll-fade {
+    animation-duration: auto;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: --scroll-row;
+  }
+  .scroll-fade-start {
+    animation-name: scroll-fade-in;
+    animation-range: 0 2.5rem;
+  }
+  .scroll-fade-end {
+    animation-name: scroll-fade-out;
+    animation-range: calc(100% - 2.5rem) 100%;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-fade-start {
+      animation-timing-function: steps(1, jump-start);
+    }
+    .scroll-fade-end {
+      animation-timing-function: steps(1, jump-end);
+    }
+  }
+}
+@keyframes scroll-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes scroll-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }

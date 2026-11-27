@@ -44,7 +44,7 @@ const FASTING_OPTIONS: { id: FastingFilter; label: string }[] = [
 ];
 
 const chip =
-  "inline-flex items-center rounded-md bg-surface px-2 py-0.5 text-xs font-semibold text-ink";
+  "inline-flex items-center rounded-md bg-surface px-2 py-0.5 text-sm font-semibold text-ink";
 
 /** Reads the filter from the URL (?q=&service=&fasting=&home=&sort=). */
 function readFilter(

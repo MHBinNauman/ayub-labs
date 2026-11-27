@@ -38,7 +38,8 @@ export function BranchSwitcher({ panels }: { panels: BranchPanel[] }) {
           label="Branches"
           idPrefix={baseId}
           controlsId={panelId}
-          className="mx-0 px-5 pt-5 sm:px-6 sm:pt-6"
+          className="mx-0 pt-5 sm:pt-6"
+          rowClassName="scroll-px-5 px-5 sm:scroll-px-6 sm:px-6"
         />
       )}
       <div

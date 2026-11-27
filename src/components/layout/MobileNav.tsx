@@ -103,12 +103,14 @@ function Drawer({
     <dialog
       ref={dialogRef}
       data-scroll-lock=""
+      data-mobile-nav=""
       aria-label="Menu"
       onClose={onClose}
       onClick={onClick}
       className="m-0 h-dvh max-h-none w-full max-w-none border-0 bg-navy p-0 text-white motion-safe:animate-drawer-in"
     >
-      <div className="flex h-full flex-col">
+      {/* Clear of a landscape notch (viewportFit "cover" in layout.tsx). */}
+      <div className="flex h-full flex-col pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)]">
         <div className="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-white/15 px-4 sm:px-6">
           {logo}
           <button
@@ -173,7 +175,7 @@ function Drawer({
                     <div className="px-3 pb-3">
                       {serviceMenu.map((group) => (
                         <div key={group.category} className="mt-3">
-                          <p className="text-xs font-bold tracking-wider text-white/75 uppercase">
+                          <p className="text-sm font-bold tracking-wider text-white/75 uppercase">
                             {group.label}
                           </p>
                           <ul className="mt-1">

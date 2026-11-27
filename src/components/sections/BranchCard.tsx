@@ -40,7 +40,7 @@ export function BranchCard({ branch }: { branch: Branch }) {
       className="flex h-full flex-col overflow-hidden rounded-card bg-white shadow-card ring-1 ring-ink/5"
     >
       <div className="flex flex-1 flex-col p-6">
-        <p className="text-xs font-semibold tracking-wider text-brand-red-text uppercase">
+        <p className="text-sm font-semibold tracking-wider text-brand-red-text uppercase">
           {branch.city}
         </p>
         <h2
@@ -93,7 +93,7 @@ export function BranchCard({ branch }: { branch: Branch }) {
                 </span>
               ))}
               {!branch.hoursVerified && (
-                <span className="mt-1 block text-xs font-semibold text-brand-red-text">
+                <span className="mt-1 block text-sm font-semibold text-brand-red-text">
                   {UNVERIFIED_HOURS_NOTE}
                 </span>
               )}

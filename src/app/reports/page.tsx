@@ -169,7 +169,7 @@ export default function ReportsPage() {
                         </span>
                       ))}
                       {!branch.hoursVerified && (
-                        <span className="mt-1 block text-xs font-semibold text-brand-red-text">
+                        <span className="mt-1 block text-sm font-semibold text-brand-red-text">
                           {UNVERIFIED_HOURS_NOTE}
                         </span>
                       )}

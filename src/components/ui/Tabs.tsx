@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { cn } from "@/lib/cn";
+import { revealInRow, ScrollRow } from "./ScrollRow";
 
 export type TabItem = { id: string; label: string; content: ReactNode };
 
@@ -25,6 +26,9 @@ type TabsProps = {
  * order (roving tabindex); Left/Right/Home/End move between tabs and select
  * as they go. Every panel stays in the DOM, so hidden content is still in the
  * HTML for search engines.
+ *
+ * The tab row scrolls sideways with snap and edge fades when it doesn't
+ * fit (ScrollRow); choosing a tab brings it fully into view.
  *
  * Motion (transform and opacity only, none under reduced motion):
  * - One red underline slides to the selected tab. It is a 1px-wide bar moved
@@ -81,16 +85,21 @@ export function Tabs({ tabs, label, defaultTabId, className }: TabsProps) {
     event.preventDefault();
     const nextTab = tabs[next];
     setActiveId(nextTab.id);
-    tabRefs.current.get(nextTab.id)?.focus();
+    const node = tabRefs.current.get(nextTab.id);
+    node?.focus();
+    if (node) revealInRow(node);
   }
 
   return (
     <div className={className}>
-      <div
+      <ScrollRow
         ref={listRef}
         role="tablist"
         aria-label={label}
-        className="relative flex overflow-x-auto border-b border-ink/10"
+        // Phones: the row runs to the screen edges, so a tab past the
+        // gutter is seen sliding under the fade rather than cut off.
+        frameClassName="-mx-4 sm:mx-0"
+        className="relative flex scroll-px-4 border-b border-ink/10 px-4 sm:scroll-px-0 sm:px-0"
       >
         {tabs.map((tab, index) => {
           const selected = tab.id === activeId;
@@ -107,7 +116,10 @@ export function Tabs({ tabs, label, defaultTabId, className }: TabsProps) {
               aria-selected={selected}
               aria-controls={`${baseId}-panel-${tab.id}`}
               tabIndex={selected ? 0 : -1}
-              onClick={() => setActiveId(tab.id)}
+              onClick={(event) => {
+                revealInRow(event.currentTarget);
+                setActiveId(tab.id);
+              }}
               onKeyDown={(event) => onKeyDown(event, index)}
               className={cn(
                 "-mb-px min-h-11 shrink-0 border-b-2 px-4 py-2 font-semibold transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-blue",
@@ -127,13 +139,13 @@ export function Tabs({ tabs, label, defaultTabId, className }: TabsProps) {
           <span
             aria-hidden="true"
             data-tab-indicator=""
-            className="pointer-events-none absolute bottom-0 left-0 h-0.5 w-px origin-left bg-brand-red motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-house"
+            className="pointer-events-none absolute bottom-0 left-0 h-0.5 w-px origin-left [scroll-snap-align:none] bg-brand-red motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-house"
             style={{
               transform: `translateX(${indicator.x}px) scaleX(${indicator.width})`,
             }}
           />
         )}
-      </div>
+      </ScrollRow>
 
       <div className="grid pt-6">
         {tabs.map((tab) => {

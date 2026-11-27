@@ -58,7 +58,6 @@ export function ServicesTabs({
         label="Service categories"
         idPrefix={baseId}
         controlsId={panelId}
-        className="[mask-image:linear-gradient(to_right,#000_calc(100%-2.5rem),transparent)] pr-10 sm:[mask-image:none] sm:pr-0"
       />
 
       <div

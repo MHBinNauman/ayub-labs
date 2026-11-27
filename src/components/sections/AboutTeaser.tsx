@@ -67,13 +67,13 @@ export function AboutSplit({
                   height={photo.height}
                   placeholder={photo.placeholder}
                   blurDataURL={photo.blurDataURL}
-                  sizes="(min-width: 1280px) 584px, (min-width: 1024px) 45vw, 100vw"
+                  sizes="(min-width: 1280px) 584px, (min-width: 1024px) 45vw, (min-width: 640px) calc(100vw - 3rem), calc(100vw - 2rem)"
                   className="size-full object-cover"
                 />
               </div>
               {founded && (
                 <p className="absolute bottom-0 left-5 rounded-xl bg-white px-5 py-3 shadow-card-hover ring-1 ring-ink/5">
-                  <span className="block text-xs font-semibold tracking-wide text-muted uppercase">
+                  <span className="block text-sm font-semibold tracking-wide text-muted uppercase">
                     Since
                   </span>
                   <span className="block text-2xl font-extrabold text-navy">

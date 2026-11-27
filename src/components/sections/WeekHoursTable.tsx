@@ -38,7 +38,7 @@ export function WeekHoursTable({
               >
                 {row.label}
                 {isToday && (
-                  <span className="ml-2 rounded-full bg-navy px-2 py-0.5 text-xs font-semibold text-white">
+                  <span className="ml-2 rounded-full bg-navy px-2 py-0.5 text-sm font-semibold text-white">
                     Today
                   </span>
                 )}

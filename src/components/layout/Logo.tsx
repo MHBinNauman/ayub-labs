@@ -18,12 +18,17 @@ type LogoProps = {
  * Emblem image plus the wordmark and tagline as live text, so the name stays
  * crisp at every size. For navy backgrounds. The emblem is decorative: the
  * text beside it names the link.
+ *
+ * A logotype, so it is exempt from the 14px text floor (data-type-exempt,
+ * checked in e2e/mobile-qa.spec.ts): below 380px the name is 13px and the
+ * tagline 10-11px, which is what fits beside the header buttons.
  */
 export function Logo({ size = "lg", eager = false, className }: LogoProps) {
   const large = size === "lg";
   return (
     <Link
       href="/"
+      data-type-exempt=""
       className={cn(
         "flex min-w-0 items-center gap-2.5 rounded-md transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:gap-3",
         className,

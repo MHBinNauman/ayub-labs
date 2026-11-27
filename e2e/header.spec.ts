@@ -215,7 +215,10 @@ test.describe("mobile header", () => {
       drawer.getByRole("link", { name: /^Directions/ }),
     ).toBeVisible();
 
-    // Services accordion.
+    // The floating WhatsApp button steps aside while the drawer is open.
+    await expect(page.locator(".vt-whatsapp")).toBeHidden();
+
+    // Services expands inline.
     await drawer.getByText("Services", { exact: true }).click();
     await expect(
       drawer.getByRole("link", { name: services[0].name }),
@@ -225,6 +228,9 @@ test.describe("mobile header", () => {
     await expect(drawer).toHaveCount(0);
     await expect(hamburger).toBeFocused();
     await expect(page.locator("dialog")).toHaveCount(0);
+    await expect(
+      page.getByRole("link", { name: "Chat on WhatsApp" }),
+    ).toBeVisible();
   });
 
   test("choosing a page closes the drawer", async ({ page }) => {

@@ -23,7 +23,7 @@ export function TopBar() {
   const hours = formatWeekHours(primaryBranch);
 
   return (
-    <div className="bg-white text-xs text-muted sm:text-[0.8125rem]">
+    <div className="bg-white text-sm text-muted">
       <Container className="flex h-11 items-center justify-between gap-4">
         <div className="flex h-full min-w-0 items-center gap-x-3 md:gap-x-4">
           <a

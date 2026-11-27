@@ -51,7 +51,7 @@ export function ServicePhotoCard({
               placeholder={image.placeholder}
               blurDataURL={image.blurDataURL}
               fill
-              sizes="(min-width: 1024px) 384px, (min-width: 640px) 50vw, 100vw"
+              sizes="(min-width: 1024px) 384px, (min-width: 640px) calc(50vw - 2.5rem), calc(100vw - 2rem)"
               className="object-cover"
             />
             <span

@@ -74,7 +74,7 @@ export function TestTable({
         <caption className="px-5 pt-5 pb-3 text-left text-lg font-bold text-navy">
           {caption}
         </caption>
-        <thead className="border-y border-ink/10 bg-surface text-xs tracking-wide text-muted uppercase">
+        <thead className="border-y border-ink/10 bg-surface text-sm tracking-wide text-muted uppercase">
           <tr>
             <th scope="col" className="px-5 py-3 font-semibold">
               Test
@@ -96,7 +96,7 @@ export function TestTable({
               <th scope="row" className="px-5 py-3 font-semibold text-ink">
                 {test.name}
                 {test.aka && test.aka.length > 0 && (
-                  <span className="block text-xs font-normal text-muted">
+                  <span className="block text-sm font-normal text-muted">
                     Also called {test.aka.join(", ")}
                   </span>
                 )}

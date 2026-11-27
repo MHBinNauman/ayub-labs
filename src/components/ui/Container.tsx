@@ -1,14 +1,18 @@
 import type { ComponentPropsWithoutRef } from "react";
 import { cn } from "@/lib/cn";
 
-/** Centres content at the site's maximum width with responsive side padding. */
+/**
+ * Centres content at the site's maximum width with responsive side padding
+ * (16 / 24 / 32px), widened where a landscape notch would cover it
+ * (px-gutter in globals.css).
+ */
 export function Container({
   className,
   ...props
 }: ComponentPropsWithoutRef<"div">) {
   return (
     <div
-      className={cn("mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8", className)}
+      className={cn("mx-auto w-full max-w-7xl px-gutter", className)}
       {...props}
     />
   );

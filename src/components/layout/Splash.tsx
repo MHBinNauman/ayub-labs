@@ -61,7 +61,11 @@ export function Splash() {
                 {brand.displayName}
               </p>
               {brand.tagline.verified && (
-                <p className="splash-rise splash-rise-late mt-2 text-[0.6875rem] font-semibold tracking-[0.2em] whitespace-nowrap text-white/85 uppercase sm:text-sm">
+                // Part of the logotype lock-up: exempt from the 14px floor.
+                <p
+                  data-type-exempt=""
+                  className="splash-rise splash-rise-late mt-2 text-[0.6875rem] font-semibold tracking-[0.2em] whitespace-nowrap text-white/85 uppercase sm:text-sm"
+                >
                   {brand.tagline.value}
                 </p>
               )}

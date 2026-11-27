@@ -92,7 +92,7 @@ export default function NotFound() {
                   <li key={service.slug}>
                     <Link
                       href={serviceHref(service.slug)}
-                      className="inline-flex min-h-11 items-center font-semibold text-navy underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-brand-blue"
+                      className="inline-flex min-h-11 min-w-11 items-center font-semibold text-navy underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-brand-blue"
                     >
                       {service.name}
                     </Link>
