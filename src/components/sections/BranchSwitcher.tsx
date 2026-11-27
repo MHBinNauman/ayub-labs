@@ -2,7 +2,7 @@
 
 import { useId, useState, type ReactNode } from "react";
 import { CategoryTabs, categoryTabId } from "@/components/ui/CategoryTabs";
-import { cn } from "@/lib/cn";
+import { cx } from "@/lib/cx";
 
 export type BranchPanel = {
   id: string;
@@ -38,7 +38,8 @@ export function BranchSwitcher({ panels }: { panels: BranchPanel[] }) {
           label="Branches"
           idPrefix={baseId}
           controlsId={panelId}
-          className="mx-0 pt-5 sm:pt-6"
+          bleed={false}
+          className="pt-5 sm:pt-6"
           rowClassName="scroll-px-5 px-5 sm:scroll-px-6 sm:px-6"
         />
       )}
@@ -46,7 +47,7 @@ export function BranchSwitcher({ panels }: { panels: BranchPanel[] }) {
         id={panelId}
         role={tabbed ? "tabpanel" : undefined}
         aria-labelledby={tabbed ? categoryTabId(baseId, active.id) : undefined}
-        className={cn("grid", tabbed && "mt-4 sm:mt-5")}
+        className={cx("grid", tabbed && "mt-4 sm:mt-5")}
       >
         {panels.map((panel) => {
           const shown = panel.id === active.id;
@@ -55,7 +56,7 @@ export function BranchSwitcher({ panels }: { panels: BranchPanel[] }) {
               key={panel.id}
               data-branch={panel.id}
               data-active={shown || undefined}
-              className={cn(
+              className={cx(
                 "[grid-area:1/1] motion-safe:transition-[opacity,visibility] motion-safe:duration-300 motion-safe:ease-out",
                 shown ? "visible opacity-100" : "invisible opacity-0",
               )}

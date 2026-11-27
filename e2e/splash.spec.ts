@@ -74,6 +74,9 @@ async function breakSplashScript(page: Page) {
 }
 
 test.describe("splash screen", () => {
+  // About the animation itself; reduced motion has its own block. Pinned so
+  // the reduced-motion run (pnpm test:e2e:reduced) checks the same thing.
+  test.use({ reducedMotion: "no-preference" });
   test("first load: shown, announced, then removed", async ({ page }) => {
     await recordFrames(page);
     await stallLoad(page, 900);

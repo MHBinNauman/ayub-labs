@@ -2,7 +2,7 @@
 
 import { MapLoading } from "@/components/ui/MapLoading";
 import { useState } from "react";
-import { cn } from "@/lib/cn";
+import { cx } from "@/lib/cx";
 import { resolveSelection } from "@/lib/locations-state";
 import { useIsDesktop } from "@/lib/use-media-query";
 import { useUrlParams } from "@/lib/use-url-params";
@@ -64,7 +64,7 @@ export function LocationsMap({ branches }: { branches: FinderBranch[] }) {
             onTransitionEnd={() => {
               if (isTop) setShownId(id);
             }}
-            className={cn(
+            className={cx(
               "absolute inset-0 size-full border-0 motion-safe:transition-opacity motion-safe:duration-300",
               visible ? "opacity-100" : "opacity-0",
             )}

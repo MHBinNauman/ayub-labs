@@ -62,6 +62,8 @@ const parallaxName = (page: import("@playwright/test").Page) =>
     .evaluate((el) => getComputedStyle(el).animationName);
 
 test("parallax runs on desktop only", async ({ page, isMobile }) => {
+  // About the motion itself (pinned for the reduced-motion run).
+  await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/about");
   expect(await parallaxName(page)).toBe(isMobile ? "none" : "banner-parallax");
 });

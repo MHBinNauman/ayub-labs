@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/cn";
+import { cx } from "@/lib/cx";
 import { zonedDay, type DayHoursRow } from "@/lib/hours";
 import { useMinuteClock } from "@/lib/use-clock";
 
@@ -30,7 +30,7 @@ export function WeekHoursTable({
             <tr
               key={row.day}
               aria-current={isToday ? "date" : undefined}
-              className={cn(isToday && "bg-tint font-semibold")}
+              className={cx(isToday && "bg-tint font-semibold")}
             >
               <th
                 scope="row"
@@ -44,7 +44,7 @@ export function WeekHoursTable({
                 )}
               </th>
               <td
-                className={cn(
+                className={cx(
                   "py-2.5 pr-3 text-right tabular-nums",
                   row.closed ? "text-muted" : "text-ink",
                 )}

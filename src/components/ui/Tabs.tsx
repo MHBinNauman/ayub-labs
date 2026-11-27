@@ -8,7 +8,7 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from "react";
-import { cn } from "@/lib/cn";
+import { cx } from "@/lib/cx";
 import { revealInRow, ScrollRow } from "./ScrollRow";
 
 export type TabItem = { id: string; label: string; content: ReactNode };
@@ -121,7 +121,7 @@ export function Tabs({ tabs, label, defaultTabId, className }: TabsProps) {
                 setActiveId(tab.id);
               }}
               onKeyDown={(event) => onKeyDown(event, index)}
-              className={cn(
+              className={cx(
                 "-mb-px min-h-11 shrink-0 border-b-2 px-4 py-2 font-semibold transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-blue",
                 selected
                   ? // The sliding underline takes over once it is measured.
@@ -158,7 +158,7 @@ export function Tabs({ tabs, label, defaultTabId, className }: TabsProps) {
               aria-labelledby={`${baseId}-tab-${tab.id}`}
               tabIndex={0}
               data-active={shown || undefined}
-              className={cn(
+              className={cx(
                 "[grid-area:1/1] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue",
                 "motion-safe:transition-[opacity,visibility] motion-safe:duration-300 motion-safe:ease-out",
                 shown ? "visible opacity-100" : "invisible opacity-0",

@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { cn } from "@/lib/cn";
+import { cx } from "@/lib/cx";
 import { serviceIcon } from "@/lib/service-icons";
 import { ServiceIcon } from "./ServiceIcon";
 
@@ -36,7 +36,7 @@ export function ServiceCard({
 }: ServiceCardProps) {
   return (
     <li
-      className={cn(
+      className={cx(
         // card-hover: the shared card lift and shadow (globals.css).
         "group card-hover flex gap-4 rounded-card bg-white p-4 shadow-card ring-1 ring-ink/5 sm:flex-col sm:gap-0 sm:p-6",
         className,

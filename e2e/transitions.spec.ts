@@ -108,6 +108,9 @@ async function withoutViewTransitions(page: Page) {
 }
 
 test.describe("page transitions", () => {
+  // About the animation itself; reduced motion has its own block. Pinned so
+  // the reduced-motion run (pnpm test:e2e:reduced) checks the same thing.
+  test.use({ reducedMotion: "no-preference" });
   test.beforeEach(({ page }) => record(page));
 
   test("the page that was loaded does not animate", async ({ page }) => {
@@ -232,6 +235,9 @@ test.describe("page transitions", () => {
 });
 
 test.describe("page transitions without browser support", () => {
+  // About the animation itself; reduced motion has its own block. Pinned so
+  // the reduced-motion run (pnpm test:e2e:reduced) checks the same thing.
+  test.use({ reducedMotion: "no-preference" });
   test("fall back to a fade with a 16px rise", async ({ page }) => {
     await withoutViewTransitions(page);
     await record(page);

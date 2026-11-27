@@ -730,7 +730,7 @@ html:has(dialog[data-mobile-nav][open]) :is(.vt-whatsapp, .vt-to-top) {
   }
   @media (prefers-reduced-motion: reduce) {
     .scroll-fade-start {
-      animation-timing-function: steps(1, jump-start);
+      animation-timing-function: steps(1, jump-end);
     }
     .scroll-fade-end {
       animation-timing-function: steps(1, jump-end);

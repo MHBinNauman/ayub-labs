@@ -2,7 +2,7 @@
 
 import { MapPinned } from "lucide-react";
 import type { ReactNode } from "react";
-import { cn } from "@/lib/cn";
+import { cx } from "@/lib/cx";
 import {
   branchCardId,
   resolveSelection,
@@ -35,7 +35,7 @@ export function BranchCardFrame({
       id={branchCardId(branchId)}
       hidden={!visibleIds.includes(branchId)}
       data-selected={selected || undefined}
-      className={cn(
+      className={cx(
         // Clears the sticky header when scrolled to.
         "scroll-mt-24 rounded-card ring-2 ring-offset-2 transition-shadow",
         selected ? "ring-navy" : "ring-transparent",

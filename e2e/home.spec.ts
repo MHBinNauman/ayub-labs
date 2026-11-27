@@ -277,6 +277,8 @@ test.describe("hero slider", () => {
   });
 
   test("slides 2 and 3 load only after the load event", async ({ page }) => {
+    // About the motion itself (pinned for the reduced-motion run).
+    await page.emulateMedia({ reducedMotion: "no-preference" });
     await page.goto("/");
     await expect(slider(page).locator("img")).toHaveCount(3);
     await expect
@@ -291,6 +293,8 @@ test.describe("hero slider", () => {
   test("dots choose a slide and the toggle pauses the show", async ({
     page,
   }) => {
+    // About the motion itself (pinned for the reduced-motion run).
+    await page.emulateMedia({ reducedMotion: "no-preference" });
     await page.goto("/");
     const group = slider(page);
     await expect(group).toHaveAttribute("data-hydrated", "true");
@@ -313,6 +317,8 @@ test.describe("hero slider", () => {
 
   test("hovering the photos pauses the show", async ({ page, isMobile }) => {
     test.skip(isMobile, "no hover on touch screens");
+    // About the motion itself (pinned for the reduced-motion run).
+    await page.emulateMedia({ reducedMotion: "no-preference" });
     await page.goto("/");
     const group = slider(page);
     await expect(group).toHaveAttribute("data-hydrated", "true");
@@ -359,9 +365,17 @@ test.describe("hero slider", () => {
         const fab = (await page
           .getByRole("link", { name: "Chat on WhatsApp" })
           .boundingBox())!;
-        const controls = (await slider(page)
-          .getByRole("button", { name: "Pause slideshow" })
-          .boundingBox())!;
+        // No slide controls under reduced motion (one still photo), so
+        // there is nothing to wait for; otherwise they must be clear too.
+        await expect(slider(page)).toHaveAttribute("data-hydrated", "true");
+        const reduced = await page.evaluate(
+          () => matchMedia("(prefers-reduced-motion: reduce)").matches,
+        );
+        const controls = reduced
+          ? null
+          : (await slider(page)
+              .getByRole("button", { name: "Pause slideshow" })
+              .boundingBox())!;
         type Box = typeof fab;
         const overlaps = (a: Box, b: Box) =>
           a.x < b.x + b.width &&
@@ -373,7 +387,7 @@ test.describe("hero slider", () => {
           const box = (await cta.boundingBox())!;
           expect(box.y + box.height).toBeLessThanOrEqual(height);
           expect(overlaps(box, fab)).toBe(false);
-          expect(overlaps(box, controls)).toBe(false);
+          if (controls) expect(overlaps(box, controls)).toBe(false);
         }
       });
     });

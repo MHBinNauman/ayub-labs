@@ -1,4 +1,4 @@
-import { cn } from "@/lib/cn";
+import { cx } from "@/lib/cx";
 
 /**
  * A top-level item in the desktop nav strip. Active = navy text with a 2px
@@ -8,7 +8,7 @@ import { cn } from "@/lib/cn";
  * active.
  */
 export function navItemClass(active: boolean, expanded = false): string {
-  return cn(
+  return cx(
     "relative inline-flex h-full items-center gap-1 px-4 text-[0.9375rem] font-semibold transition-colors",
     "after:absolute after:inset-x-4 after:bottom-0 after:h-0.5 after:rounded-full after:transition-colors",
     "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-blue",

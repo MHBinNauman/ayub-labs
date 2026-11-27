@@ -48,6 +48,8 @@ test.describe("/contact", () => {
   });
 
   test("the underline slides and the panels crossfade", async ({ page }) => {
+    // About the motion itself (pinned for the reduced-motion run).
+    await page.emulateMedia({ reducedMotion: "no-preference" });
     const tabs = page.getByRole("tablist", { name: "Branches" });
     const indicator = tabs.locator("[data-tab-indicator]");
     await expect(indicator).toBeAttached();

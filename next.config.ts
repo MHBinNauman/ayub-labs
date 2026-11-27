@@ -12,6 +12,9 @@ import { validateMediaFiles } from "./src/lib/validate";
 const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
+  // Not experimental.inlineCss: tried 2026-11-27. With cacheComponents the
+  // stylesheet was repeated in every segment's RSC payload (home HTML 560 KB,
+  // CSS 11 times), which cost more main-thread time than the request saved.
   turbopack: {
     rules: {
       "*.css": {

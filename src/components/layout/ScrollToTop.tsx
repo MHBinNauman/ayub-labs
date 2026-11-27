@@ -2,7 +2,7 @@
 
 import { ArrowUp } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/cn";
+import { cx } from "@/lib/cx";
 
 /**
  * "Back to top", bottom-left so it never meets the WhatsApp button on the
@@ -50,7 +50,7 @@ export function ScrollToTop({ mainId = "main" }: { mainId?: string }) {
         onClick={toTop}
         aria-label="Back to top"
         data-shown={shown || undefined}
-        className={cn(
+        className={cx(
           "vt-to-top fixed fab-left z-30 grid size-12 place-items-center rounded-full bg-navy text-white shadow-card-hover hover:bg-brand-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue",
           "motion-safe:transition-[opacity,translate,visibility,background-color] motion-safe:duration-200 motion-safe:ease-house",
           shown

@@ -11,6 +11,7 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "test:e2e": "playwright test",
+    "test:e2e:reduced": "node scripts/e2e-reduced.mjs",
     "import-tests": "tsx scripts/import-tests.ts",
     "images": "tsx scripts/optimize-images.ts",
     "lhci": "lhci autorun"

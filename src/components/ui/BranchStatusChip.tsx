@@ -2,7 +2,7 @@
 
 import { Clock } from "lucide-react";
 import type { Branch } from "@/data/site-data";
-import { cn } from "@/lib/cn";
+import { cx } from "@/lib/cx";
 import { formatWeekHours, getBranchStatus } from "@/lib/hours";
 import { useMinuteClock } from "@/lib/use-clock";
 import { Badge } from "./Badge";
@@ -37,11 +37,11 @@ export function BranchStatusChip({
   if (variant === "dot") {
     return (
       <span
-        className={cn("inline-flex items-center gap-1.5 text-sm", className)}
+        className={cx("inline-flex items-center gap-1.5 text-sm", className)}
       >
         <span
           aria-hidden="true"
-          className={cn(
+          className={cx(
             "size-2.5 shrink-0 rounded-full",
             !status && "bg-ink/20",
             status?.isOpen && "bg-brand-blue",
@@ -61,7 +61,7 @@ export function BranchStatusChip({
     const openDays = formatWeekHours(branch).find((row) => !row.closed);
     if (!openDays) return null;
     return (
-      <Badge className={cn("min-h-8", className)}>
+      <Badge className={cx("min-h-8", className)}>
         <Clock aria-hidden="true" className="size-3.5 text-brand-blue" />
         {openDays.label}
       </Badge>
@@ -71,7 +71,7 @@ export function BranchStatusChip({
   return (
     <Badge
       variant={status.isOpen ? "open" : "closed"}
-      className={cn("min-h-8", className)}
+      className={cx("min-h-8", className)}
     >
       {status.label}
     </Badge>

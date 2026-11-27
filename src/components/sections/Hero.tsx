@@ -124,7 +124,7 @@ export function Hero() {
       style={heroOverlayVars as CSSProperties}
       className="relative isolate flex min-h-[calc(100svh-6.75rem)] overflow-hidden bg-linear-to-br from-navy to-brand-blue text-white lg:min-h-155"
     >
-      <HexPattern id="hero-hex" />
+      <HexPattern />
 
       <HeroSlider
         slides={slides}

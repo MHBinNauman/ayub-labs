@@ -20,7 +20,7 @@ export function Splash() {
           aria-label={`Loading ${brand.displayName}`}
           className="splash fixed inset-0 z-60 overflow-hidden bg-linear-to-br from-navy to-brand-blue text-white"
         >
-          <HexPattern id="splash-hex" />
+          <HexPattern />
           <div
             aria-hidden="true"
             className="relative flex h-full flex-col items-center justify-center px-4 text-center"

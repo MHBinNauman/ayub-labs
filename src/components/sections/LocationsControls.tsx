@@ -3,7 +3,7 @@
 import { MapPin, RotateCcw } from "lucide-react";
 import { useId } from "react";
 import { BranchStatusChip } from "@/components/ui/BranchStatusChip";
-import { cn } from "@/lib/cn";
+import { cx } from "@/lib/cx";
 import {
   branchCardId,
   branchHeadingId,
@@ -110,7 +110,7 @@ export function LocationsControls({
                 type="button"
                 aria-pressed={selected}
                 onClick={() => pick(branch.id)}
-                className={cn(
+                className={cx(
                   "flex min-h-16 w-full items-center gap-3 rounded-lg border px-4 py-3 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue",
                   selected
                     ? "border-navy bg-tint"

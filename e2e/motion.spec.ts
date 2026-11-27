@@ -100,6 +100,9 @@ test.describe("scroll to top", () => {
 });
 
 test.describe("WhatsApp ping", () => {
+  // About the animation itself; reduced motion has its own block. Pinned so
+  // the reduced-motion run (pnpm test:e2e:reduced) checks the same thing.
+  test.use({ reducedMotion: "no-preference" });
   test("is armed on the first load of a session only", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator("html")).toHaveAttribute("data-wa-ping", "");
@@ -114,6 +117,9 @@ test.describe("WhatsApp ping", () => {
 });
 
 test.describe("mobile drawer", () => {
+  // About the animation itself; reduced motion has its own block. Pinned so
+  // the reduced-motion run (pnpm test:e2e:reduced) checks the same thing.
+  test.use({ reducedMotion: "no-preference" });
   test("items follow the panel in, one after another", async ({
     page,
     isMobile,

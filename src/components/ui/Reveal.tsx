@@ -71,10 +71,21 @@ export function Reveal({
     if (!root) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    // All layout reads first, then the style writes: reading geometry after
+    // a write forces a second layout, once per Reveal on the page.
     const targets = stagger === undefined ? [root] : revealItems(root);
-    const pending = targets.filter(
-      (element) => element.getBoundingClientRect().top >= window.innerHeight,
-    );
+    const viewport = window.innerHeight;
+    const pending: HTMLElement[] = [];
+    const amounts: number[] = [];
+    for (const element of targets) {
+      const rect = element.getBoundingClientRect();
+      if (rect.top < viewport) continue;
+      pending.push(element);
+      // An item taller than five screens could never be a fifth visible.
+      amounts.push(
+        Math.min(AMOUNT, (viewport * AMOUNT) / Math.max(rect.height, 1)),
+      );
+    }
     if (pending.length === 0) return;
 
     const reset = (element: HTMLElement) => {
@@ -107,20 +118,14 @@ export function Reveal({
     };
 
     // inView stops watching an element after its first entry, so each runs once.
-    const stops = pending.map((element) =>
+    const stops = pending.map((element, index) =>
       inView(
         element,
         () => {
           batch.push(element);
           if (!frame) frame = requestAnimationFrame(flush);
         },
-        // An item taller than five screens could never be a fifth visible.
-        {
-          amount: Math.min(
-            AMOUNT,
-            (window.innerHeight * AMOUNT) / Math.max(element.offsetHeight, 1),
-          ),
-        },
+        { amount: amounts[index] },
       ),
     );
 

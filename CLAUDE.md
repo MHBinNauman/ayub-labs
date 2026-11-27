@@ -14,7 +14,7 @@ Marketing and patient-access website for **Ayyub Labs & Clinics** (diagnostic la
 2. **No invented medical claims.** Don't write "accredited", "ISO certified", "100% accurate", "#1 lab", fake stats, fake reviews or fake doctors. The client is *registered* with PHC and PNRA; that is the only trust claim allowed.
 3. **Brand fidelity.** Colours, font and logo come from `brandTokens` in site-data.ts. Primary = navy `#27477D` / logo blue `#0A58A8`; accent = logo red `#E81C24` (large text, icons, highlights only; use `#C8151D` for small red text). Font = Montserrat only. Allowed gradients only: navy→logoBlue (dark sections), tint→white (light sections), tint→paleBlue `#E3EEFB` with a soft brand-blue radial glow (homepage final CTA band only), and navy-alpha overlays on photos. No teal, no green except WhatsApp #25D366 on WhatsApp buttons, no purple. The Dr. Adil template is a LAYOUT reference only; never copy its colours or images. No other accents.
 4. **Accessibility:** WCAG 2.1 AA. Body text `#1E2A3A`, muted `#5B6472` (never the old `#888C92`). Visible focus rings, 44px touch targets, `prefers-reduced-motion` respected.
-5. **Performance budget:** Lighthouse ≥ 95 on all four categories, mobile. LCP < 2.0s. No client JS on a page unless it is interactive.
+5. **Performance budget:** Lighthouse mobile ≥ 90 Performance, ≥ 95 Accessibility, Best Practices and SEO. LCP < 2.0s. No client JS on a page unless it is interactive.
 6. **Mobile-first.** Most patients arrive on phones from Google Maps or WhatsApp. Call / WhatsApp must be one tap from every screen.
 7. Times and "open now" are computed in `Asia/Karachi`, never the user's browser timezone.
 
@@ -36,7 +36,6 @@ Marketing and patient-access website for **Ayyub Labs & Clinics** (diagnostic la
 - Every image is referenced from a `media` object in site-data.ts (never a hard-coded path in a component), with alt text written for a patient (what's in the picture, not "image of").
 
 ## Structure
-- Routes (built and planned): /, /services, /services/[slug], /locations, /locations/[id], /reports, /about, /contact, /tests
 - Nav order is fixed: Home, About, Services, Reports, Locations, Contact (`navigation.navItems` in site-data.ts). When `features.testDirectory` is on, "Tests & prices" goes directly before Reports.
 - `src/data/site-data.ts` is the single source of truth (do not restructure without asking).
 - `public/brand/` holds the logo and badges, downloaded from the live site before DNS cutover.

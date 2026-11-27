@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef } from "react";
-import { cn } from "@/lib/cn";
+import { cx } from "@/lib/cx";
 
 const dots = {
   open: "bg-brand-blue",
@@ -24,14 +24,14 @@ export function Badge({
   const dot = dots[variant];
   return (
     <span
-      className={cn(
+      className={cx(
         "inline-flex items-center gap-2 rounded-md border border-ink/10 bg-surface px-2.5 py-1 text-sm font-semibold text-ink",
         className,
       )}
       {...props}
     >
       {dot && (
-        <span aria-hidden="true" className={cn("size-2 rounded-full", dot)} />
+        <span aria-hidden="true" className={cx("size-2 rounded-full", dot)} />
       )}
       {children}
     </span>

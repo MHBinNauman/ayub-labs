@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, type KeyboardEvent } from "react";
-import { cn } from "@/lib/cn";
+import { cx } from "@/lib/cx";
 import { revealInRow, ScrollRow } from "./ScrollRow";
 
 /** `count` is shown as a pill after the label; leave it out to show none. */
@@ -17,9 +17,14 @@ type CategoryTabsProps = {
   idPrefix: string;
   /** Id of the single panel every tab controls. */
   controlsId: string;
-  /** Classes for the frame: margins and bleed. */
+  /** Extra classes for the frame, e.g. its top margin. */
   className?: string;
-  /** Classes for the scrolling row itself: its side padding. */
+  /**
+   * On phones the row bleeds to the screen edges (-mx-4). Turn off inside a
+   * padded card, and give the card's own padding as `rowClassName`.
+   */
+  bleed?: boolean;
+  /** Side padding of the scrolling row. Replaces the default, not merged. */
   rowClassName?: string;
 };
 
@@ -41,7 +46,8 @@ export function CategoryTabs({
   idPrefix,
   controlsId,
   className,
-  rowClassName,
+  bleed = true,
+  rowClassName = "scroll-px-4 px-4 sm:scroll-px-0 sm:px-0",
 }: CategoryTabsProps) {
   const tabRefs = useRef(new Map<string, HTMLButtonElement>());
 
@@ -78,11 +84,8 @@ export function CategoryTabs({
     <ScrollRow
       role="tablist"
       aria-label={label}
-      frameClassName={cn("-mx-4 sm:mx-0", className)}
-      className={cn(
-        "flex scroll-px-4 gap-2 px-4 pb-1 sm:scroll-px-0 sm:flex-wrap sm:px-0",
-        rowClassName,
-      )}
+      frameClassName={cx(bleed && "-mx-4 sm:mx-0", className)}
+      className={cx("flex gap-2 pb-1 sm:flex-wrap", rowClassName)}
     >
       {tabs.map((tab, index) => {
         const selected = tab.id === activeId;
@@ -104,7 +107,7 @@ export function CategoryTabs({
               onSelect(tab.id);
             }}
             onKeyDown={(event) => onKeyDown(event, index)}
-            className={cn(
+            className={cx(
               "min-h-11 shrink-0 rounded-full border px-4 text-sm font-semibold whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue",
               selected
                 ? "border-navy bg-navy text-white"
@@ -114,7 +117,7 @@ export function CategoryTabs({
             {tab.label}
             {tab.count !== undefined && (
               <span
-                className={cn(
+                className={cx(
                   "ml-2 rounded-full px-1.5 text-sm",
                   selected ? "bg-white/20" : "bg-surface text-muted",
                 )}

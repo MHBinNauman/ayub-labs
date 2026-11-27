@@ -81,6 +81,24 @@ test.describe("mobile QA", () => {
             scroll.clientWidth,
           );
 
+          // Every image reserves its space before it loads (no layout
+          // shift): width/height attributes, or next/image `fill` in a box
+          // that is already sized.
+          const unsized = await page.evaluate(() =>
+            [...document.images]
+              .filter((img) => {
+                // Not rendered (e.g. desktop-only), so it takes no space.
+                if (!img.checkVisibility()) return false;
+                if (img.hasAttribute("width") && img.hasAttribute("height"))
+                  return false;
+                const fill = getComputedStyle(img).position === "absolute";
+                const box = img.parentElement?.getBoundingClientRect();
+                return !(fill && box && box.width > 0 && box.height > 0);
+              })
+              .map((img) => img.getAttribute("src")),
+          );
+          expect(unsized, "images without dimensions").toEqual([]);
+
           // 2. Tap targets and 3. text size.
           const problems = await page.evaluate(
             ({ minTarget, minText, exempt, floating }) => {

@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { cn } from "@/lib/cn";
+import { cx } from "@/lib/cx";
 import type { MediaProps } from "@/lib/media";
 import { serviceIcon } from "@/lib/service-icons";
 import type { ServiceCardData } from "./ServiceCard";
@@ -33,7 +33,7 @@ export function ServicePhotoCard({
 
   return (
     <li
-      className={cn(
+      className={cx(
         // No overflow-hidden here: it would clip card-hover's shadow layer.
         "group card-hover flex flex-col rounded-card bg-white shadow-card ring-1 ring-ink/5",
         className,

@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef, Ref } from "react";
-import { cn } from "@/lib/cn";
+import { cx } from "@/lib/cx";
 
 type ScrollRowProps = ComponentPropsWithoutRef<"div"> & {
   /** Classes for the outer frame: margins and bleed (e.g. -mx-4). */
@@ -28,8 +28,8 @@ export function ScrollRow({
   ...props
 }: ScrollRowProps) {
   return (
-    <div className={cn("scroll-row-frame", frameClassName)}>
-      <div ref={ref} {...props} className={cn("scroll-row", className)}>
+    <div className={cx("scroll-row-frame", frameClassName)}>
+      <div ref={ref} {...props} className={cx("scroll-row", className)}>
         {children}
       </div>
       <span aria-hidden="true" className="scroll-fade scroll-fade-start" />

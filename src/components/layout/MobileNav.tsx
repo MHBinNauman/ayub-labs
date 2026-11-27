@@ -12,7 +12,7 @@ import {
   type ReactNode,
 } from "react";
 import type { NavItem } from "@/data/site-data";
-import { cn } from "@/lib/cn";
+import { cx } from "@/lib/cx";
 import { ariaCurrent, isActivePath, type ServiceMenuGroup } from "@/lib/paths";
 import { serviceIcon } from "@/lib/service-icons";
 
@@ -92,7 +92,7 @@ function Drawer({
   }
 
   const linkClass = (active: boolean) =>
-    cn(
+    cx(
       "flex min-h-14 items-center rounded-lg px-3 text-lg font-semibold transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white",
       active &&
         "bg-white/10 underline decoration-brand-red decoration-2 underline-offset-8",
@@ -161,7 +161,7 @@ function Drawer({
                   <details open={active} className="accordion-item group">
                     <summary
                       aria-current={active ? "true" : undefined}
-                      className={cn(
+                      className={cx(
                         linkClass(active),
                         "cursor-pointer list-none justify-between [&::-webkit-details-marker]:hidden",
                       )}
@@ -191,7 +191,7 @@ function Drawer({
                                     href={service.href}
                                     prefetch
                                     aria-current={current ? "page" : undefined}
-                                    className={cn(
+                                    className={cx(
                                       "-mx-2 flex min-h-12 items-center gap-3 rounded-lg px-2 font-medium transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white",
                                       current && "bg-white/10",
                                     )}

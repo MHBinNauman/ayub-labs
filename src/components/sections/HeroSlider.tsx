@@ -11,7 +11,7 @@ import {
   type ReactNode,
 } from "react";
 import type { HeroSlide } from "@/data/site-data";
-import { cn } from "@/lib/cn";
+import { cx } from "@/lib/cx";
 import {
   HERO_FADE_MS,
   HERO_SLIDE_MS,
@@ -145,7 +145,7 @@ export function HeroSlider({ slides, overlay, className }: HeroSliderProps) {
         if (event.target.matches(":focus-visible")) setFocused(true);
       }}
       onBlur={onBlur}
-      className={cn("hero-slider isolate overflow-hidden", className)}
+      className={cx("hero-slider isolate overflow-hidden", className)}
     >
       {/* From lg the photos fade in from the left, so they melt into the hero's own gradient. */}
       <div className="absolute inset-0 isolate lg:hero-fade">
@@ -176,7 +176,7 @@ export function HeroSlider({ slides, overlay, className }: HeroSliderProps) {
                   alt={alt}
                   fill
                   sizes="(min-width: 64rem) 55vw, 100vw"
-                  className={cn(
+                  className={cx(
                     "object-cover",
                     slide.focal === "right" ? "object-right" : "object-center",
                   )}
@@ -214,7 +214,7 @@ export function HeroSlider({ slides, overlay, className }: HeroSliderProps) {
           >
             <span
               aria-hidden="true"
-              className={cn(
+              className={cx(
                 "size-2.5 rounded-full bg-white ring-1 ring-navy/40 transition-[opacity,transform] duration-300",
                 index === active
                   ? "scale-125"

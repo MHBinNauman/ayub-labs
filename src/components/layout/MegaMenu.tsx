@@ -15,7 +15,7 @@ import {
 import { flushSync } from "react-dom";
 import { Container } from "@/components/ui/Container";
 import type { NavItem } from "@/data/site-data";
-import { cn } from "@/lib/cn";
+import { cx } from "@/lib/cx";
 import { isActivePath, type ServiceMenuGroup } from "@/lib/paths";
 import { serviceIcon } from "@/lib/service-icons";
 import { useHydrated } from "@/lib/use-hydrated";
@@ -226,7 +226,7 @@ export function MegaMenu({ item, groups, pathname }: MegaMenuProps) {
         {item.label}
         <ChevronDown
           aria-hidden="true"
-          className={cn(
+          className={cx(
             "size-4 motion-safe:transition-transform motion-safe:duration-200 motion-safe:ease-house",
             open && "rotate-180",
           )}
@@ -263,7 +263,7 @@ export function MegaMenu({ item, groups, pathname }: MegaMenuProps) {
                             href={service.href}
                             prefetch
                             aria-current={current ? "page" : undefined}
-                            className={cn(
+                            className={cx(
                               "-mx-2 flex min-h-11 items-center gap-3 rounded-lg px-2 py-1.5 text-sm font-semibold transition-colors hover:bg-tint hover:text-navy focus-visible:outline-2 focus-visible:outline-brand-blue",
                               current ? "text-navy" : "text-ink",
                             )}
